@@ -2,14 +2,12 @@
 using LivriaBackend.communities.Domain.Model.Aggregates;
 using LivriaBackend.communities.Domain.Model.Services;
 using LivriaBackend.communities.Domain.Repositories;
-using LivriaBackend.Shared.Domain.Repositories; // For IUnitOfWork
+using LivriaBackend.Shared.Domain.Repositories; 
 using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Application.Internal.CommandServices
 {
-    /// <summary>
-    /// Implements the ICommunityCommandService for handling Community commands.
-    /// </summary>
+
     public class CommunityCommandService : ICommunityCommandService
     {
         private readonly ICommunityRepository _communityRepository;

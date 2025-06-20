@@ -8,7 +8,7 @@ namespace LivriaBackend.users.Domain.Model.Repositories
     {
         Task<UserClient> GetByIdAsync(int id);
         Task<IEnumerable<UserClient>> GetAllAsync();
-        Task<UserClient> GetByUsernameAsync(string username); // ¡Nuevo método clave!
+        Task<UserClient> GetByUsernameAsync(string username); 
         Task AddAsync(UserClient userClient);
         Task UpdateAsync(UserClient userClient);
         Task DeleteAsync(int id);

@@ -15,7 +15,6 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories
             Context = context;
         }
 
-        // Make these methods virtual so they can be overridden in derived classes
         public virtual async Task<TEntity> GetByIdAsync(int id)
         {
             return await Context.Set<TEntity>().FindAsync(id);
@@ -31,10 +30,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories
             await Context.Set<TEntity>().AddAsync(entity);
         }
 
-        // Ensure UpdateAsync and DeleteAsync are either removed from IAsyncRepository
-        // or properly implemented/handled as discussed previously.
-        // For Communities/Posts, these are not used, so remove them from IAsyncRepository
-        // or implement them throwing NotSupportedException if they must exist in the interface.
+       
 
         public async Task<bool> ExistsAsync(int id)
         {

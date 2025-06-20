@@ -4,14 +4,14 @@ using LivriaBackend.users.Domain.Model.Repositories;
 using LivriaBackend.users.Domain.Model.Services;
 using System.Threading.Tasks;
 using System;
-using LivriaBackend.Shared.Domain.Repositories; // Asegúrate de tener este using
+using LivriaBackend.Shared.Domain.Repositories; 
 
 namespace LivriaBackend.users.Application.Internal.CommandServices
 {
     public class UserAdminCommandService : IUserAdminCommandService
     {
         private readonly IUserAdminRepository _userAdminRepository;
-        private readonly IUnitOfWork _unitOfWork; // Inyectar IUnitOfWork
+        private readonly IUnitOfWork _unitOfWork; 
 
         public UserAdminCommandService(IUserAdminRepository userAdminRepository, IUnitOfWork unitOfWork)
         {
@@ -19,7 +19,6 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             _unitOfWork = unitOfWork;
         }
 
-        // REMOVIDO: No hay Handle para CreateUserAdminCommand
 
         public async Task<UserAdmin> Handle(UpdateUserAdminCommand command)
         {
@@ -34,10 +33,10 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
                 command.AdminAccess, command.SecurityPin);
 
             await _userAdminRepository.UpdateAsync(userAdmin);
-            await _unitOfWork.CompleteAsync(); // Guardar cambios
+            await _unitOfWork.CompleteAsync(); 
             return userAdmin;
         }
 
-        // REMOVIDO: No hay Handle para DeleteUserAdminCommand
+        
     }
 }

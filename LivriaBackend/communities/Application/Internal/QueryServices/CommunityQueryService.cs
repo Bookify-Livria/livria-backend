@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Application.Internal.QueryServices
 {
-    /// <summary>
-    /// Implements the ICommunityQueryService for handling Community queries.
-    /// </summary>
+
     public class CommunityQueryService : ICommunityQueryService
     {
         private readonly ICommunityRepository _communityRepository;

@@ -35,13 +35,13 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         public async Task AddAsync(UserClient userClient)
         {
             await _context.UserClients.AddAsync(userClient);
-            // No llamar SaveChanges aquí si usas UnitOfWork.CompleteAsync() en el servicio de comandos.
+            
         }
 
         public async Task UpdateAsync(UserClient userClient)
         {
             _context.UserClients.Update(userClient);
-            // No llamar SaveChanges aquí si usas UnitOfWork.CompleteAsync() en el servicio de comandos.
+            
         }
 
         public async Task DeleteAsync(int id)
@@ -50,7 +50,7 @@ namespace LivriaBackend.users.Infrastructure.Repositories
             if (userClientToDelete != null)
             {
                 _context.UserClients.Remove(userClientToDelete);
-                // No llamar SaveChanges aquí si usas UnitOfWork.CompleteAsync() en el servicio de comandos.
+                
             }
         }
     }

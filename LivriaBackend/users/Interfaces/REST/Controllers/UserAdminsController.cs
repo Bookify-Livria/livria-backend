@@ -28,9 +28,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             _mapper = mapper;
         }
 
-        // REMOVIDO: No hay endpoint POST para crear UserAdmin
 
-        // GET: api/v1/useradmins
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserAdminResource>>> GetAllUserAdmins()
         {
@@ -41,7 +39,6 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         }
 
 
-        // PUT: api/v1/useradmins/{id}
         [HttpPut("{id}")]
         public async Task<ActionResult<UserAdminResource>> UpdateUserAdmin(int id, [FromBody] UpdateUserAdminResource resource)
         {
@@ -71,6 +68,5 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             }
         }
 
-        // REMOVIDO: No hay endpoint DELETE para eliminar UserAdmin
     }
 }

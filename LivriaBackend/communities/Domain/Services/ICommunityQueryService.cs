@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Domain.Model.Services
 {
-    /// <summary>
-    /// Service interface for handling Community queries.
-    /// </summary>
+
     public interface ICommunityQueryService
     {
         Task<IEnumerable<Community>> Handle(GetAllCommunitiesQuery query);

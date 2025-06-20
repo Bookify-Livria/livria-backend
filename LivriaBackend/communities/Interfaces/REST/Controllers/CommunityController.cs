@@ -17,27 +17,22 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
     {
         private readonly ICommunityCommandService _communityCommandService;
         private readonly ICommunityQueryService _communityQueryService;
-        private readonly IUserCommunityCommandService _userCommunityCommandService; // NEW
+        private readonly IUserCommunityCommandService _userCommunityCommandService; 
         private readonly IMapper _mapper;
 
         public CommunitiesController(
             ICommunityCommandService communityCommandService,
             ICommunityQueryService communityQueryService,
-            IUserCommunityCommandService userCommunityCommandService, // NEW
+            IUserCommunityCommandService userCommunityCommandService, 
             IMapper mapper)
         {
             _communityCommandService = communityCommandService;
             _communityQueryService = communityQueryService;
-            _userCommunityCommandService = userCommunityCommandService; // NEW
+            _userCommunityCommandService = userCommunityCommandService; 
             _mapper = mapper;
         }
 
-        // POST: api/v1/communities
-        /// <summary>
-        /// Creates a new community.
-        /// </summary>
-        /// <param name="resource">Resource with the new community data.</param>
-        /// <returns>The created community resource with a 201 Created code.</returns>
+ 
         [HttpPost]
         public async Task<ActionResult<CommunityResource>> CreateCommunity([FromBody] CreateCommunityResource resource)
         {
@@ -53,11 +48,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             return CreatedAtAction(nameof(GetCommunityById), new { id = communityResource.Id }, communityResource);
         }
 
-        // GET: api/v1/communities
-        /// <summary>
-        /// Gets all communities.
-        /// </summary>
-        /// <returns>A list of community resources.</returns>
+  
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CommunityResource>>> GetAllCommunities()
         {
@@ -67,12 +58,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             return Ok(communityResources);
         }
 
-        // GET: api/v1/communities/{id}
-        /// <summary>
-        /// Gets a community by its ID.
-        /// </summary>
-        /// <param name="id">ID of the community.</param>
-        /// <returns>The community resource if found; otherwise, 404 Not Found.</returns>
+
         [HttpGet("{id}")]
         public async Task<ActionResult<CommunityResource>> GetCommunityById(int id)
         {
@@ -88,13 +74,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             return Ok(communityResource);
         }
 
-        // NEW: Endpoint to join a community
-        // POST: api/v1/communities/join
-        /// <summary>
-        /// Allows a UserClient to join a Community.
-        /// </summary>
-        /// <param name="resource">Resource containing UserClient ID and Community ID.</param>
-        /// <returns>The UserCommunity resource with code 201 Created.</returns>
+
         [HttpPost("join")]
         public async Task<ActionResult<UserCommunityResource>> JoinCommunity([FromBody] JoinCommunityResource resource)
         {
@@ -107,7 +87,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             }
             catch (ApplicationException ex)
             {
-                // Handle specific application exceptions (e.g., user/community not found, already joined)
+                
                 return BadRequest(ex.Message);
             }
             catch (Exception)

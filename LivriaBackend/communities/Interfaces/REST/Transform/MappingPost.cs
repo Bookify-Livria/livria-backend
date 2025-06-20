@@ -9,10 +9,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Transform
     {
         public MappingPost()
         {
-            // Mapeo del recurso de entrada a comando
+            
             CreateMap<CreatePostResource, CreatePostCommand>();
 
-            // Mapeo de la entidad Post a PostResource para la respuesta
+            
             CreateMap<Post, PostResource>();
         }
     }

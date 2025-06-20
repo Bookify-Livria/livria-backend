@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Application.Internal.QueryServices
 {
-    /// <summary>
-    /// Implements the IPostQueryService for handling Post queries.
-    /// </summary>
+
     public class PostQueryService : IPostQueryService
     {
         private readonly IPostRepository _postRepository;

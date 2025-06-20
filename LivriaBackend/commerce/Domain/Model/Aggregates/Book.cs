@@ -1,35 +1,68 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using LivriaBackend.commerce.Domain.Model.Entities;
 
 namespace LivriaBackend.commerce.Domain.Model.Aggregates
 {
     public class Book
     {
         public int Id { get; private set; }
-        public string Title { get; set; }
-        public DateTime PublishDate { get; set; }
-        public string Genre { get; set; }
-        public float Price { get; set; }
-        public string Format { get; set; }
-        public string Description { get; set; }
-        public string Cover { get; set; }
-        public string Language { get; set; }
-        public string Author { get; set; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
+        public string Author { get; private set; }
+        public decimal Price { get; private set; }
+        public int Stock { get; private set; }
+        public string Cover { get; private set; }
+        public string Genre { get; private set; }
+        public string Language { get; private set; }
 
-        [JsonConstructor]
-        public Book(string title, DateTime publishDate, string genre, float price, string format, string description,
-            string cover, string language, string author)
-        {
-            Title = title;
-            PublishDate = publishDate;
-            Genre = genre;
-            Price = price;
-            Format = format;
-            Description = description;
-            Cover = cover;
-            Language = language;
-            Author = author;
-        }
+        public ICollection<Review> Reviews { get; private set; } = new List<Review>();
 
         protected Book() { }
+
+        public Book(string title, string description, string author, decimal price, int stock, string cover, string genre, string language)
+        {
+            Title = title;
+            Description = description;
+            Author = author;
+            Price = price;
+            Stock = stock; 
+            Cover = cover;
+            Genre = genre;
+            Language = language;
+        }
+        
+        public void DecreaseStock(int quantity)
+        {
+            if (quantity < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to decrease cannot be negative.");
+            }
+            if (Stock < quantity)
+            {
+              
+                throw new InvalidOperationException($"Insufficient stock. Available: {Stock}, Requested: {quantity}.");
+            }
+            Stock -= quantity;
+        }
+
+        public void Update(string title, string description, string author, decimal price, int stock, string cover, string genre, string language)
+        {
+            Title = title;
+            Description = description;
+            Author = author;
+            Price = price;
+            Stock = stock;
+            Cover = cover;
+            Genre = genre;
+            Language = language;
+        }
+
+        public void AddReview(Review review)
+        {
+            if (review != null && review.BookId == this.Id)
+            {
+                Reviews.Add(review);
+            }
+        }
     }
 }

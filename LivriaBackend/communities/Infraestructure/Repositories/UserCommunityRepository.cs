@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Infrastructure.Repositories
 {
-    /// <summary>
-    /// EF Core implementation of IUserCommunityRepository.
-    /// </summary>
+
     public class UserCommunityRepository : BaseRepository<UserCommunity>, IUserCommunityRepository
     {
         public UserCommunityRepository(AppDbContext context) : base(context)

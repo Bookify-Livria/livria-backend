@@ -1,26 +1,43 @@
 ﻿using LivriaBackend.commerce.Domain.Model.Aggregates;
 using LivriaBackend.commerce.Domain.Repositories;
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace LivriaBackend.commerce.Infrastructure.Repositories;
-
-public class BookRepository : IBookRepository
+namespace LivriaBackend.commerce.Infrastructure.Repositories
 {
-    private readonly AppDbContext _context;
-
-    public BookRepository(AppDbContext context)
+    public class BookRepository : BaseRepository<Book>, IBookRepository
     {
-        _context = context;
+        public BookRepository(AppDbContext context) : base(context)
+        {
+        }
+
+        public new async Task<Book> GetByIdAsync(int id)
+        {
+            return await this.Context.Books
+                .Include(b => b.Reviews)
+                .FirstOrDefaultAsync(b => b.Id == id);
+        }
+
+        public new async Task<IEnumerable<Book>> GetAllAsync()
+        {
+            return await this.Context.Books
+                .Include(b => b.Reviews)
+                .ToListAsync();
+        }
+
+        public async Task AddAsync(Book book)
+        {
+            await this.Context.Books.AddAsync(book);
+        }
+
+        public async Task UpdateAsync(Book book) 
+        {
+           
+            this.Context.Entry(book).State = EntityState.Modified;
+            await Task.CompletedTask; 
+        }
     }
-
-    public async Task<IEnumerable<Book>> ListAsync() => await _context.Books.ToListAsync();
-
-    public async Task<Book?> FindByIdAsync(int id) => await _context.Books.FindAsync(id);
-
-    public async Task AddAsync(Book book) => await _context.Books.AddAsync(book);
-
-    public void Update(Book book) => _context.Books.Update(book);
-
-    public void Remove(Book book) => _context.Books.Remove(book);
 }

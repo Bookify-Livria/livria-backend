@@ -6,7 +6,7 @@ namespace LivriaBackend.users.Domain.Model.Services
 {
     public interface IUserAdminCommandService
     {
-        // Solo permitir la actualización
+        
         Task<UserAdmin> Handle(UpdateUserAdminCommand command);
     }
 }

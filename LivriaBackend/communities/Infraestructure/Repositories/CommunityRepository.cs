@@ -8,16 +8,13 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Infrastructure.Repositories
 {
-    /// <summary>
-    /// EF Core implementation of ICommunityRepository.
-    /// </summary>
+
     public class CommunityRepository : BaseRepository<Community>, ICommunityRepository
     {
         public CommunityRepository(AppDbContext context) : base(context)
         {
         }
 
-        // Override GetByIdAsync to include Posts
         public override async Task<Community> GetByIdAsync(int id)
         {
             return await Context.Communities
@@ -25,7 +22,6 @@ namespace LivriaBackend.communities.Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        // Override ListAsync to include Posts
         public override async Task<IEnumerable<Community>> ListAsync()
         {
             return await Context.Communities

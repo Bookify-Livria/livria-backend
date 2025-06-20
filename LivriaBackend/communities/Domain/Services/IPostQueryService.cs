@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Domain.Model.Services
 {
-    /// <summary>
-    /// Service interface for handling Post queries.
-    /// </summary>
+
     public interface IPostQueryService
     {
         Task<IEnumerable<Post>> Handle(GetAllPostsQuery query);

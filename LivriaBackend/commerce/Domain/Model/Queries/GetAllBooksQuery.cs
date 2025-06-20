@@ -1,3 +1,4 @@
-﻿namespace LivriaBackend.commerce.Domain.Model.Queries;
-
-public record GetAllBooksQuery();
+﻿namespace LivriaBackend.commerce.Domain.Model.Queries
+{
+    public record GetAllBooksQuery();
+}

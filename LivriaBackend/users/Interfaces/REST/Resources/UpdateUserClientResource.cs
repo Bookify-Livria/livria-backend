@@ -1,17 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations; // Para validaciones
+﻿using System.ComponentModel.DataAnnotations; 
 
 namespace LivriaBackend.users.Interfaces.REST.Resources
 {
-    // Cambiado a 'public record class'
+    
     public record class UpdateUserClientResource : UpdateUserResource
     {
-        // Propiedades específicas de UserClient para la actualización
-        // Hacemos nullable con 'init' si son opcionales en la actualización
         public string? Icon { get; init; }
         public string? Phrase { get; init; }
-        public string? Subscription { get; init; } // Asumiendo que UserClient tiene suscripción
+        public string? Subscription { get; init; } 
 
-        // Constructor explícito para inicializar todas las propiedades
+        
         public UpdateUserClientResource(
             string? display,
             string? username,
@@ -27,7 +25,7 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
             Subscription = subscription;
         }
         
-        // Constructor sin parámetros para la deserialización y mapeo si es necesario
+        
         public UpdateUserClientResource() : base() { }
     }
 }

@@ -15,11 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="commerce\Interfaces\REST\Transform\" />
-      <Folder Include="notifications\Application\" />
-      <Folder Include="notifications\Domain\" />
-      <Folder Include="notifications\Infraestructure\" />
-      <Folder Include="notifications\Interfaces\" />
       <Folder Include="Shared\Infrastructure\Interfaces\" />
     </ItemGroup>
 
