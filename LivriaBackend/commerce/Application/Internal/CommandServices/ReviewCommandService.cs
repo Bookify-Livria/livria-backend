@@ -41,7 +41,7 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
 
             var usernameForReview = userClient.Display; 
 
-            var review = new Review(command.BookId, command.UserClientId, command.Content, usernameForReview);
+            var review = new Review(command.BookId, command.UserClientId, command.Content, command.Stars, usernameForReview);
 
             await _reviewRepository.AddAsync(review);
             await _unitOfWork.CompleteAsync(); 

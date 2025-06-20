@@ -1,4 +1,4 @@
-﻿using LivriaBackend.users.Domain.Model.Aggregates; // For UserClient
+﻿using LivriaBackend.users.Domain.Model.Aggregates; 
 using LivriaBackend.communities.Domain.Model.Aggregates; 
 
 namespace LivriaBackend.communities.Domain.Model.Aggregates

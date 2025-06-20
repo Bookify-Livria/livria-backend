@@ -3,9 +3,19 @@
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record ShippingResource(
-        [Required] string Address,
-        [Required] string City,
-        [Required] string District,
+        [Required(ErrorMessage = "EmptyField")]
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        string Address,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        string City,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        string District,
+        
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
         string Reference
     );
 }

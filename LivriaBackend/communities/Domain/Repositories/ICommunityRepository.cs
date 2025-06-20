@@ -1,5 +1,5 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
-using LivriaBackend.Shared.Domain.Repositories; // Assuming you have a base IAsyncRepository
+using LivriaBackend.Shared.Domain.Repositories; 
 
 namespace LivriaBackend.communities.Domain.Repositories
 {

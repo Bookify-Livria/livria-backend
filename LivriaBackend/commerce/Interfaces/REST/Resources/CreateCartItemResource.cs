@@ -3,8 +3,14 @@
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record CreateCartItemResource(
-        [Required] int BookId,
-        [Required] [Range(1, int.MaxValue)] int Quantity,
-        [Required] int UserClientId
+        [Required(ErrorMessage = "EmptyField")]
+        int BookId,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        [Range(1, int.MaxValue, ErrorMessage = "RangeError")]
+        int Quantity,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        int UserClientId
     );
 }

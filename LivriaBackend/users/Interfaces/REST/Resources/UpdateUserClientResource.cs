@@ -6,8 +6,12 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
     public record class UpdateUserClientResource : UpdateUserResource
     {
         public string? Icon { get; init; }
+        
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
         public string? Phrase { get; init; }
-        public string? Subscription { get; init; } 
+        
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        public string? Subscription { get; init; }
 
         
         public UpdateUserClientResource(

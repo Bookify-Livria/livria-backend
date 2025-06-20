@@ -4,7 +4,9 @@ namespace LivriaBackend.communities.Interfaces.REST.Resources
 {
 
     public record JoinCommunityResource(
-        [Required] int UserClientId,
-        [Required] int CommunityId
+        [Required(ErrorMessage = "EmptyField")]
+        int UserClientId,
+        [Required(ErrorMessage = "EmptyField")]
+        int CommunityId
     );
 }

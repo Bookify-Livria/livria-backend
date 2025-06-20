@@ -3,7 +3,8 @@
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record UpdateCartItemQuantityResource(
-        [Required] [Range(0, int.MaxValue)] int NewQuantity 
-
+        [Required(ErrorMessage = "EmptyField")]
+        [Range(0, int.MaxValue, ErrorMessage = "RangeError")]
+        int NewQuantity 
     );
 }

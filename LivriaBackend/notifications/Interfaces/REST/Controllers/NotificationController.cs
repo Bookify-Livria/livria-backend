@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.notifications.Interfaces.REST.Controllers
 {
@@ -32,6 +33,10 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary= "Crear una nueva notificación.",
+            Description= "Crea una nueva notificación en el sistema."
+        )]
         public async Task<ActionResult<NotificationResource>> CreateNotification([FromBody] CreateNotificationResource resource)
         {
             var createCommand = _mapper.Map<CreateNotificationCommand>(resource);
@@ -46,6 +51,11 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de todas las notificaciones.",
+            Description= "Te muestra los datos de las notificaciones."
+            
+        )]
         public async Task<ActionResult<IEnumerable<NotificationResource>>> GetAllNotifications()
         {
             var query = new GetAllNotificationsQuery();
@@ -55,6 +65,11 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de una notificación en específico.",
+            Description= "Te muestra los datos de la notificación que buscaste."
+            
+        )]
         public async Task<ActionResult<NotificationResource>> GetNotificationById(int id)
         {
             var query = new GetNotificationByIdQuery(id);
@@ -70,15 +85,19 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary= "Eliminar una notificacion previamente creada.",
+            Description= "Elimina una notificacion del sistema."
+        )]
         public async Task<IActionResult> DeleteNotification(int id)
         {
             var deleteCommand = new DeleteNotificationCommand(id);
             try
             {
                 await _notificationCommandService.Delete(deleteCommand);
-                return NoContent(); // 204 No Content para eliminación exitosa
+                return NoContent(); 
             }
-            catch (ArgumentException ex) // Captura si la notificación no se encuentra
+            catch (ArgumentException ex) 
             {
                 return NotFound(new { message = ex.Message });
             }

@@ -14,7 +14,7 @@ namespace LivriaBackend.communities.Application.Internal.CommandServices
     {
         private readonly ICommunityRepository _communityRepository;
         private readonly IUserClientRepository _userClientRepository;
-        private readonly IUserCommunityRepository _userCommunityRepository; // NEW
+        private readonly IUserCommunityRepository _userCommunityRepository; 
         private readonly IUnitOfWork _unitOfWork;
 
         public UserCommunityCommandService(

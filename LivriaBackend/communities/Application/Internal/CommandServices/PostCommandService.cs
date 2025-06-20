@@ -2,9 +2,9 @@
 using LivriaBackend.communities.Domain.Model.Commands;
 using LivriaBackend.communities.Domain.Repositories;
 using LivriaBackend.communities.Domain.Model.Services;
-using LivriaBackend.Shared.Domain.Repositories; // Para IUnitOfWork
+using LivriaBackend.Shared.Domain.Repositories; 
 using System.Threading.Tasks;
-using LivriaBackend.users.Domain.Model.Repositories; // Para IUserClientRepository
+using LivriaBackend.users.Domain.Model.Repositories; 
 using System; 
 
 namespace LivriaBackend.communities.Application.Internal.CommandServices
