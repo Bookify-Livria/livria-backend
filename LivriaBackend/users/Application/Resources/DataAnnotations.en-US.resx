@@ -21,10 +21,4 @@
     <data name="EmailError" xml:space="preserve">
         <value>The 'Email' field must contain a valid email address.</value>
     </data>
-<<<<<<< HEAD
-=======
-    <data name="PhoneError" xml:space="preserve">
-        <value>The '{0}' field must be a valid phone number.</value>
-    </data>
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
 </root>

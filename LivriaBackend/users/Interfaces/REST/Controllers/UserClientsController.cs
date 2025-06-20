@@ -7,15 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
-<<<<<<< HEAD
-using System.Linq;
-using LivriaBackend.commerce.Interfaces.REST.Resources;
-=======
 using System.ComponentModel;
 using System.Linq;
 using LivriaBackend.commerce.Interfaces.REST.Resources;
 using Swashbuckle.AspNetCore.Annotations;
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
 
 namespace LivriaBackend.users.Interfaces.REST.Controllers
 {
@@ -140,13 +135,10 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         }
         
          [HttpPost("{userClientId}/favorites/{bookId}")]
-<<<<<<< HEAD
-=======
          [SwaggerOperation(
              Summary= "Agregar un libro existente como favorito.",
              Description= "Agrega un libro existente como favorito en el sistema."
          )]
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
         public async Task<ActionResult<UserClientResource>> AddBookToFavorites(int userClientId, int bookId)
         {
             var command = new AddFavoriteBookCommand(userClientId, bookId);
@@ -171,13 +163,10 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         }
         
         [HttpDelete("{userClientId}/favorites/{bookId}")]
-<<<<<<< HEAD
-=======
         [SwaggerOperation(
             Summary= "Eliminar un libro favorito de un UserClient previamente creado.",
             Description= "Elimina un libro favorito de un UserClient del sistema."
         )]
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
         public async Task<ActionResult<UserClientResource>> RemoveBookFromFavorites(int userClientId, int bookId)
         {
             var command = new RemoveFavoriteBookCommand(userClientId, bookId);
@@ -185,11 +174,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             {
                 var userClient = await _userClientCommandService.Handle(command);
                 var userClientResource = _mapper.Map<UserClientResource>(userClient);
-<<<<<<< HEAD
-                return Ok(userClientResource); // Devolver el UserClient actualizado
-=======
                 return Ok(userClientResource); 
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
             }
             catch (ArgumentException ex)
             {
@@ -197,11 +182,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             }
             catch (InvalidOperationException ex)
             {
-<<<<<<< HEAD
-                return Conflict(new { message = ex.Message }); // No estaba en favoritos
-=======
                 return Conflict(new { message = ex.Message }); 
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
             }
             catch (Exception ex)
             {
@@ -210,11 +191,6 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         }
         
         [HttpGet("{userClientId}/favorites")]
-<<<<<<< HEAD
-        public async Task<ActionResult<IEnumerable<BookResource>>> GetUserFavoriteBooks(int userClientId)
-        {
-            var query = new GetUserClientByIdQuery(userClientId); // Reutilizamos la query de obtener UserClient
-=======
         [SwaggerOperation(
             Summary= "Obtener los datos de los favoritos que le pertenecen a un usuario en específico.",
             Description= "Te muestra los datos de los favoritos por medio del id de un usuario en específico."
@@ -222,7 +198,6 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         public async Task<ActionResult<IEnumerable<BookResource>>> GetUserFavoriteBooks(int userClientId)
         {
             var query = new GetUserClientByIdQuery(userClientId); 
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
             var userClient = await _userClientQueryService.Handle(query);
 
             if (userClient == null)

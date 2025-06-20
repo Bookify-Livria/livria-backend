@@ -61,8 +61,6 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasMany(uc => uc.FavoriteBooks)
                     .WithMany() 
                     .UsingEntity(j => j.ToTable("user_favorite_books"));
-<<<<<<< HEAD
-=======
 
                 
                 entity.HasMany(uc => uc.Orders) 
@@ -70,7 +68,6 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                     .HasForeignKey(o => o.UserClientId) 
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Restrict); 
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
             });
 
             modelBuilder.Entity<UserAdmin>(entity =>

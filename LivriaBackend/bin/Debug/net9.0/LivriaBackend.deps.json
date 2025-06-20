@@ -19,13 +19,8 @@
           "LivriaBackend.dll": {}
         },
         "resources": {
-<<<<<<< HEAD
           "en-us/LivriaBackend.resources.dll": {
             "locale": "en-us"
-=======
-          "en-US/LivriaBackend.resources.dll": {
-            "locale": "en-US"
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
           },
           "es-es/LivriaBackend.resources.dll": {
             "locale": "es-es"

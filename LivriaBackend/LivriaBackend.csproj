@@ -69,25 +69,6 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>SharedResource.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-<<<<<<< HEAD
-=======
-      <EmbeddedResource Update="commerce\Application\Resources\DataAnnotations.en-US.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>DataAnnotations.en-US.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="commerce\Application\Resources\DataAnnotations.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>DataAnnotations.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="commerce\Application\Resources\DataAnnotations.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>DataAnnotations.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="commerce\Application\Resources\DataAnnotations.en-US.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>DataAnnotations.en-US.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
     </ItemGroup>
 
     <ItemGroup>
@@ -105,24 +86,6 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>SharedResource.resx</DependentUpon>
       </Compile>
-<<<<<<< HEAD
-=======
-      <Compile Update="commerce\Application\Resources\DataAnnotations.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>DataAnnotations.resx</DependentUpon>
-      </Compile>
-      <Compile Update="commerce\Application\Resources\DataAnnotations.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>DataAnnotations.resx</DependentUpon>
-      </Compile>
-      <Compile Update="commerce\Application\Resources\DataAnnotations.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>DataAnnotations.resx</DependentUpon>
-      </Compile>
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
     </ItemGroup>
 
 </Project>

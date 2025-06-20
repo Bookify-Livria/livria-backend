@@ -23,10 +23,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         int Stock,
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]
-<<<<<<< HEAD
-=======
-        [Url(ErrorMessage = "UrlError")]
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
         string Cover,
         
         [StringLength(50, ErrorMessage = "MaxLengthError")]

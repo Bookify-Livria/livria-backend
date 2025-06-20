@@ -7,10 +7,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using System;
 using LivriaBackend.commerce.Domain.Model.Aggregates;
-<<<<<<< HEAD
-=======
 using Swashbuckle.AspNetCore.Annotations;
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -30,13 +27,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 
         
         [HttpGet("users/{userClientId}")]
-<<<<<<< HEAD
-=======
         [SwaggerOperation(
             Summary= "Obtener los datos de las recomendaciones que le pertenecen a un usuario en específico.",
             Description= "Te muestra los datos de las recomendaciones por medio del id de un usuario en específico."
         )]
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
         public async Task<ActionResult<RecommendationResource>> GetUserRecommendations(int userClientId)
         {
             var query = new GetUserRecommendationsQuery(userClientId);

@@ -11,10 +11,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         int Quantity,
         
         [Required(ErrorMessage = "EmptyField")]
-<<<<<<< HEAD
-=======
-        [Range(0, int.MaxValue, ErrorMessage = "MinimumValueError")]
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
         int UserClientId
     );
 }
