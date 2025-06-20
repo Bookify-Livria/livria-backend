@@ -2,22 +2,32 @@
 
 namespace LivriaBackend.users.Interfaces.REST.Resources
 {
-    public class UpdateUserClientResource
+    // Cambiado a 'public record class'
+    public record class UpdateUserClientResource : UpdateUserResource
     {
-        [Required]
-        [StringLength(100)]
-        public string Display { get; set; }
+        // Propiedades específicas de UserClient para la actualización
+        // Hacemos nullable con 'init' si son opcionales en la actualización
+        public string? Icon { get; init; }
+        public string? Phrase { get; init; }
+        public string? Subscription { get; init; } // Asumiendo que UserClient tiene suscripción
 
-        [StringLength(50)]
-        public string Username { get; set; } // Puede que no quieras que el username se pueda actualizar
-
-        [EmailAddress]
-        [StringLength(100)]
-        public string Email { get; set; } // Puede que no quieras que el email se pueda actualizar
-
-        public string Password { get; set; } // Considerar si la contraseña se actualiza aquí o en un endpoint aparte
-        public string Icon { get; set; }
-        public string Phrase { get; set; }
-        public string Subscription { get; set; }
+        // Constructor explícito para inicializar todas las propiedades
+        public UpdateUserClientResource(
+            string? display,
+            string? username,
+            string? email,
+            string? password,
+            string? icon,
+            string? phrase,
+            string? subscription
+        ) : base(display, username, email, password, icon, phrase)
+        {
+            Icon = icon;
+            Phrase = phrase;
+            Subscription = subscription;
+        }
+        
+        // Constructor sin parámetros para la deserialización y mapeo si es necesario
+        public UpdateUserClientResource() : base() { }
     }
 }

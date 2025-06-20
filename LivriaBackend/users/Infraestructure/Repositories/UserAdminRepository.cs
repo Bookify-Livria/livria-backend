@@ -1,65 +1,54 @@
-﻿using LivriaBackend.users.Domain.Model.Aggregates;
+﻿using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; // Nuevo using para AppDbContext
+using LivriaBackend.users.Domain.Model.Aggregates;
 using LivriaBackend.users.Domain.Model.Repositories;
+using Microsoft.EntityFrameworkCore; // Nuevo using para los métodos de extensión de EF Core
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace LivriaBackend.users.Infrastructure.Repositories
 {
-    // ESTO ES UNA IMPLEMENTACIÓN MOCK/IN-MEMORY PARA DEMOSTRACIÓN.
-    // En un proyecto real, esto interactuaría con una base de datos (EF Core, Dapper, etc.).
     public class UserAdminRepository : IUserAdminRepository
     {
-        private static readonly List<UserAdmin> _userAdmins = new List<UserAdmin>();
-        private static int _nextId = 1; // Para simular IDs de DB
+        private readonly AppDbContext _context;
 
-        public UserAdminRepository()
+        public UserAdminRepository(AppDbContext context)
         {
-            // Inicializar algunos datos de ejemplo si la lista está vacía
-            if (!_userAdmins.Any())
+            _context = context;
+        }
+
+        public async Task<UserAdmin> GetByIdAsync(int id)
+        {
+            return await _context.UserAdmins.FirstOrDefaultAsync(ua => ua.Id == id);
+        }
+
+        public async Task<IEnumerable<UserAdmin>> GetAllAsync()
+        {
+            return await _context.UserAdmins.ToListAsync();
+        }
+
+        public async Task AddAsync(UserAdmin userAdmin)
+        {
+            // La lógica de asignación de ID para el ID 0 ya se maneja en Program.cs.
+            // Para otros casos (si permitieras añadir más UserAdmins), EF Core se encargaría.
+            await _context.UserAdmins.AddAsync(userAdmin);
+            await _context.SaveChangesAsync(); // Guardar cambios inmediatamente o al final de la unidad de trabajo
+        }
+
+        public async Task UpdateAsync(UserAdmin userAdmin)
+        {
+            _context.UserAdmins.Update(userAdmin);
+            await _context.SaveChangesAsync(); // Guardar cambios
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var userAdminToDelete = await _context.UserAdmins.FirstOrDefaultAsync(ua => ua.Id == id);
+            if (userAdminToDelete != null)
             {
-                _userAdmins.Add(new UserAdmin(_nextId++, "Admin Display 1", "admin1", "admin1@example.com", "password123", true, "1234"));
-                _userAdmins.Add(new UserAdmin(_nextId++, "Admin Display 2", "admin2", "admin2@example.com", "password456", true, "5678"));
+                _context.UserAdmins.Remove(userAdminToDelete);
+                await _context.SaveChangesAsync(); // Guardar cambios
             }
-        }
-
-        public Task<UserAdmin> GetByIdAsync(int id)
-        {
-            return Task.FromResult(_userAdmins.FirstOrDefault(ua => ua.Id == id));
-        }
-
-        public Task<IEnumerable<UserAdmin>> GetAllAsync()
-        {
-            return Task.FromResult<IEnumerable<UserAdmin>>(_userAdmins);
-        }
-
-        public Task AddAsync(UserAdmin userAdmin)
-        {
-            userAdmin.GetType().GetProperty("Id").SetValue(userAdmin, _nextId++); // Simula asignación de ID por DB
-            _userAdmins.Add(userAdmin);
-            return Task.CompletedTask;
-        }
-
-        public Task UpdateAsync(UserAdmin userAdmin)
-        {
-            var existingUserAdmin = _userAdmins.FirstOrDefault(ua => ua.Id == userAdmin.Id);
-            if (existingUserAdmin != null)
-            {
-                // Actualiza las propiedades manualmente (o usa un mapeador como AutoMapper)
-                existingUserAdmin.Display = userAdmin.Display;
-                existingUserAdmin.Username = userAdmin.Username;
-                existingUserAdmin.Email = userAdmin.Email;
-                existingUserAdmin.Password = userAdmin.Password;
-                existingUserAdmin.AdminAccess = userAdmin.AdminAccess;
-                existingUserAdmin.SecurityPin = userAdmin.SecurityPin;
-            }
-            return Task.CompletedTask;
-        }
-
-        public Task DeleteAsync(int id)
-        {
-            _userAdmins.RemoveAll(ua => ua.Id == id);
-            return Task.CompletedTask;
         }
     }
 }

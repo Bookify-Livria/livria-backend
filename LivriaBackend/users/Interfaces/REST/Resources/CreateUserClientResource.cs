@@ -2,27 +2,14 @@
 
 namespace LivriaBackend.users.Interfaces.REST.Resources
 {
-    public class CreateUserClientResource
-    {
-        [Required]
-        [StringLength(100)]
-        public string Display { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string Username { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [StringLength(100)]
-        public string Email { get; set; }
-
-        [Required]
-        [MinLength(6)] // Ejemplo de validación para contraseña
-        public string Password { get; set; }
-
-        public string Icon { get; set; }
-        public string Phrase { get; set; }
-        public string Subscription { get; set; }
-    }
+    // Cambiado a 'public record'
+    public record CreateUserClientResource(
+        [Required] [StringLength(100)] string Display,
+        [Required] [StringLength(50)] string Username,
+        [Required] [EmailAddress] [StringLength(100)] string Email,
+        [Required] [MinLength(6)] string Password, // Ejemplo de validación para contraseña
+        string Icon,
+        string Phrase,
+        string Subscription
+    );
 }

@@ -2,15 +2,15 @@
 
 namespace LivriaBackend.users.Interfaces.REST.Resources
 {
-    public class UserClientResource
-    {
-        public int Id { get; set; }
-        public string Display { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Icon { get; set; }
-        public string Phrase { get; set; }
-        public List<int> Order { get; set; } // O un DTO más simple para los elementos de Order
-        public string Subscription { get; set; }
-    }
+    // Cambiado a 'public record'
+    public record UserClientResource(
+        int Id,
+        string Display,
+        string Username,
+        string Email,
+        string Icon,
+        string Phrase,
+        List<int> Order, // O un DTO más simple para los elementos de Order
+        string Subscription
+    ) : UserResource(Id, Display, Username, Email); // Hereda del constructor primario de UserResource
 }

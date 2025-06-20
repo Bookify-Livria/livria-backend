@@ -1,12 +1,7 @@
 ﻿namespace LivriaBackend.users.Domain.Model.Commands
 {
-    public class DeleteUserClientCommand
-    {
-        public int UserClientId { get; }
-
-        public DeleteUserClientCommand(int userClientId)
-        {
-            UserClientId = userClientId;
-        }
-    }
+    // Cambiado a 'public record'
+    public record DeleteUserClientCommand(
+        int UserClientId
+    );
 }

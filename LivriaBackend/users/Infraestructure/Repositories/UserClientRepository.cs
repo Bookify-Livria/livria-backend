@@ -1,53 +1,56 @@
-﻿using LivriaBackend.users.Domain.Model.Aggregates;
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; // Tu DbContext está aquí
+﻿using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using LivriaBackend.users.Domain.Model.Repositories;
 
 namespace LivriaBackend.users.Infrastructure.Repositories
 {
     public class UserClientRepository : IUserClientRepository
     {
-        private readonly AppDbContext _context; // Inyecta tu DbContext
+        private readonly AppDbContext _context;
 
         public UserClientRepository(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task AddAsync(UserClient userClient)
+        public async Task<UserClient> GetByIdAsync(int id)
         {
-            await _context.UserClients.AddAsync(userClient); // Añadir a DbSet de UserClients
-            await _context.SaveChangesAsync(); // ¡Persistir en la base de datos!
-        }
-
-        public async Task<UserClient?> GetByIdAsync(int id) // Puede devolver null si no se encuentra
-        {
-            // Para TPT, FindAsync suele funcionar, pero si hay problemas con las propiedades base,
-            // puedes necesitar un .Include() o .Where().FirstOrDefaultAsync().
-            return await _context.UserClients.FindAsync(id);
+            return await _context.UserClients.FirstOrDefaultAsync(uc => uc.Id == id);
         }
 
         public async Task<IEnumerable<UserClient>> GetAllAsync()
         {
-            // Obtener todos los UserClients de la base de datos
             return await _context.UserClients.ToListAsync();
+        }
+
+        public async Task<UserClient> GetByUsernameAsync(string username) // Implementación
+        {
+            return await _context.UserClients.FirstOrDefaultAsync(uc => uc.Username == username);
+        }
+
+        public async Task AddAsync(UserClient userClient)
+        {
+            await _context.UserClients.AddAsync(userClient);
+            // No llamar SaveChanges aquí si usas UnitOfWork.CompleteAsync() en el servicio de comandos.
         }
 
         public async Task UpdateAsync(UserClient userClient)
         {
-            _context.UserClients.Update(userClient); // Marcar la entidad como modificada
-            await _context.SaveChangesAsync(); // Persistir los cambios
+            _context.UserClients.Update(userClient);
+            // No llamar SaveChanges aquí si usas UnitOfWork.CompleteAsync() en el servicio de comandos.
         }
 
         public async Task DeleteAsync(int id)
         {
-            var userClient = await _context.UserClients.FindAsync(id);
-            if (userClient != null)
+            var userClientToDelete = await _context.UserClients.FirstOrDefaultAsync(uc => uc.Id == id);
+            if (userClientToDelete != null)
             {
-                _context.UserClients.Remove(userClient); // Marcar la entidad para eliminación
-                await _context.SaveChangesAsync(); // Persistir la eliminación
+                _context.UserClients.Remove(userClientToDelete);
+                // No llamar SaveChanges aquí si usas UnitOfWork.CompleteAsync() en el servicio de comandos.
             }
         }
     }

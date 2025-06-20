@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
-
+﻿using System.Collections.Generic; // Si se necesita para alguna propiedad compleja en el futuro
 
 namespace LivriaBackend.users.Interfaces.REST.Resources
 {
-
-    public class UserAdminResource : UserResource // Hereda de UserResource
-    {
-        public bool AdminAccess { get; set; }
-        public string SecurityPin { get; set; } // Considera si realmente quieres exponer el SecurityPin
-        // Si es un PIN sensible, es mejor no incluirlo aquí o encriptarlo.
-    }
+    // Cambiado a 'public record'
+    public record UserAdminResource(
+        int Id,
+        string Display,
+        string Username,
+        string Email,
+        bool AdminAccess,
+        string SecurityPin // Considera si realmente quieres exponer el SecurityPin
+    ) : UserResource(Id, Display, Username, Email); // Hereda del constructor primario de UserResource
 }

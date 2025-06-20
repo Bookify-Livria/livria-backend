@@ -1,11 +1,11 @@
 ﻿namespace LivriaBackend.users.Interfaces.REST.Resources
 {
-    public class UserResource
-    {
-        public int Id { get; set; }
-        public string Display { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        // La contraseña NUNCA debe exponerse en un recurso de respuesta
-    }
+    // Cambiado a 'public record'
+    public record UserResource(
+        int Id,
+        string Display,
+        string Username,
+        string Email
+    );
+    // La contraseña NUNCA debe exponerse en un recurso de respuesta
 }

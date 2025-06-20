@@ -1,35 +1,27 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
 
-namespace LivriaBackend.users.Domain.Model.Aggregates;
-
-public class UserAdmin : User
+namespace LivriaBackend.users.Domain.Model.Aggregates
 {
-    public bool AdminAccess { get; set; }
-    public string SecurityPin { get; set; }
-
-    [JsonConstructor]
-    public UserAdmin(int id, string display, string username, string email, string password,
-        bool adminAccess, string securityPin)
-        : base(id, display, username, email, password)
+    public class UserAdmin : User
     {
-        AdminAccess = adminAccess;
-        SecurityPin = securityPin;
-    }
+        public bool AdminAccess { get; private set; }
+        public string SecurityPin { get; private set; }
 
-    public UserAdmin(string display, string username, string email, string password,
-        bool adminAccess, string securityPin)
-        : base(display, username, email, password)
-    {
-        AdminAccess = adminAccess;
-        SecurityPin = securityPin;
-    }
+        protected UserAdmin() : base() { }
 
-    protected UserAdmin() : base() { }
+        public UserAdmin(string display, string username, string email, string password, bool adminAccess, string securityPin)
+            : base(display, username, email, password)
+        {
+            AdminAccess = adminAccess;
+            SecurityPin = securityPin;
+        }
 
-    public void Update(string display, string username, string email, string password, bool adminAccess, string securityPin)
-    {
-        base.Update(display, username, email, password);
-        AdminAccess = adminAccess;
-        SecurityPin = securityPin;
+        public void Update(string display, string username, string email, string password, bool adminAccess, string securityPin)
+        {
+            base.UpdateUserProperties(display, username, email, password);
+            AdminAccess = adminAccess;
+            SecurityPin = securityPin;
+        }
     }
 }

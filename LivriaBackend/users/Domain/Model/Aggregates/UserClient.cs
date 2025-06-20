@@ -1,56 +1,59 @@
-﻿using System.Text.Json.Serialization;
+﻿using LivriaBackend.commerce.Domain.Model.Aggregates;
+using LivriaBackend.communities.Domain.Model.Aggregates;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
-namespace LivriaBackend.users.Domain.Model.Aggregates;
-
-public class UserClient : User
+namespace LivriaBackend.users.Domain.Model.Aggregates
 {
-    public string Icon { get; set; } // Asegúrate de que tenga un set;
-    public string Phrase { get; set; } // Asegúrate de que tenga un set;
-    public List<int> Order { get; private set; } // Esto es 'private set'. Lee la nota en AppDbContext sobre mapeo de List<int>.
-    public string Subscription { get; set; }
-
-    [JsonConstructor]
-    public UserClient(int id, string display, string username, string email, string password,
-        string icon, string phrase, List<int> order, string subscription)
-        : base(id, display, username, email, password)
+    public class UserClient : User
     {
-        Icon = icon;
-        Phrase = phrase;
-        Order = order ?? new List<int>();
-        Subscription = subscription;
-    }
+        public string Icon { get; private set; }
+        public string Phrase { get; private set; }
+        public string Subscription { get; private set; }
+        public List<int> Order { get; private set; }
 
-    public UserClient(string display, string username, string email, string password,
-        string icon, string phrase, string subscription)
-        : base(display, username, email, password)
-    {
-        Icon = icon;
-        Phrase = phrase;
-        Order = new List<int>();
-        Subscription = subscription;
-    }
+        public ICollection<UserCommunity> UserCommunities { get; private set; } = new List<UserCommunity>();
 
-    protected UserClient() : base() { Order = new List<int>(); }
 
-    public void Update(string display, string username, string email, string password, string icon, string phrase, string subscription)
-    {
-        base.Update(display, username, email, password);
-        Icon = icon;
-        Phrase = phrase;
-        Subscription = subscription;
-    }
-
-    public void AddOrder(int orderId)
-    {
-        if (!Order.Contains(orderId))
+        protected UserClient() : base()
         {
-            Order.Add(orderId);
+            UserCommunities = new List<UserCommunity>();
         }
-    }
 
-    public void RemoveOrder(int orderId)
-    {
-        Order.Remove(orderId);
+        public UserClient(string display, string username, string email, string password, string icon, string phrase, string subscription)
+            : base(display, username, email, password)
+        {
+            Icon = icon;
+            Phrase = phrase;
+            Subscription = subscription;
+            Order = new List<int>();
+            UserCommunities = new List<UserCommunity>();
+        }
+
+        public void Update(string display, string username, string email, string password, string icon, string phrase, string subscription)
+        {
+            base.UpdateUserProperties(display, username, email, password);
+            Icon = icon;
+            Phrase = phrase;
+            Subscription = subscription;
+        }
+
+        public void JoinCommunity(int communityId)
+        {
+            if (!UserCommunities.Any(uc => uc.CommunityId == communityId))
+            {
+                UserCommunities.Add(new UserCommunity(this.Id, communityId));
+            }
+        }
+
+        public void LeaveCommunity(int communityId)
+        {
+                var userCommunity = UserCommunities.FirstOrDefault(uc => uc.CommunityId == communityId);
+                if (userCommunity != null)
+                {
+                    UserCommunities.Remove(userCommunity);
+                }
+        }
     }
 }

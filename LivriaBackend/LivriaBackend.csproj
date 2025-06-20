@@ -16,17 +16,6 @@
 
     <ItemGroup>
       <Folder Include="commerce\Interfaces\REST\Transform\" />
-      <Folder Include="communities\Application\Internal\CommandServices\" />
-      <Folder Include="communities\Application\Internal\QueryServices\" />
-      <Folder Include="communities\Domain\Model\Aggregates\" />
-      <Folder Include="communities\Domain\Model\Commands\" />
-      <Folder Include="communities\Domain\Model\Queries\" />
-      <Folder Include="communities\Domain\Repositories\" />
-      <Folder Include="communities\Domain\Services\" />
-      <Folder Include="communities\Infraestructure\Repositories\" />
-      <Folder Include="communities\Interfaces\REST\Controllers\" />
-      <Folder Include="communities\Interfaces\REST\Resources\" />
-      <Folder Include="communities\Interfaces\REST\Transform\" />
       <Folder Include="notifications\Application\" />
       <Folder Include="notifications\Domain\" />
       <Folder Include="notifications\Infraestructure\" />
