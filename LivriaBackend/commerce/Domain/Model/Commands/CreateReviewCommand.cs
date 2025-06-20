@@ -3,6 +3,7 @@
     public record CreateReviewCommand(
         int BookId,
         int UserClientId,
-        string Content
+        string Content,
+        int Stars
     );
 }

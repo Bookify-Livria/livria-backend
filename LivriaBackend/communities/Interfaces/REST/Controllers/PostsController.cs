@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Net.Mime; // Para MediaTypeNames
-using System; 
+using System.Net.Mime; 
+using System;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.communities.Interfaces.REST.Controllers
 {
@@ -31,6 +32,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
 
         
         [HttpPost("communities/{communityId}")] 
+        [SwaggerOperation(
+            Summary= "Crear una nueva pubicación en una comunidad existente.",
+            Description= "Crea una nueva pubicación en una comunidad existente en el sistema."
+        )]
         public async Task<ActionResult<PostResource>> CreatePost(int communityId, [FromBody] CreatePostResource resource)
         {
         
@@ -66,6 +71,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de una publicación en específico.",
+            Description= "Te muestra los datos de la publicación que buscaste."
+        )]
         public async Task<ActionResult<PostResource>> GetPostById(int id)
         {
             var post = await _postQueryService.Handle(new GetPostByIdQuery(id));
@@ -78,6 +87,11 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de todas las publicaciones.",
+            Description= "Te muestra los datos de las publicaciones."
+            
+        )]
         public async Task<ActionResult<IEnumerable<PostResource>>> GetAllPosts()
         {
             var posts = await _postQueryService.Handle(new GetAllPostsQuery());

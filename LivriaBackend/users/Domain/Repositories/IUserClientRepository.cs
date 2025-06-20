@@ -11,6 +11,9 @@ namespace LivriaBackend.users.Domain.Model.Repositories
         Task<UserClient> GetByUsernameAsync(string username); 
         Task AddAsync(UserClient userClient);
         Task UpdateAsync(UserClient userClient);
-        Task DeleteAsync(int id);
+        Task DeleteAsync(UserClient userClient);
+        Task<UserClient> GetByEmailAsync(string email);
+        Task<bool> ExistsByUsernameAsync(string username);
+        Task<bool> ExistsByEmailAsync(string email);
     }
 }

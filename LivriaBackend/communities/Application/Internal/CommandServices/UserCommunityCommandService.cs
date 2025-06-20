@@ -14,7 +14,7 @@ namespace LivriaBackend.communities.Application.Internal.CommandServices
     {
         private readonly ICommunityRepository _communityRepository;
         private readonly IUserClientRepository _userClientRepository;
-        private readonly IUserCommunityRepository _userCommunityRepository; // NEW
+        private readonly IUserCommunityRepository _userCommunityRepository; 
         private readonly IUnitOfWork _unitOfWork;
 
         public UserCommunityCommandService(
@@ -37,6 +37,11 @@ namespace LivriaBackend.communities.Application.Internal.CommandServices
                 throw new ApplicationException($"UserClient with ID {command.UserClientId} not found.");
             }
 
+            if (userClient.Subscription != "communityplan")
+            {
+                throw new ApplicationException("User must have a 'communityplan' subscription to join a community.");
+            }
+            
             var community = await _communityRepository.GetByIdAsync(command.CommunityId);
             if (community == null)
             {

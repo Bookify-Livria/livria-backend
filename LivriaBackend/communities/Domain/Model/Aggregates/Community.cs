@@ -20,7 +20,7 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
 
         private Community()
         {
-            Posts = new List<Post>(); // Ensure collections are initialized
+            Posts = new List<Post>(); 
             UserCommunities = new List<UserCommunity>(); 
         }
 
