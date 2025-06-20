@@ -58,7 +58,7 @@ namespace LivriaBackend.notifications.Domain.Model.Aggregates
         
         public void SetDateToNow()
         {
-            Date = DateTime.UtcNow; 
+            Date = DateTime.UtcNow; // O DateTime.Now según tu zona horaria preferida
         }
 
         

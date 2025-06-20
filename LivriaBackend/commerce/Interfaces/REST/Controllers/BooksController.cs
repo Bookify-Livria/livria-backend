@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -29,11 +28,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet]
-        [SwaggerOperation(
-            Summary= "Obtener los datos de todos los libros.",
-            Description= "Te muestra los datos de los libros."
-            
-        )]
         public async Task<ActionResult<IEnumerable<BookResource>>> GetAllBooks()
         {
             var query = new GetAllBooksQuery();
@@ -43,10 +37,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
         
         [HttpGet("{id}")]
-        [SwaggerOperation(
-            Summary= "Obtener los datos de un libro en específico.",
-            Description= "Te muestra los datos del libro que buscaste."
-        )]
         public async Task<ActionResult<BookResource>> GetBookById(int id)
         {
             var query = new GetBookByIdQuery(id);
@@ -62,10 +52,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpPost]
-        [SwaggerOperation(
-            Summary= "Crear un nuevo libro.",
-            Description= "Crea un nuevo libro en el sistema."
-        )]
         public async Task<ActionResult<BookResource>> CreateBook([FromBody] CreateBookResource resource)
         {
             var createCommand = _mapper.Map<CreateBookCommand>(resource);

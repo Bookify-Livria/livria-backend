@@ -1,4 +1,4 @@
-﻿using LivriaBackend.commerce.Domain.Model.Aggregates; 
+﻿using LivriaBackend.commerce.Domain.Model.Aggregates;
 using LivriaBackend.communities.Domain.Model.Aggregates;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +11,13 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         public string Icon { get; private set; }
         public string Phrase { get; private set; }
         public string Subscription { get; private set; }
-
-        
-        
-        public ICollection<Order> Orders { get; private set; } = new List<Order>();
+        public List<int> Order { get; private set; }
 
         public ICollection<UserCommunity> UserCommunities { get; private set; } = new List<UserCommunity>();
-
-        private readonly List<Book> _favoriteBooks = new List<Book>();
-        public IReadOnlyCollection<Book> FavoriteBooks => _favoriteBooks.AsReadOnly();
 
 
         protected UserClient() : base()
         {
-            
-            Orders = new List<Order>(); 
             UserCommunities = new List<UserCommunity>();
         }
 
@@ -35,7 +27,7 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
             Icon = icon;
             Phrase = phrase;
             Subscription = subscription;
-            Orders = new List<Order>();
+            Order = new List<int>();
             UserCommunities = new List<UserCommunity>();
         }
 
@@ -62,28 +54,6 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
                 {
                     UserCommunities.Remove(userCommunity);
                 }
-        }
-        
-        public void AddFavoriteBook(Book book)
-        {
-            if (book == null)
-            {
-                throw new ArgumentNullException(nameof(book));
-            }
-
-            if (!_favoriteBooks.Contains(book))
-            {
-                _favoriteBooks.Add(book);
-            }
-        }
-        
-        public void RemoveFavoriteBook(Book book)
-        {
-            if (book == null)
-            {
-                throw new ArgumentNullException(nameof(book));
-            }
-            _favoriteBooks.Remove(book);
         }
     }
 }

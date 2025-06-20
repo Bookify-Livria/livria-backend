@@ -1,20 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using LivriaBackend.commerce.Application.Resources;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record CreateOrderResource(
         [Required(ErrorMessage = "EmptyField")]
-        [Range(0, int.MaxValue, ErrorMessage = "MinimumValueError")]
         int UserClientId,
         
         [Required(ErrorMessage = "EmptyField")]
-        [EmailAddress(ErrorMessageResourceType = typeof(DataAnnotations), ErrorMessageResourceName = "EmailError")]
+        [EmailAddress]
         string UserEmail,
         
         [Required(ErrorMessage = "EmptyField")]
-        [Phone(ErrorMessageResourceType = typeof(DataAnnotations), ErrorMessageResourceName = "PhoneError")]
+        [Phone(ErrorMessage = "PhoneError")]
         string UserPhone,
         
         [Required(ErrorMessage = "EmptyField")]
@@ -24,7 +22,8 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         [Required(ErrorMessage = "EmptyField")]
         bool IsDelivery,
         
-        ShippingResource? ShippingDetails, 
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        ShippingResource ShippingDetails, 
         
         [Required(ErrorMessage = "EmptyField")]
         List<int> CartItemIds 

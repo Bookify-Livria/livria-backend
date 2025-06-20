@@ -26,9 +26,9 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
 
         
         protected User(int id, string display, string username, string email, string password)
-            : this(display, username, email, password) 
+            : this(display, username, email, password) // Llama al constructor principal
         {
-            Id = id; 
+            Id = id; // Asigna el Id explícitamente
         }
 
         

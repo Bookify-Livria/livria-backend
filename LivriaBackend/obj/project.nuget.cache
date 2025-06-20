@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QkninWuO8kI=",
+  "dgSpecHash": "wPYm9EsPj1w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Asuss\\Downloads\\carpenter\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
+  "projectFilePath": "C:\\Users\\Asuss\\Downloads\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asuss\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Asuss\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
@@ -33,9 +33,8 @@
     "C:\\Users\\Asuss\\.nuget\\packages\\mysql.data\\9.3.0\\mysql.data.9.3.0.nupkg.sha512",
     "C:\\Users\\Asuss\\.nuget\\packages\\mysql.entityframeworkcore\\9.0.3\\mysql.entityframeworkcore.9.0.3.nupkg.sha512",
     "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore\\8.1.4\\swashbuckle.aspnetcore.8.1.4.nupkg.sha512",
-    "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore.annotations\\9.0.1\\swashbuckle.aspnetcore.annotations.9.0.1.nupkg.sha512",
-    "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\9.0.1\\swashbuckle.aspnetcore.swagger.9.0.1.nupkg.sha512",
-    "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\9.0.1\\swashbuckle.aspnetcore.swaggergen.9.0.1.nupkg.sha512",
+    "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\8.1.4\\swashbuckle.aspnetcore.swagger.8.1.4.nupkg.sha512",
+    "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\8.1.4\\swashbuckle.aspnetcore.swaggergen.8.1.4.nupkg.sha512",
     "C:\\Users\\Asuss\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\8.1.4\\swashbuckle.aspnetcore.swaggerui.8.1.4.nupkg.sha512",
     "C:\\Users\\Asuss\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Asuss\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",

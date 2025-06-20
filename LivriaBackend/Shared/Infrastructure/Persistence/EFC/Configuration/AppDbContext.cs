@@ -1,7 +1,7 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
-using LivriaBackend.commerce.Domain.Model.Aggregates; 
-using LivriaBackend.commerce.Domain.Model.Entities;    
-using LivriaBackend.commerce.Domain.Model.ValueObjects; 
+using LivriaBackend.commerce.Domain.Model.Aggregates; // Para Book y Order
+using LivriaBackend.commerce.Domain.Model.Entities;    // Para Review, CartItem, OrderItem
+using LivriaBackend.commerce.Domain.Model.ValueObjects; // Para Shipping
 using LivriaBackend.users.Domain.Model.Aggregates;
 using LivriaBackend.notifications.Domain.Model.Aggregates;
 using LivriaBackend.notifications.Domain.Model.ValueObjects;
@@ -53,21 +53,8 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(uc => uc.Icon).HasMaxLength(255);
                 entity.Property(uc => uc.Phrase).HasMaxLength(255);
                 entity.Property(uc => uc.Subscription).HasMaxLength(50);
-                
-                
-                
+                entity.Ignore(uc => uc.Order); 
                 entity.HasBaseType<User>();
-                
-                entity.HasMany(uc => uc.FavoriteBooks)
-                    .WithMany() 
-                    .UsingEntity(j => j.ToTable("user_favorite_books"));
-
-                
-                entity.HasMany(uc => uc.Orders) 
-                    .WithOne(o => o.UserClient) 
-                    .HasForeignKey(o => o.UserClientId) 
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict); 
             });
 
             modelBuilder.Entity<UserAdmin>(entity =>
@@ -155,11 +142,11 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasIndex(o => o.Code).IsUnique(); 
 
                 entity.Property(o => o.UserClientId).IsRequired();
-                entity.HasOne(o => o.UserClient) 
-                    .WithMany(uc => uc.Orders) 
-                    .HasForeignKey(o => o.UserClientId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict); 
+                entity.HasOne(o => o.UserClient)
+                      .WithMany() 
+                      .HasForeignKey(o => o.UserClientId)
+                      .IsRequired()
+                      .OnDelete(DeleteBehavior.Restrict); 
 
                 entity.Property(o => o.UserEmail).IsRequired().HasMaxLength(100);
                 entity.Property(o => o.UserPhone).IsRequired().HasMaxLength(20);
@@ -197,7 +184,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(oi => oi.BookTitle).IsRequired().HasMaxLength(255);
                 entity.Property(oi => oi.BookAuthor).IsRequired().HasMaxLength(100);
                 entity.Property(oi => oi.BookPrice).IsRequired().HasColumnType("decimal(10, 2)");
-                entity.Property(oi => oi.BookCover).HasMaxLength(255); 
+                entity.Property(oi => oi.BookCover).HasMaxLength(255); // Puede ser nulo
 
                 entity.Property(oi => oi.Quantity).IsRequired();
                 entity.Property(oi => oi.ItemTotal).IsRequired().HasColumnType("decimal(10, 2)");

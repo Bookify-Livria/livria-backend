@@ -21,8 +21,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Transform
             CreateMap<Order, OrderResource>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToString("yyyy-MM-ddTHH:mm:ssZ"))); 
             ;
-            
-            CreateMap<Recommendation, RecommendationResource>();
 
 
             CreateMap<CreateBookResource, CreateBookCommand>();

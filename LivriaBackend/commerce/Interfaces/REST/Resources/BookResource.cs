@@ -5,7 +5,6 @@ using LivriaBackend.commerce.Interfaces.REST.Resources;
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record BookResource(
-        [Range(0, int.MaxValue, ErrorMessage = "MinimumValueError")]
         int Id,
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]
@@ -20,7 +19,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         [Range(0.01, 10000.00, ErrorMessage = "RangeError")]
         decimal Price,
         
-        [Range(0, int.MaxValue, ErrorMessage = "MinimumValueError")]
+        [Range(0, 10000, ErrorMessage = "RangeError")]
         int Stock,
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]

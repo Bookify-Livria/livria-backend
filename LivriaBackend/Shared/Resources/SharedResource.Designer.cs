@@ -78,7 +78,7 @@ namespace LivriaBackend.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Email error: {0}..
         /// </summary>
         internal static string EmailError {
             get {
@@ -114,11 +114,11 @@ namespace LivriaBackend.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimum value error: {0} [{1}].
+        ///   Looks up a localized string similar to Must be a phone number: {0}..
         /// </summary>
-        internal static string MinimumValueError {
+        internal static string PhoneError {
             get {
-                return ResourceManager.GetString("MinimumValueError", resourceCulture);
+                return ResourceManager.GetString("PhoneError", resourceCulture);
             }
         }
         
