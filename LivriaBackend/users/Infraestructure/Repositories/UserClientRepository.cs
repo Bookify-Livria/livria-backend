@@ -1,4 +1,5 @@
 ﻿using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories;
 using LivriaBackend.users.Domain.Model.Aggregates;
 using LivriaBackend.users.Domain.Model.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,50 +9,69 @@ using System.Threading.Tasks;
 
 namespace LivriaBackend.users.Infrastructure.Repositories
 {
-    public class UserClientRepository : IUserClientRepository
+    public class UserClientRepository : BaseRepository<UserClient>, IUserClientRepository
     {
-        private readonly AppDbContext _context;
-
-        public UserClientRepository(AppDbContext context)
+        public UserClientRepository(AppDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public async Task<UserClient> GetByIdAsync(int id)
+        public new async Task<UserClient> GetByIdAsync(int id)
         {
-            return await _context.UserClients.FirstOrDefaultAsync(uc => uc.Id == id);
+            return await this.Context.UserClients
+                .Include(uc => uc.UserCommunities)
+                .Include(uc => uc.FavoriteBooks) // ¡NUEVO! Incluir los libros favoritos
+                .FirstOrDefaultAsync(uc => uc.Id == id);
         }
 
-        public async Task<IEnumerable<UserClient>> GetAllAsync()
+        public new async Task<IEnumerable<UserClient>> GetAllAsync()
         {
-            return await _context.UserClients.ToListAsync();
-        }
-
-        public async Task<UserClient> GetByUsernameAsync(string username) // Implementación
-        {
-            return await _context.UserClients.FirstOrDefaultAsync(uc => uc.Username == username);
+            return await this.Context.UserClients
+                .Include(uc => uc.UserCommunities)
+                .Include(uc => uc.FavoriteBooks) // ¡NUEVO! Incluir los libros favoritos
+                .ToListAsync();
         }
 
         public async Task AddAsync(UserClient userClient)
         {
-            await _context.UserClients.AddAsync(userClient);
-            
+            await this.Context.UserClients.AddAsync(userClient);
         }
 
         public async Task UpdateAsync(UserClient userClient)
         {
-            _context.UserClients.Update(userClient);
-            
+            this.Context.Entry(userClient).State = EntityState.Modified;
+            await Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(UserClient userClient)
         {
-            var userClientToDelete = await _context.UserClients.FirstOrDefaultAsync(uc => uc.Id == id);
-            if (userClientToDelete != null)
-            {
-                _context.UserClients.Remove(userClientToDelete);
-                
-            }
+            this.Context.UserClients.Remove(userClient);
+            await Task.CompletedTask;
+        }
+
+        public async Task<UserClient> GetByUsernameAsync(string username)
+        {
+            return await this.Context.UserClients
+                .Include(uc => uc.UserCommunities)
+                .Include(uc => uc.FavoriteBooks) // ¡NUEVO!
+                .FirstOrDefaultAsync(uc => uc.Username == username);
+        }
+
+        public async Task<UserClient> GetByEmailAsync(string email)
+        {
+            return await this.Context.UserClients
+                .Include(uc => uc.UserCommunities)
+                .Include(uc => uc.FavoriteBooks) // ¡NUEVO!
+                .FirstOrDefaultAsync(uc => uc.Email == email);
+        }
+
+        public async Task<bool> ExistsByUsernameAsync(string username)
+        {
+            return await this.Context.UserClients.AnyAsync(uc => uc.Username == username);
+        }
+
+        public async Task<bool> ExistsByEmailAsync(string email)
+        {
+            return await this.Context.UserClients.AnyAsync(uc => uc.Email == email);
         }
     }
 }

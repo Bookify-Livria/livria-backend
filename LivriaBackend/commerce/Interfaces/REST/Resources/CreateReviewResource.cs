@@ -3,8 +3,11 @@
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record CreateReviewResource(
-        [Required] int BookId,
-        [Required] int UserClientId, 
-        [Required] string Content
+        [Required(ErrorMessage = "EmptyField")]
+        int BookId,
+        [Required(ErrorMessage = "EmptyField")]
+        int UserClientId, 
+        [Required(ErrorMessage = "EmptyField")]
+        string Content
     );
 }

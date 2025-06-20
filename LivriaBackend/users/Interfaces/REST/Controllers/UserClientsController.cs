@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
+using LivriaBackend.commerce.Interfaces.REST.Resources;
 
 namespace LivriaBackend.users.Interfaces.REST.Controllers
 {
@@ -27,7 +29,8 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             _userClientQueryService = userClientQueryService;
             _mapper = mapper;
         }
-
+        
+        
         [HttpPost]
         public async Task<ActionResult<UserClientResource>> CreateUserClient([FromBody] CreateUserClientResource resource)
         {
@@ -106,6 +109,69 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             {
                 return StatusCode(500, "An unexpected error occurred while deleting the user client.");
             }
+        }
+        
+         [HttpPost("{userClientId}/favorites/{bookId}")]
+        public async Task<ActionResult<UserClientResource>> AddBookToFavorites(int userClientId, int bookId)
+        {
+            var command = new AddFavoriteBookCommand(userClientId, bookId);
+            try
+            {
+                var userClient = await _userClientCommandService.Handle(command);
+                var userClientResource = _mapper.Map<UserClientResource>(userClient);
+                return Ok(userClientResource); 
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message }); 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred: " + ex.Message });
+            }
+        }
+        
+        [HttpDelete("{userClientId}/favorites/{bookId}")]
+        public async Task<ActionResult<UserClientResource>> RemoveBookFromFavorites(int userClientId, int bookId)
+        {
+            var command = new RemoveFavoriteBookCommand(userClientId, bookId);
+            try
+            {
+                var userClient = await _userClientCommandService.Handle(command);
+                var userClientResource = _mapper.Map<UserClientResource>(userClient);
+                return Ok(userClientResource); // Devolver el UserClient actualizado
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message }); // No estaba en favoritos
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An unexpected error occurred: " + ex.Message });
+            }
+        }
+        
+        [HttpGet("{userClientId}/favorites")]
+        public async Task<ActionResult<IEnumerable<BookResource>>> GetUserFavoriteBooks(int userClientId)
+        {
+            var query = new GetUserClientByIdQuery(userClientId); // Reutilizamos la query de obtener UserClient
+            var userClient = await _userClientQueryService.Handle(query);
+
+            if (userClient == null)
+            {
+                return NotFound(new { message = $"UserClient with ID {userClientId} not found." });
+            }
+
+            var favoriteBookResources = _mapper.Map<IEnumerable<BookResource>>(userClient.FavoriteBooks);
+            return Ok(favoriteBookResources);
         }
     }
 }

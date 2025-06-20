@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marce\\RiderProjects\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj": {}
+    "C:\\Users\\marce\\Downloads\\gogogo\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marce\\RiderProjects\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj": {
+    "C:\\Users\\marce\\Downloads\\gogogo\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marce\\RiderProjects\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
+        "projectUniqueName": "C:\\Users\\marce\\Downloads\\gogogo\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
         "projectName": "LivriaBackend",
-        "projectPath": "C:\\Users\\marce\\RiderProjects\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
+        "projectPath": "C:\\Users\\marce\\Downloads\\gogogo\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
         "packagesPath": "C:\\Users\\marce\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marce\\RiderProjects\\LivriaBackend\\LivriaBackend\\obj\\",
+        "outputPath": "C:\\Users\\marce\\Downloads\\gogogo\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

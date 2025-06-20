@@ -83,7 +83,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             {
                 var userCommunity = await _userCommunityCommandService.Handle(command);
                 var userCommunityResource = _mapper.Map<UserCommunity, UserCommunityResource>(userCommunity);
-                return CreatedAtAction(nameof(JoinCommunity), userCommunityResource); // You might want to adjust the route parameter if needed.
+                return CreatedAtAction(nameof(JoinCommunity), userCommunityResource);
             }
             catch (ApplicationException ex)
             {

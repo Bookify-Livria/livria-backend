@@ -55,6 +55,10 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(uc => uc.Subscription).HasMaxLength(50);
                 entity.Ignore(uc => uc.Order); 
                 entity.HasBaseType<User>();
+                
+                entity.HasMany(uc => uc.FavoriteBooks)
+                    .WithMany() 
+                    .UsingEntity(j => j.ToTable("user_favorite_books"));
             });
 
             modelBuilder.Entity<UserAdmin>(entity =>

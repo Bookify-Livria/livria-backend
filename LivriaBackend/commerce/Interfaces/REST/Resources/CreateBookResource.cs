@@ -3,13 +3,32 @@
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     public record CreateBookResource(
-        [Required] [StringLength(255)] string Title,
-        [StringLength(1000)] string Description,
-        [Required] [StringLength(100)] string Author,
-        [Required] [Range(0.01, 10000.00)] decimal Price, 
-        [Required] [Range(0, 10000)] int Stock,          
-        [StringLength(255)] string Cover,
-        [StringLength(50)] string Genre,
-        [StringLength(50)] string Language
+        [Required(ErrorMessage = "EmptyField")]
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        string Title,
+        
+        [StringLength(1000, ErrorMessage = "MaxLengthError")]
+        string Description,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        string Author,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        [Range(0.01, 10000.00, ErrorMessage = "RangeError")]
+        decimal Price,
+        
+        [Required(ErrorMessage = "EmptyField")]
+        [Range(0, 10000, ErrorMessage = "RangeError")]
+        int Stock,
+        
+        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        string Cover,
+        
+        [StringLength(50, ErrorMessage = "MaxLengthError")]
+        string Genre,
+        
+        [StringLength(50, ErrorMessage = "MaxLengthError")]
+        string Language
     );
 }

@@ -15,6 +15,9 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
 
         public ICollection<UserCommunity> UserCommunities { get; private set; } = new List<UserCommunity>();
 
+        private readonly List<Book> _favoriteBooks = new List<Book>();
+        public IReadOnlyCollection<Book> FavoriteBooks => _favoriteBooks.AsReadOnly();
+
 
         protected UserClient() : base()
         {
@@ -54,6 +57,28 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
                 {
                     UserCommunities.Remove(userCommunity);
                 }
+        }
+        
+        public void AddFavoriteBook(Book book)
+        {
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book));
+            }
+
+            if (!_favoriteBooks.Contains(book))
+            {
+                _favoriteBooks.Add(book);
+            }
+        }
+        
+        public void RemoveFavoriteBook(Book book)
+        {
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book));
+            }
+            _favoriteBooks.Remove(book);
         }
     }
 }

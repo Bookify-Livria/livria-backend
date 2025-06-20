@@ -16,6 +16,14 @@
         },
         "runtime": {
           "LivriaBackend.dll": {}
+        },
+        "resources": {
+          "en-us/LivriaBackend.resources.dll": {
+            "locale": "en-us"
+          },
+          "es-es/LivriaBackend.resources.dll": {
+            "locale": "es-es"
+          }
         }
       },
       "AutoMapper/12.0.1": {

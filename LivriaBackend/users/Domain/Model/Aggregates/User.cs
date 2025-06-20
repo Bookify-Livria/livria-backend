@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.OpenApi.MicrosoftExtensions;
 
 namespace LivriaBackend.users.Domain.Model.Aggregates
 {

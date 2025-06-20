@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "g4lKQY04skE=",
+  "dgSpecHash": "f8XzUpk+mnY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\marce\\RiderProjects\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
+  "projectFilePath": "C:\\Users\\marce\\Downloads\\gogogo\\livria-test-backend-main\\LivriaBackend\\LivriaBackend\\LivriaBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\marce\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\marce\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
