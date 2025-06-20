@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -29,6 +30,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary= "Crear una nueva orden.",
+            Description= "Crea una nueva orden en el sistema."
+        )]
         public async Task<ActionResult<OrderResource>> CreateOrder([FromBody] CreateOrderResource resource)
         {
             
@@ -54,6 +59,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de una orden en específico.",
+            Description= "Te muestra los datos de la orden que buscaste."
+        )]
         public async Task<ActionResult<OrderResource>> GetOrderById(int id)
         {
             var query = new GetOrderByIdQuery(id);
@@ -69,6 +78,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet("code/{code}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de una orden en específico por medio de su código.",
+            Description= "Te muestra los datos de la orden que buscaste por medio de su código."
+        )]
         public async Task<ActionResult<OrderResource>> GetOrderByCode(string code)
         {
             var query = new GetOrderByCodeQuery(code);
@@ -85,6 +98,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 
 
         [HttpGet("users/{userClientId}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de un usuario cliente en específico.",
+            Description= "Te muestra los datos del usuario cliente que buscaste."
+        )]
         public async Task<ActionResult<IEnumerable<OrderResource>>> GetOrdersByUserId(int userClientId)
         {
             var query = new GetOrdersByUserIdQuery(userClientId);

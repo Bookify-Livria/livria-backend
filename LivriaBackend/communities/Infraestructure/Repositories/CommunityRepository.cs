@@ -2,7 +2,7 @@
 using LivriaBackend.communities.Domain.Repositories;
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories;
-using Microsoft.EntityFrameworkCore; // Add this using directive
+using Microsoft.EntityFrameworkCore; 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

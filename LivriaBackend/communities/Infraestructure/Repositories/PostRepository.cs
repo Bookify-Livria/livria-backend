@@ -1,6 +1,6 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
 using LivriaBackend.communities.Domain.Repositories;
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; // For AppDbContext
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; 
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories; 
 
 namespace LivriaBackend.communities.Infrastructure.Repositories

@@ -19,7 +19,13 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         {
             return await this.Context.UserClients
                 .Include(uc => uc.UserCommunities)
+<<<<<<< HEAD
                 .Include(uc => uc.FavoriteBooks) // ¡NUEVO! Incluir los libros favoritos
+=======
+                .Include(uc => uc.FavoriteBooks)
+                .Include(uc => uc.Orders)
+                .ThenInclude(o => o.Items)
+>>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
                 .FirstOrDefaultAsync(uc => uc.Id == id);
         }
 
@@ -27,7 +33,13 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         {
             return await this.Context.UserClients
                 .Include(uc => uc.UserCommunities)
+<<<<<<< HEAD
                 .Include(uc => uc.FavoriteBooks) // ¡NUEVO! Incluir los libros favoritos
+=======
+                .Include(uc => uc.FavoriteBooks)
+                .Include(uc => uc.Orders)
+                .ThenInclude(o => o.Items)
+>>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
                 .ToListAsync();
         }
 
@@ -52,7 +64,13 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         {
             return await this.Context.UserClients
                 .Include(uc => uc.UserCommunities)
+<<<<<<< HEAD
                 .Include(uc => uc.FavoriteBooks) // ¡NUEVO!
+=======
+                .Include(uc => uc.FavoriteBooks)
+                .Include(uc => uc.Orders) 
+                .ThenInclude(o => o.Items)
+>>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
                 .FirstOrDefaultAsync(uc => uc.Username == username);
         }
 
@@ -60,7 +78,13 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         {
             return await this.Context.UserClients
                 .Include(uc => uc.UserCommunities)
+<<<<<<< HEAD
                 .Include(uc => uc.FavoriteBooks) // ¡NUEVO!
+=======
+                .Include(uc => uc.FavoriteBooks) 
+                .Include(uc => uc.Orders) 
+                .ThenInclude(o => o.Items)
+>>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
                 .FirstOrDefaultAsync(uc => uc.Email == email);
         }
 

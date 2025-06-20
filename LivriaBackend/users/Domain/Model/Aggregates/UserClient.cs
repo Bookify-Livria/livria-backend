@@ -1,4 +1,4 @@
-﻿using LivriaBackend.commerce.Domain.Model.Aggregates;
+﻿using LivriaBackend.commerce.Domain.Model.Aggregates; 
 using LivriaBackend.communities.Domain.Model.Aggregates;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,10 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         public string Icon { get; private set; }
         public string Phrase { get; private set; }
         public string Subscription { get; private set; }
-        public List<int> Order { get; private set; }
+
+        
+        
+        public ICollection<Order> Orders { get; private set; } = new List<Order>();
 
         public ICollection<UserCommunity> UserCommunities { get; private set; } = new List<UserCommunity>();
 
@@ -21,6 +24,8 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
 
         protected UserClient() : base()
         {
+            
+            Orders = new List<Order>(); 
             UserCommunities = new List<UserCommunity>();
         }
 
@@ -30,7 +35,7 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
             Icon = icon;
             Phrase = phrase;
             Subscription = subscription;
-            Order = new List<int>();
+            Orders = new List<Order>();
             UserCommunities = new List<UserCommunity>();
         }
 

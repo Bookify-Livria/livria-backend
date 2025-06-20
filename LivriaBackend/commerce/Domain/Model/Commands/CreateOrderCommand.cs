@@ -1,4 +1,4 @@
-﻿using LivriaBackend.commerce.Domain.Model.ValueObjects; // Para Shipping (en el comando)
+﻿using LivriaBackend.commerce.Domain.Model.ValueObjects; 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

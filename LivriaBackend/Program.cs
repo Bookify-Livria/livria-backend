@@ -144,6 +144,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.EnableAnnotations();
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Livria API",
@@ -194,7 +195,7 @@ using (var scope = app.Services.CreateScope())
         }
         else
         {
-            Console.WriteLine("UserAdmin por defecto (ID 0) ya existe en la base de datos.");
+            Console.WriteLine("UserAdmin por defecto (ID 1) ya existe en la base de datos.");
         }
     }
     catch (Exception ex)

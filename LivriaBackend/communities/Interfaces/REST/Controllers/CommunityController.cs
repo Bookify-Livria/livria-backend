@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.communities.Interfaces.REST.Controllers
 {
@@ -34,6 +35,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
 
  
         [HttpPost]
+        [SwaggerOperation(
+            Summary= "Crear una nueva comunidad.",
+            Description= "Crea una nueva comunidad en el sistema."
+        )]
         public async Task<ActionResult<CommunityResource>> CreateCommunity([FromBody] CreateCommunityResource resource)
         {
             var command = _mapper.Map<CreateCommunityResource, CreateCommunityCommand>(resource);
@@ -50,6 +55,11 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
 
   
         [HttpGet]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de todas las comunidades.",
+            Description= "Te muestra los datos de las comunidades."
+            
+        )]
         public async Task<ActionResult<IEnumerable<CommunityResource>>> GetAllCommunities()
         {
             var query = new GetAllCommunitiesQuery();
@@ -60,6 +70,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
 
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de una comunidad en específico.",
+            Description= "Te muestra los datos de la comunidad que buscaste."
+        )]
         public async Task<ActionResult<CommunityResource>> GetCommunityById(int id)
         {
             var query = new GetCommunityByIdQuery(id);
@@ -76,6 +90,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
 
 
         [HttpPost("join")]
+        [SwaggerOperation(
+            Summary= "Unirse una comunidad existente.",
+            Description= "El userclient puede unirse a una comunidad existente."
+        )]
         public async Task<ActionResult<UserCommunityResource>> JoinCommunity([FromBody] JoinCommunityResource resource)
         {
             var command = _mapper.Map<JoinCommunityResource, JoinCommunityCommand>(resource);

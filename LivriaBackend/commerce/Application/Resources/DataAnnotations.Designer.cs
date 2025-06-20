@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LivriaBackend.Shared.Resources {
+namespace LivriaBackend.commerce.Application.Resources {
     using System;
     
     
@@ -21,14 +21,14 @@ namespace LivriaBackend.Shared.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SharedResource {
+    internal class DataAnnotations {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SharedResource() {
+        internal DataAnnotations() {
         }
         
         /// <summary>
@@ -38,7 +38,7 @@ namespace LivriaBackend.Shared.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LivriaBackend.Shared.Resources.SharedResource", typeof(SharedResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LivriaBackend.users.Application.Resources.DataAnnotations", typeof(DataAnnotations).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -60,29 +60,7 @@ namespace LivriaBackend.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Date not in range: {0} [{1}-Today]..
-        /// </summary>
-        internal static string DateNotInRange {
-            get {
-                return ResourceManager.GetString("DateNotInRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Date out of range: {0} [{1}-{2}]..
-        /// </summary>
-        internal static string DateOutOfRange {
-            get {
-                return ResourceManager.GetString("DateOutOfRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-<<<<<<< HEAD
-        ///   Looks up a localized string similar to Email error: {0}..
-=======
-        ///   Looks up a localized string similar to .
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
+        ///   Looks up a localized string similar to The email address is invalid: {0}..
         /// </summary>
         internal static string EmailError {
             get {
@@ -91,64 +69,11 @@ namespace LivriaBackend.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Field is required: {0}..
-        /// </summary>
-        internal static string EmptyField {
-            get {
-                return ResourceManager.GetString("EmptyField", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Length error: {0} [{2}-{1}]..
-        /// </summary>
-        internal static string LengthError {
-            get {
-                return ResourceManager.GetString("LengthError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Max length error: {0} [{1}]..
-        /// </summary>
-        internal static string MaxLengthError {
-            get {
-                return ResourceManager.GetString("MaxLengthError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-<<<<<<< HEAD
         ///   Looks up a localized string similar to Must be a phone number: {0}..
         /// </summary>
         internal static string PhoneError {
             get {
                 return ResourceManager.GetString("PhoneError", resourceCulture);
-=======
-        ///   Looks up a localized string similar to Minimum value error: {0} [{1}].
-        /// </summary>
-        internal static string MinimumValueError {
-            get {
-                return ResourceManager.GetString("MinimumValueError", resourceCulture);
->>>>>>> 7e68f3afcd0d91417be42b8698d95f516548843d
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Must be in range: {0} [{1}-{2}]..
-        /// </summary>
-        internal static string RangeError {
-            get {
-                return ResourceManager.GetString("RangeError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Must be an URL: {0}..
-        /// </summary>
-        internal static string UrlError {
-            get {
-                return ResourceManager.GetString("UrlError", resourceCulture);
             }
         }
     }

@@ -19,7 +19,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         {
             return await this.Context.Orders
                 .Include(o => o.Items) 
-                // .ThenInclude(oi => oi.Book) 
+                
                 .Include(o => o.UserClient) 
                 .Include(o => o.Shipping)   
                 .FirstOrDefaultAsync(o => o.Id == id);

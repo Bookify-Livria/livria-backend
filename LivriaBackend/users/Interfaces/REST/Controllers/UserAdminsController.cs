@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.users.Interfaces.REST.Controllers
 {
@@ -30,6 +31,11 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
 
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary= "Obtener los datos del usuario administrador.",
+            Description= "Te muestra los datos del usuario administrador."
+            
+        )]
         public async Task<ActionResult<IEnumerable<UserAdminResource>>> GetAllUserAdmins()
         {
             var query = new GetAllUserAdminQuery();
@@ -40,6 +46,10 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
 
 
         [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary= "Actualizar los datos del UserAdmin.",
+            Description= "Te permite modificar los datos del UserAdmin."
+        )]
         public async Task<ActionResult<UserAdminResource>> UpdateUserAdmin(int id, [FromBody] UpdateUserAdminResource resource)
         {
             var command = new UpdateUserAdminCommand(

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -28,6 +29,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary= "Crear un nuevo carrito.",
+            Description= "Crea un nuevo carrito en el sistema."
+        )]
         public async Task<ActionResult<CartItemResource>> CreateCartItem([FromBody] CreateCartItemResource resource)
         {
             var command = _mapper.Map<CreateCartItemCommand>(resource);
@@ -43,15 +48,13 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<CartItemResource>> UpdateCartItem(int id, [FromBody] UpdateCartItemQuantityResource resource)
-        {
-           
-            return NotFound("Endpoint not fully implemented without authentication context. Please provide UserClientId."); 
-        }
 
 
         [HttpPut("{id}/users/{userClientId}")]
+        [SwaggerOperation(
+            Summary= "Actualizar la cantidad de libros de un carrito existente.",
+            Description= "Te permite modificar la cantidad de libros de un carrito previamente creado."
+        )]
         public async Task<ActionResult<CartItemResource>> UpdateCartItemQuantity(int id, int userClientId, [FromBody] UpdateCartItemQuantityResource resource)
         {
             var command = new UpdateCartItemQuantityCommand(id, resource.NewQuantity, userClientId);
@@ -73,6 +76,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 
 
         [HttpDelete("{id}/users/{userClientId}")]
+        [SwaggerOperation(
+            Summary= "Eliminar un carrito de un UserClient previamente creado.",
+            Description= "Elimina un carrito de un UserClient del sistema."
+        )]
         public async Task<IActionResult> RemoveCartItem(int id, int userClientId)
         {
             var command = new RemoveCartItemCommand(id, userClientId);
@@ -92,6 +99,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet("{id}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos de un libro perteneciente a un carrito en específico.",
+            Description= "Te muestra los datos de un libro perteneciente al carrito que buscaste."
+        )]
         public async Task<ActionResult<CartItemResource>> GetCartItemById(int id)
         {
             var query = new GetCartItemByIdQuery(id);
@@ -107,6 +118,10 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet("users/{userClientId}")]
+        [SwaggerOperation(
+            Summary= "Obtener los datos del carrito del usuario especificado.",
+            Description= "Te muestra los datos del carrito del usuario especificado."
+        )]
         public async Task<ActionResult<IEnumerable<CartItemResource>>> GetCartItemsByUserId(int userClientId)
         {
             var query = new GetAllCartItemsByUserIdQuery(userClientId);
