@@ -1,0 +1,1 @@
+﻿namespace LivriaBackend.Shared.Resources;
