@@ -1,5 +1,5 @@
-﻿using LivriaBackend.commerce.Domain.Model.Aggregates; 
-using LivriaBackend.users.Domain.Model.Aggregates; 
+﻿using LivriaBackend.commerce.Domain.Model.Aggregates; // Para Book
+using LivriaBackend.users.Domain.Model.Aggregates; // Para UserClient
 
 namespace LivriaBackend.commerce.Domain.Model.Entities
 {

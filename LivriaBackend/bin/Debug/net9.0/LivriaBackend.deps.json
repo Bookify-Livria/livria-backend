@@ -12,8 +12,7 @@
           "Microsoft.AspNetCore.OpenApi": "9.0.5",
           "Microsoft.EntityFrameworkCore": "9.0.5",
           "MySql.EntityFrameworkCore": "9.0.3",
-          "Swashbuckle.AspNetCore": "8.1.4",
-          "Swashbuckle.AspNetCore.Annotations": "9.0.1"
+          "Swashbuckle.AspNetCore": "8.1.4"
         },
         "runtime": {
           "LivriaBackend.dll": {}
@@ -321,41 +320,30 @@
       "Swashbuckle.AspNetCore/8.1.4": {
         "dependencies": {
           "Microsoft.Extensions.ApiDescription.Server": "6.0.5",
-          "Swashbuckle.AspNetCore.Swagger": "9.0.1",
-          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.1",
+          "Swashbuckle.AspNetCore.Swagger": "8.1.4",
+          "Swashbuckle.AspNetCore.SwaggerGen": "8.1.4",
           "Swashbuckle.AspNetCore.SwaggerUI": "8.1.4"
         }
       },
-      "Swashbuckle.AspNetCore.Annotations/9.0.1": {
-        "dependencies": {
-          "Swashbuckle.AspNetCore.SwaggerGen": "9.0.1"
-        },
-        "runtime": {
-          "lib/net9.0/Swashbuckle.AspNetCore.Annotations.dll": {
-            "assemblyVersion": "9.0.1.0",
-            "fileVersion": "9.0.1.1541"
-          }
-        }
-      },
-      "Swashbuckle.AspNetCore.Swagger/9.0.1": {
+      "Swashbuckle.AspNetCore.Swagger/8.1.4": {
         "dependencies": {
           "Microsoft.OpenApi": "1.6.23"
         },
         "runtime": {
           "lib/net9.0/Swashbuckle.AspNetCore.Swagger.dll": {
-            "assemblyVersion": "9.0.1.0",
-            "fileVersion": "9.0.1.1541"
+            "assemblyVersion": "8.1.4.0",
+            "fileVersion": "8.1.4.1479"
           }
         }
       },
-      "Swashbuckle.AspNetCore.SwaggerGen/9.0.1": {
+      "Swashbuckle.AspNetCore.SwaggerGen/8.1.4": {
         "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "9.0.1"
+          "Swashbuckle.AspNetCore.Swagger": "8.1.4"
         },
         "runtime": {
           "lib/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {
-            "assemblyVersion": "9.0.1.0",
-            "fileVersion": "9.0.1.1541"
+            "assemblyVersion": "8.1.4.0",
+            "fileVersion": "8.1.4.1479"
           }
         }
       },
@@ -693,26 +681,19 @@
       "path": "swashbuckle.aspnetcore/8.1.4",
       "hashPath": "swashbuckle.aspnetcore.8.1.4.nupkg.sha512"
     },
-    "Swashbuckle.AspNetCore.Annotations/9.0.1": {
+    "Swashbuckle.AspNetCore.Swagger/8.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-TANd+yRHl99IPUWGcifwP+FbK48Lx7rrTqd21z/7GaduUdiKFF7/uUs85dC8Tdll70erb2s1eDsvItnt83Qz2A==",
-      "path": "swashbuckle.aspnetcore.annotations/9.0.1",
-      "hashPath": "swashbuckle.aspnetcore.annotations.9.0.1.nupkg.sha512"
+      "sha512": "sha512-w83aYEBJYNa6ZYomziwZWwXhqQPLKhZH0n8MzqqNhF1ElCGBKm71kd7W6pgIr/yu0i6ymQzrZUFSZLdvH1kY5w==",
+      "path": "swashbuckle.aspnetcore.swagger/8.1.4",
+      "hashPath": "swashbuckle.aspnetcore.swagger.8.1.4.nupkg.sha512"
     },
-    "Swashbuckle.AspNetCore.Swagger/9.0.1": {
+    "Swashbuckle.AspNetCore.SwaggerGen/8.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4/9tBsbeCN+ewwqjEBPq3BszNE9tOvA1iDogwT7qW7L0Uh942IozhtF9VaICD70XyZIlKNiHjc2Vt5QE09P4nw==",
-      "path": "swashbuckle.aspnetcore.swagger/9.0.1",
-      "hashPath": "swashbuckle.aspnetcore.swagger.9.0.1.nupkg.sha512"
-    },
-    "Swashbuckle.AspNetCore.SwaggerGen/9.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Za5w1NfLMF0Tt4GTgC491wfmuuMwNw8A5nwZuytpBd4UXYZxkwNJa3QnRYGbUQD9MjLzQCYnKc8rMrr5LglW6A==",
-      "path": "swashbuckle.aspnetcore.swaggergen/9.0.1",
-      "hashPath": "swashbuckle.aspnetcore.swaggergen.9.0.1.nupkg.sha512"
+      "sha512": "sha512-aBwO2MF1HHAaWgdBwX8tlSqxycOKTKmCT6pEpb0oSY1pn7mUdmzJvHZA0HxWx9nfmKP0eOGQcLC9ZnN/MuehRQ==",
+      "path": "swashbuckle.aspnetcore.swaggergen/8.1.4",
+      "hashPath": "swashbuckle.aspnetcore.swaggergen.8.1.4.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore.SwaggerUI/8.1.4": {
       "type": "package",

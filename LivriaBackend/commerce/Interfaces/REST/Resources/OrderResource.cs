@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System; 
 
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
@@ -28,7 +27,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         
         [DataType(DataType.DateTime)]
         [Range(typeof(DateTime), "1/1/1900", "12/12/3000", ErrorMessage = "DateOutOfRange")]
-        DateTime Date, 
+        string Date, 
         
         IEnumerable<OrderItemResource> Items
     );

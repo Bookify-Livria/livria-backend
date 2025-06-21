@@ -12,10 +12,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         string Username, 
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]
-        string Content,
-        
-        int Stars
-        
-        
+        string Content
     );
 }

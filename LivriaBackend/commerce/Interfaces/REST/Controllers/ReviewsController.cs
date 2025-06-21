@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -33,10 +32,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpPost]
-        [SwaggerOperation(
-            Summary= "Crear una nueva review.",
-            Description= "Crea una nueva review en el sistema."
-        )]
         public async Task<ActionResult<ReviewResource>> CreateReview([FromBody] CreateReviewResource resource)
         {
             var createCommand = _mapper.Map<CreateReviewCommand>(resource);
@@ -56,11 +51,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet]
-        [SwaggerOperation(
-            Summary= "Obtener los datos de todas las recomendaciones.",
-            Description= "Te muestra los datos de las recomendaciones."
-            
-        )]
         public async Task<ActionResult<IEnumerable<ReviewResource>>> GetAllReviews()
         {
             var query = new GetAllReviewsQuery();
@@ -70,10 +60,6 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         }
 
         [HttpGet("{id}")]
-        [SwaggerOperation(
-            Summary= "Obtener los datos de una review en específico.",
-            Description= "Te muestra los datos de la review que buscaste."
-        )]
         public async Task<ActionResult<ReviewResource>> GetReviewById(int id)
         {
             var query = new GetReviewByIdQuery(id);
