@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LivriaBackend.users.Application.Resources;
+using LivriaBackend.users.Application.Resources; 
 
 namespace LivriaBackend.users.Interfaces.REST.Resources
 {
@@ -22,11 +22,11 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
         string Password,
 
         [Url(ErrorMessage = "UrlError")]
-        string Icon,
+        string Icon, 
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]
-        string Phrase,
+        string Phrase 
         
-        string Subscription
+        
     );
 }

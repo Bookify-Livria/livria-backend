@@ -10,7 +10,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Resources
         [StringLength(500, ErrorMessage = "MaxLengthError")]
         string Content,
         
-        /* [Url(ErrorMessage = "UrlError")] */
+        [Url(ErrorMessage = "UrlError")]
         string Img
     );
 }

@@ -16,9 +16,10 @@ namespace LivriaBackend.communities.Interfaces.REST.Resources
         [StringLength(50, ErrorMessage = "MaxLengthError")]
         string Type,
         
-        /* [Url(ErrorMessage = "UrlError")] */
+        [Url(ErrorMessage = "UrlError")]
         string Image,
         
+        [Url(ErrorMessage = "UrlError")]
         string Banner,
         
         IEnumerable<PostResource> Posts 

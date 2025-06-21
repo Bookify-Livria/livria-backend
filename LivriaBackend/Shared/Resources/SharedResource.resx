@@ -21,9 +21,6 @@
     <data name="DateNotInRange" xml:space="preserve">
         <value>Date not in range: {0} [{1}-Today].</value>
     </data>
-    <data name="EmailError" xml:space="preserve">
-        <value>Email error: {0}.</value>
-    </data>
     <data name="EmptyField" xml:space="preserve">
         <value>Field is required: {0}.</value>
     </data>
@@ -36,13 +33,16 @@
     <data name="UrlError" xml:space="preserve">
         <value>Must be an URL: {0}.</value>
     </data>
-    <data name="PhoneError" xml:space="preserve">
-        <value>Must be a phone number: {0}.</value>
-    </data>
     <data name="RangeError" xml:space="preserve">
         <value>Must be in range: {0} [{1}-{2}].</value>
     </data>
     <data name="DateOutOfRange" xml:space="preserve">
         <value>Date out of range: {0} [{1}-{2}].</value>
+    </data>
+    <data name="MinimumValueError" xml:space="preserve">
+        <value>Minimum value error: {0} [{1}]</value>
+    </data>
+    <data name="EmailError" xml:space="preserve">
+        <value />
     </data>
 </root>

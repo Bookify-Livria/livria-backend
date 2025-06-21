@@ -67,5 +67,14 @@ namespace LivriaBackend.users.Application.Resources {
                 return ResourceManager.GetString("EmailError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Must be a phone number: {0}..
+        /// </summary>
+        internal static string PhoneError {
+            get {
+                return ResourceManager.GetString("PhoneError", resourceCulture);
+            }
+        }
     }
 }

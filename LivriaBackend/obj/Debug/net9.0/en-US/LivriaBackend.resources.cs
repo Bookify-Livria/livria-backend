@@ -17,7 +17,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyProductAttribute("LivriaBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LivriaBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyCultureAttribute("en-us")]
+[assembly: System.Reflection.AssemblyCultureAttribute("en-US")]
 
 // Generado por la clase WriteCodeFragment de MSBuild.
 

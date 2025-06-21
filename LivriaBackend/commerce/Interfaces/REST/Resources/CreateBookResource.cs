@@ -16,13 +16,14 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         
         [Required(ErrorMessage = "EmptyField")]
         [Range(0.01, 10000.00, ErrorMessage = "RangeError")]
-        decimal Price,
+        decimal SalePrice,
         
         [Required(ErrorMessage = "EmptyField")]
-        [Range(0, 10000, ErrorMessage = "RangeError")]
+        [Range(1, 10000, ErrorMessage = "RangeError")]
         int Stock,
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]
+        [Url(ErrorMessage = "UrlError")]
         string Cover,
         
         [StringLength(50, ErrorMessage = "MaxLengthError")]

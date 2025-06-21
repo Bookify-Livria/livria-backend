@@ -1,7 +1,7 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
-using LivriaBackend.commerce.Domain.Model.Aggregates; // Para Book y Order
-using LivriaBackend.commerce.Domain.Model.Entities;    // Para Review, CartItem, OrderItem
-using LivriaBackend.commerce.Domain.Model.ValueObjects; // Para Shipping
+using LivriaBackend.commerce.Domain.Model.Aggregates; 
+using LivriaBackend.commerce.Domain.Model.Entities;    
+using LivriaBackend.commerce.Domain.Model.ValueObjects; 
 using LivriaBackend.users.Domain.Model.Aggregates;
 using LivriaBackend.notifications.Domain.Model.Aggregates;
 using LivriaBackend.notifications.Domain.Model.ValueObjects;
@@ -10,27 +10,54 @@ using System;
 
 namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
 {
+    /// <summary>
+    /// Representa el contexto de la base de datos para la aplicación LivriaBackend.
+    /// Hereda de <see cref="DbContext"/> y es responsable de la configuración del modelo de datos
+    /// y la interacción con la base de datos utilizando Entity Framework Core.
+    /// </summary>
     public class AppDbContext : DbContext
     {
+        /// <summary>Representa la colección de libros en la base de datos.</summary>
         public DbSet<Book> Books { get; set; }
+        /// <summary>Representa la colección de reseñas de libros en la base de datos.</summary>
         public DbSet<Review> Reviews { get; set; }
+        /// <summary>Representa la colección de ítems en los carritos de compra en la base de datos.</summary>
         public DbSet<CartItem> CartItems { get; set; }
+        /// <summary>Representa la colección de órdenes de compra en la base de datos.</summary>
         public DbSet<Order> Orders { get; set; } 
+        /// <summary>Representa la colección de ítems dentro de las órdenes de compra en la base de datos.</summary>
         public DbSet<OrderItem> OrderItems { get; set; } 
 
+        /// <summary>Representa la colección de usuarios base en la base de datos.</summary>
         public DbSet<User> Users { get; set; }
+        /// <summary>Representa la colección de clientes de usuario en la base de datos.</summary>
         public DbSet<UserClient> UserClients { get; set; }
+        /// <summary>Representa la colección de administradores de usuario en la base de datos.</summary>
         public DbSet<UserAdmin> UserAdmins { get; set; }
 
+        /// <summary>Representa la colección de comunidades en la base de datos.</summary>
         public DbSet<Community> Communities { get; set; }
+        /// <summary>Representa la colección de publicaciones en las comunidades en la base de datos.</summary>
         public DbSet<Post> Posts { get; set; }
+        /// <summary>Representa la tabla de unión entre usuarios clientes y comunidades en la base de datos.</summary>
         public DbSet<UserCommunity> UserCommunities { get; set; }
+        
+        /// <summary>Representa la colección de notificaciones en la base de datos.</summary>
         public DbSet<Notification> Notifications { get; set; }
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="AppDbContext"/>.
+        /// </summary>
+        /// <param name="options">Las opciones de configuración para este contexto de base de datos.</param>
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
+        /// <summary>
+        /// Configura el modelo de datos que se utilizará para crear el esquema de la base de datos.
+        /// Este método se llama una vez cuando se crea la instancia del contexto.
+        /// </summary>
+        /// <param name="modelBuilder">El constructor de modelos que se utiliza para configurar el modelo de la base de datos.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -53,8 +80,21 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(uc => uc.Icon).HasMaxLength(255);
                 entity.Property(uc => uc.Phrase).HasMaxLength(255);
                 entity.Property(uc => uc.Subscription).HasMaxLength(50);
-                entity.Ignore(uc => uc.Order); 
+                
+                
+                
                 entity.HasBaseType<User>();
+                
+                entity.HasMany(uc => uc.FavoriteBooks)
+                    .WithMany() 
+                    .UsingEntity(j => j.ToTable("user_favorite_books"));
+
+                
+                entity.HasMany(uc => uc.Orders) 
+                    .WithOne(o => o.UserClient) 
+                    .HasForeignKey(o => o.UserClientId) 
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Restrict); 
             });
 
             modelBuilder.Entity<UserAdmin>(entity =>
@@ -73,7 +113,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(b => b.Title).IsRequired().HasMaxLength(255);
                 entity.Property(b => b.Description).HasMaxLength(1000);
                 entity.Property(b => b.Author).IsRequired().HasMaxLength(100);
-                entity.Property(b => b.Price).IsRequired().HasColumnType("decimal(10, 2)");
+                entity.Property(b => b.SalePrice).IsRequired().HasColumnType("decimal(10, 2)");
                 entity.Property(b => b.Stock).IsRequired();
                 entity.Property(b => b.Cover).HasMaxLength(255);
                 entity.Property(b => b.Genre).HasMaxLength(50);
@@ -142,15 +182,17 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasIndex(o => o.Code).IsUnique(); 
 
                 entity.Property(o => o.UserClientId).IsRequired();
-                entity.HasOne(o => o.UserClient)
-                      .WithMany() 
-                      .HasForeignKey(o => o.UserClientId)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Restrict); 
+                entity.HasOne(o => o.UserClient) 
+                    .WithMany(uc => uc.Orders) 
+                    .HasForeignKey(o => o.UserClientId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Restrict); 
 
                 entity.Property(o => o.UserEmail).IsRequired().HasMaxLength(100);
                 entity.Property(o => o.UserPhone).IsRequired().HasMaxLength(20);
                 entity.Property(o => o.UserFullName).IsRequired().HasMaxLength(255);
+                entity.Property(o => o.RecipientName).IsRequired().HasMaxLength(255);
+                entity.Property(o => o.Status).IsRequired().HasMaxLength(255);
                 entity.Property(o => o.IsDelivery).IsRequired();
                 entity.Property(o => o.Total).IsRequired().HasColumnType("decimal(10, 2)");
                 entity.Property(o => o.Date).IsRequired();
@@ -184,7 +226,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(oi => oi.BookTitle).IsRequired().HasMaxLength(255);
                 entity.Property(oi => oi.BookAuthor).IsRequired().HasMaxLength(100);
                 entity.Property(oi => oi.BookPrice).IsRequired().HasColumnType("decimal(10, 2)");
-                entity.Property(oi => oi.BookCover).HasMaxLength(255); // Puede ser nulo
+                entity.Property(oi => oi.BookCover).HasMaxLength(255); 
 
                 entity.Property(oi => oi.Quantity).IsRequired();
                 entity.Property(oi => oi.ItemTotal).IsRequired().HasColumnType("decimal(10, 2)");
@@ -263,7 +305,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasKey(n => n.Id);
                 entity.Property(n => n.Id).IsRequired().ValueGeneratedOnAdd();
 
-                entity.Property(n => n.Date).IsRequired();
+                entity.Property(n => n.CreatedAt).IsRequired();
                 entity.Property(n => n.Title).IsRequired().HasMaxLength(100);
                 entity.Property(n => n.Content).IsRequired().HasMaxLength(500);
 

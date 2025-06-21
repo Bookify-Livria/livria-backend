@@ -43,6 +43,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
+using Microsoft.AspNetCore.Diagnostics; 
+using System.Text.Json; 
+using LivriaBackend.Shared.ErrorHandling; 
+using Microsoft.AspNetCore.Http; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -119,6 +123,7 @@ builder.Services.AddScoped<ICartItemQueryService, CartItemQueryService>();
 builder.Services.AddScoped<IOrderCommandService, OrderCommandService>();
 builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
 
+builder.Services.AddScoped<IRecommendationQueryService, RecommendationQueryService>();
 
 
 builder.Services.AddAutoMapper(
@@ -143,6 +148,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.EnableAnnotations();
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Livria API",
@@ -193,7 +199,7 @@ using (var scope = app.Services.CreateScope())
         }
         else
         {
-            Console.WriteLine("UserAdmin por defecto (ID 0) ya existe en la base de datos.");
+            Console.WriteLine("UserAdmin por defecto (ID 1) ya existe en la base de datos.");
         }
     }
     catch (Exception ex)
@@ -204,7 +210,64 @@ using (var scope = app.Services.CreateScope())
 }
 
 
+app.UseExceptionHandler(appBuilder =>
+{
+    appBuilder.Run(async context =>
+    {
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        var exception = exceptionHandlerPathFeature?.Error;
 
+        if (exception is ArgumentException argEx && argEx.ParamName == "language")
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest; 
+            context.Response.ContentType = "application/json";
+
+            var errorResponse = new ErrorResponse
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Validation Error",
+                Detail = argEx.Message, 
+                TraceId = context.TraceIdentifier
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+        }
+        else if (exception is ArgumentException genreEx && genreEx.ParamName == "genre")
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest; // 400 Bad Request
+            context.Response.ContentType = "application/json";
+
+            var errorResponse = new ErrorResponse
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Validation Error",
+                // The message from the Book class already lists the allowed genres
+                Detail = genreEx.Message.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)[0],
+                TraceId = context.TraceIdentifier
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+        }
+        else
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError; 
+            context.Response.ContentType = "application/json";
+
+            var errorResponse = new ErrorResponse
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "An error occurred",
+                Detail = "An unexpected error occurred. Please try again later.",
+                TraceId = context.TraceIdentifier
+            };
+            
+            var logger = appBuilder.ApplicationServices.GetRequiredService<ILogger<Program>>();
+            logger.LogError(exception, "An unhandled exception occurred.");
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+        }
+    });
+});
 
 if (app.Environment.IsDevelopment())
 {

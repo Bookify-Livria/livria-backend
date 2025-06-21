@@ -7,9 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.users.Interfaces.REST.Controllers
 {
+    /// <summary>
+    /// Controlador RESTful para la gestión de administradores de usuario.
+    /// Expone endpoints para operaciones relacionadas con <see cref="UserAdmin"/>, como
+    /// obtener todos los administradores y actualizar un administrador existente.
+    /// </summary>
     [ApiController]
     [Route("api/v1/useradmins")]
     public class UserAdminsController : ControllerBase
@@ -18,6 +24,12 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         private readonly IUserAdminQueryService _userAdminQueryService;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase <see cref="UserAdminsController"/>.
+        /// </summary>
+        /// <param name="userAdminCommandService">El servicio de comandos para administradores de usuario.</param>
+        /// <param name="userAdminQueryService">El servicio de consultas para administradores de usuario.</param>
+        /// <param name="mapper">La instancia de AutoMapper para el mapeo entre objetos.</param>
         public UserAdminsController(
             IUserAdminCommandService userAdminCommandService,
             IUserAdminQueryService userAdminQueryService,
@@ -28,8 +40,20 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             _mapper = mapper;
         }
 
-
+        /// <summary>
+        /// Obtiene todos los administradores de usuario del sistema.
+        /// </summary>
+        /// <returns>
+        /// Una acción de resultado HTTP que contiene una colección de <see cref="UserAdminResource"/>
+        /// si la operación fue exitosa (código 200 OK).
+        /// </returns>
         [HttpGet]
+        [SwaggerOperation(
+            Summary= "Obtener los datos del usuario administrador.",
+            Description= "Te muestra los datos del usuario administrador."
+            
+        )]
+        [ProducesResponseType(typeof(IEnumerable<UserAdminResource>), 200)]
         public async Task<ActionResult<IEnumerable<UserAdminResource>>> GetAllUserAdmins()
         {
             var query = new GetAllUserAdminQuery();
@@ -38,8 +62,25 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             return Ok(userAdminResources);
         }
 
-
+        /// <summary>
+        /// Actualiza los datos de un administrador de usuario existente.
+        /// </summary>
+        /// <param name="id">El identificador único del administrador de usuario a actualizar.</param>
+        /// <param name="resource">Los datos actualizados del administrador de usuario en formato <see cref="UpdateUserAdminResource"/>.</param>
+        /// <returns>
+        /// Una acción de resultado HTTP que contiene el <see cref="UserAdminResource"/> actualizado
+        /// si la operación fue exitosa (código 200 OK).
+        /// Retorna 400 Bad Request si la solicitud es inválida o el administrador no se encuentra.
+        /// Retorna 500 Internal Server Error si ocurre un error inesperado.
+        /// </returns>
         [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary= "Actualizar los datos del UserAdmin.",
+            Description= "Te permite modificar los datos del UserAdmin."
+        )]
+        [ProducesResponseType(typeof(UserAdminResource), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         public async Task<ActionResult<UserAdminResource>> UpdateUserAdmin(int id, [FromBody] UpdateUserAdminResource resource)
         {
             var command = new UpdateUserAdminCommand(
@@ -67,6 +108,5 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
                 return StatusCode(500, "An unexpected error occurred while updating the user admin.");
             }
         }
-
     }
 }

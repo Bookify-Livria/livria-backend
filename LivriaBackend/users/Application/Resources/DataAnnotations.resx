@@ -21,4 +21,7 @@
     <data name="EmailError" xml:space="preserve">
         <value>The email address is invalid: {0}.</value>
     </data>
+    <data name="PhoneError" xml:space="preserve">
+        <value>Must be a phone number: {0}.</value>
+    </data>
 </root>
