@@ -16,9 +16,9 @@ namespace LivriaBackend.communities.Interfaces.REST.Resources
         CommunityType Type, 
         
         [Url(ErrorMessage = "UrlError")]
-        string? Image, // ¡Hecho nullable para coincidir con el constructor de la entidad!
+        string? Image, 
         
         [Url(ErrorMessage = "UrlError")]
-        string? Banner // ¡Hecho nullable para coincidir con el constructor de la entidad!
+        string? Banner 
     );
 }

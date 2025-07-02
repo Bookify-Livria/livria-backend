@@ -5,7 +5,7 @@ namespace LivriaBackend.communities.Domain.Model.Commands
     public record CreateCommunityCommand(
         string Name,
         string Description,
-        CommunityType Type, // ¡Modificado a CommunityType!
+        CommunityType Type, 
         string Image, 
         string Banner 
     );

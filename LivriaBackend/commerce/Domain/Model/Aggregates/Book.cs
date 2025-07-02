@@ -59,7 +59,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
 
         private static readonly HashSet<string> AllowedGenres = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "literatura", "noficcion", "mangasycomics", "juvenil", "infantil", "ebooks"
+            "literature", "non_fiction", "fiction", "mangas_comics", "juvenile", "children", "ebooks_audiobooks"
         };
 
         /// <summary>

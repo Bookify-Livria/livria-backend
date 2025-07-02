@@ -36,7 +36,7 @@ namespace LivriaBackend.communities.Application.Internal.CommandServices
         /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es la <see cref="Community"/> recién creada.</returns>
         public async Task<Community> Handle(CreateCommunityCommand command)
         {
-            // El comando (CreateCommunityCommand) debe haber sido actualizado para tener CommunityType
+            
             var community = new Community(command.Name, command.Description, command.Type, command.Image, command.Banner);
             
             await _communityRepository.AddAsync(community);

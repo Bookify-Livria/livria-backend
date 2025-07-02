@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LivriaBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8dee7bd257d39a5723f1fc596da250540a449966")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+450e3dadfdf09fba46b4874239d4506dbdb5d5ee")]
 [assembly: System.Reflection.AssemblyProductAttribute("LivriaBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LivriaBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

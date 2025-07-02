@@ -5,11 +5,12 @@
     /// </summary>
     public enum CommunityType
     {
-        literatura,
-        noficcion,
-        mangasycomics,
-        juvenil,
-        infantil,
-        ebooks
+        literature,
+        non_fiction,
+        fiction,
+        mangas_comics,
+        juvenile,
+        children,
+        ebooks_audiobooks
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LivriaBackend.users.Domain.Model.Aggregates;
 using System.Linq;
-using LivriaBackend.communities.Domain.Model.ValueObjects; // ¡Nuevo using!
+using LivriaBackend.communities.Domain.Model.ValueObjects; 
 
 namespace LivriaBackend.communities.Domain.Model.Aggregates
 {
@@ -29,7 +29,7 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         /// <summary>
         /// Obtiene el tipo de comunidad (género literario).
         /// </summary>
-        public CommunityType Type { get; private set; } // ¡Modificado a CommunityType!
+        public CommunityType Type { get; private set; } 
 
         /// <summary>
         /// Obtiene la URL de la imagen de perfil de la comunidad.
@@ -54,13 +54,11 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         private Community()
         {
             UserCommunities = new List<UserCommunity>();
-            // Es buena práctica inicializar propiedades no nulas en constructores,
-            // incluso si son para EF Core, a menos que sepa que EF Core las poblará.
             Name = string.Empty;
             Description = string.Empty;
             Image = string.Empty;
             Banner = string.Empty;
-            // Type será asignado por EF Core al cargar.
+            
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         /// <param name="type">El tipo de comunidad (género literario).</param>
         /// <param name="image">La URL de la imagen de perfil de la comunidad. Opcional, por defecto string.Empty.</param>
         /// <param name="banner">La URL del banner de la comunidad. Opcional, por defecto string.Empty.</param>
-        public Community(string name, string description, CommunityType type, string? image = null, string? banner = null) // ¡Modificado el tipo de 'type' y hecho 'image' y 'banner' opcionales!
+        public Community(string name, string description, CommunityType type, string? image = null, string? banner = null) 
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name cannot be empty.", nameof(name));
             if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Description cannot be empty.", nameof(description));
@@ -79,12 +77,12 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
             Name = name;
             Description = description;
             Type = type;
-            Image = image ?? string.Empty; // Asigna string.Empty si es nulo
-            Banner = banner ?? string.Empty; // Asigna string.Empty si es nulo
+            Image = image ?? string.Empty; 
+            Banner = banner ?? string.Empty; 
             UserCommunities = new List<UserCommunity>();
         }
 
-        // --- Métodos para actualizar la comunidad (si aplica) ---
+        
         public void UpdateName(string newName)
         {
             if (string.IsNullOrWhiteSpace(newName)) throw new ArgumentException("Name cannot be empty.", nameof(newName));
@@ -97,7 +95,7 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
             Description = newDescription;
         }
 
-        public void UpdateType(CommunityType newType) // Método para actualizar el tipo de comunidad
+        public void UpdateType(CommunityType newType) 
         {
             Type = newType;
         }
@@ -125,7 +123,7 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
             }
             if (UserCommunities.Any(uc => uc.UserClientId == userClient.Id))
             {
-                // Podrías lanzar una excepción o simplemente no hacer nada si ya es miembro
+                
                 return;
             }
             UserCommunities.Add(new UserCommunity(userClient.Id, this.Id));
