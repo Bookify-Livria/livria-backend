@@ -64,6 +64,15 @@ localizationOptions.SetDefaultCulture("en-US");
 localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 /* Localization End */
 
+// Add CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllPolicy",
+        policy => policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrEmpty(connectionString))
@@ -269,17 +278,20 @@ app.UseExceptionHandler(appBuilder =>
     });
 });
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Livria API");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
         c.RoutePrefix = "swagger";
     });
 }
 
 app.UseHttpsRedirection();
+
+// Apply CORS Policy
+app.UseCors("AllowAllPolicy");
 
 app.UseAuthorization();
 app.MapControllers();
