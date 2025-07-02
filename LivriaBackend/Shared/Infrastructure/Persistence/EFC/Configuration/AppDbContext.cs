@@ -90,16 +90,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasMany(uc => uc.FavoriteBooks)
                     .WithMany()
                     .UsingEntity(j => j.ToTable("user_favorite_books"));
-
-                // ELIMINADO: Se elimina la configuración de la relación de Orders desde UserClient
-                // ya que la propiedad Orders fue eliminada de la clase UserClient
-                /*
-                entity.HasMany(uc => uc.Orders)
-                    .WithOne(o => o.UserClient)
-                    .HasForeignKey(o => o.UserClientId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict);
-                */
+                
             });
 
             modelBuilder.Entity<UserAdmin>(entity =>
@@ -107,6 +98,10 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.ToTable("useradmins");
                 entity.Property(ua => ua.AdminAccess).IsRequired();
                 entity.Property(ua => ua.SecurityPin).HasMaxLength(255);
+                entity.Property(ua => ua.Capital) 
+                    .IsRequired()
+                    .HasColumnType("decimal(10, 2)") 
+                    .HasDefaultValue(500m);
                 entity.HasBaseType<User>();
             });
             
@@ -119,6 +114,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(b => b.Description).HasMaxLength(1000);
                 entity.Property(b => b.Author).IsRequired().HasMaxLength(100);
                 entity.Property(b => b.SalePrice).IsRequired().HasColumnType("decimal(10, 2)");
+                entity.Property(b => b.PurchasePrice).IsRequired().HasColumnType("decimal(10, 2)");
                 entity.Property(b => b.Stock).IsRequired();
                 entity.Property(b => b.Cover).HasMaxLength(255);
                 entity.Property(b => b.Genre).HasMaxLength(50);
@@ -182,9 +178,8 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasIndex(o => o.Code).IsUnique();
 
                 entity.Property(o => o.UserClientId).IsRequired();
-                // Esta relación es correcta, ya que Order sigue teniendo una clave foránea a UserClient
                 entity.HasOne(o => o.UserClient)
-                    .WithMany() // <-- IMPORTANTE: Ahora WithMany() no toma un parámetro de navegación si UserClient ya no tiene Orders
+                    .WithMany() 
                     .HasForeignKey(o => o.UserClientId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Restrict);

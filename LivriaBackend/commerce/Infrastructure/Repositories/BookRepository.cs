@@ -4,6 +4,7 @@ using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq; 
 using System.Threading.Tasks;
 
 namespace LivriaBackend.commerce.Infrastructure.Repositories
@@ -70,6 +71,17 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         {
             this.Context.Entry(book).State = EntityState.Modified;
             await Task.CompletedTask; 
+        }
+
+        /// <summary>
+        /// Verifica si existe un libro con el mismo título (ignorando mayúsculas/minúsculas).
+        /// </summary>
+        /// <param name="title">El título del libro.</param>
+        /// <returns>True si existe un libro con el mismo título, de lo contrario False.</returns>
+        public async Task<bool> ExistsByTitleAsync(string title) // Método modificado
+        {
+            return await Context.Books.AnyAsync(b =>
+                b.Title.ToLower() == title.ToLower());
         }
     }
 }

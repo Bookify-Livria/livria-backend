@@ -4,7 +4,7 @@ using LivriaBackend.users.Domain.Model.Repositories;
 using LivriaBackend.users.Domain.Model.Services;
 using System.Threading.Tasks;
 using System;
-using LivriaBackend.Shared.Domain.Repositories; 
+using LivriaBackend.Shared.Domain.Repositories;
 
 namespace LivriaBackend.users.Application.Internal.CommandServices
 {
@@ -15,7 +15,7 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
     public class UserAdminCommandService : IUserAdminCommandService
     {
         private readonly IUserAdminRepository _userAdminRepository;
-        private readonly IUnitOfWork _unitOfWork; 
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="UserAdminCommandService"/>.
@@ -34,27 +34,60 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
         /// <param name="command">El comando <see cref="UpdateUserAdminCommand"/> que contiene los datos actualizados del administrador de usuario.</param>
         /// <returns>
         /// Una tarea que representa la operación asíncrona.
-        /// El resultado de la tarea es el objeto <see cref="UserAdmin"/> actualizado.
+        /// El resultado de la tarea es el objeto <see cref="UserAdmin"/> actualizado, o null si no se encuentra.
         /// </returns>
-        /// <exception cref="ApplicationException">
-        /// Se lanza si el administrador de usuario con el ID especificado no se encuentra en la base de datos.
-        /// </exception>
-        public async Task<UserAdmin> Handle(UpdateUserAdminCommand command)
+        public async Task<UserAdmin?> Handle(UpdateUserAdminCommand command)
         {
-            
             var userAdmin = await _userAdminRepository.GetByIdAsync(command.UserAdminId);
-            
+
             if (userAdmin == null)
             {
-                throw new ApplicationException($"UserAdmin with Id {command.UserAdminId} not found.");
+                return null;
+            }
+
+            userAdmin.Update(
+                command.Display,
+                command.Username,
+                command.Email,
+                command.Password,
+                command.AdminAccess,
+                command.SecurityPin
+            );
+
+            await _userAdminRepository.UpdateAsync(userAdmin);
+            await _unitOfWork.CompleteAsync();
+            return userAdmin;
+        }
+
+        /// <summary>
+        /// Actualiza el capital de un UserAdmin específico.
+        /// </summary>
+        /// <param name="userAdminId">El ID del UserAdmin a actualizar.</param>
+        /// <param name="amountToAdd">La cantidad a añadir/restar al capital. Puede ser positiva para añadir, negativa para restar.</param>
+        /// <returns>El objeto UserAdmin actualizado, o null si no se encuentra.</returns>
+        public async Task<UserAdmin?> UpdateUserAdminCapitalAsync(int userAdminId, decimal amountToAdd)
+        {
+            var userAdmin = await _userAdminRepository.GetByIdAsync(userAdminId);
+            if (userAdmin == null)
+            {
+                // Es importante lanzar una excepción o manejar este caso adecuadamente
+                // Si llegamos aquí, significa que el UserAdmin con ese ID no existe.
+                throw new InvalidOperationException($"UserAdmin with ID {userAdminId} not found for capital update.");
+            }
+
+            // Decide si añadir o restar capital basándose en el signo de amountToAdd
+            if (amountToAdd >= 0)
+            {
+                userAdmin.AddCapital(amountToAdd);
+            }
+            else
+            {
+                // Si amountToAdd es negativo, pasamos su valor absoluto a DecreaseCapital
+                userAdmin.DecreaseCapital(Math.Abs(amountToAdd));
             }
             
-            userAdmin.Update(command.Display, command.Username, command.Email, command.Password,
-                command.AdminAccess, command.SecurityPin);
-
-            
-            await _userAdminRepository.UpdateAsync(userAdmin);
-            await _unitOfWork.CompleteAsync(); 
+            await _userAdminRepository.UpdateAsync(userAdmin); // Asegúrate de que el repositorio actualice la entidad
+            await _unitOfWork.CompleteAsync();
             return userAdmin;
         }
     }

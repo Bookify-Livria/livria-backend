@@ -47,6 +47,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using System.Text.Json; 
 using LivriaBackend.Shared.ErrorHandling; 
 using Microsoft.AspNetCore.Http; 
+using LivriaBackend.Shared.Domain.Exceptions; // Agregado para la excepción personalizada
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -250,8 +251,23 @@ app.UseExceptionHandler(appBuilder =>
             {
                 Status = StatusCodes.Status400BadRequest,
                 Title = "Validation Error",
-                // The message from the Book class already lists the allowed genres
                 Detail = genreEx.Message.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)[0],
+                TraceId = context.TraceIdentifier
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
+        }
+        // Nuevo manejo para la excepción DuplicateEntityException
+        else if (exception is DuplicateEntityException dupEx)
+        {
+            context.Response.StatusCode = StatusCodes.Status409Conflict; // 409 Conflict es apropiado para duplicados
+            context.Response.ContentType = "application/json";
+
+            var errorResponse = new ErrorResponse
+            {
+                Status = StatusCodes.Status409Conflict,
+                Title = "Conflict",
+                Detail = dupEx.Message,
                 TraceId = context.TraceIdentifier
             };
 

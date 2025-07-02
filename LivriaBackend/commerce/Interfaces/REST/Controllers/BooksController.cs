@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
+using System; // Agregado para ArgumentOutOfRangeException y Exception
+using Microsoft.AspNetCore.Http; // Para StatusCodes
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -103,34 +105,53 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         public async Task<ActionResult<BookResource>> CreateBook([FromBody] CreateBookResource resource)
         {
             var createCommand = _mapper.Map<CreateBookCommand>(resource);
-            var book = await _bookCommandService.Handle(createCommand); 
+            try
+            {
+                var book = await _bookCommandService.Handle(createCommand); 
 
-            var bookResource = _mapper.Map<BookResource>(book);
-            return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, bookResource);
+                var bookResource = _mapper.Map<BookResource>(book);
+                return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, bookResource);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (LivriaBackend.Shared.Domain.Exceptions.DuplicateEntityException ex) // Usa el namespace completo si es necesario
+            {
+                return Conflict(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"An internal server error occurred: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"An unexpected error occurred: {ex.Message}");
+            }
         }
         
         /// <summary>
-        /// Actualiza la cantidad de stock de un libro existente por su ID.
+        /// Aumenta el stock de un libro existente por su ID.
         /// </summary>
-        /// <param name="bookId">El identificador único del libro cuyo stock se actualizará.</param>
-        /// <param name="resource">El recurso que contiene la nueva cantidad de stock.</param>
+        /// <param name="bookId">El identificador único del libro cuyo stock se aumentará.</param>
+        /// <param name="resource">El recurso que contiene la cantidad a añadir al stock.</param>
         /// <returns>
         /// Una acción de resultado HTTP que contiene el <see cref="BookResource"/> actualizado
         /// si la operación fue exitosa (código 200 OK).
-        /// Retorna 400 Bad Request si la validación del stock falla o los datos son inválidos.
+        /// Retorna 400 Bad Request si la validación de la cantidad falla o los datos son inválidos.
         /// Retorna 404 Not Found si el libro no existe.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
         [HttpPut("{bookId}/stock")] // PUT api/v1/books/{bookId}/stock
         [SwaggerOperation(
-            Summary = "Actualizar el stock de un libro.",
-            Description = "Permite cambiar la cantidad de stock disponible de un libro."
+            Summary = "Aumentar el stock de un libro.",
+            Description = "Permite añadir una cantidad específica al stock disponible de un libro."
         )]
         [ProducesResponseType(typeof(BookResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateBookStock(int bookId, [FromBody] UpdateBookStockResource resource)
+        public async Task<IActionResult> AddBookStock(int bookId, [FromBody] UpdateBookStockResource resource) // Renombrado a AddBookStock
         {
             // Valida el DTO de entrada usando Data Annotations
             if (!ModelState.IsValid)
@@ -138,8 +159,9 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Crea el comando. El BookId viene de la URL, el NewStock del cuerpo de la solicitud.
-            var command = new UpdateBookStockCommand(bookId, resource.NewStock);
+            // Crea el comando. El BookId viene de la URL, la QuantityToAdd del cuerpo de la solicitud.
+            // Asegúrate de que el nombre de la propiedad en el recurso sea QuantityToAdd
+            var command = new UpdateBookStockCommand(bookId, resource.QuantityToAdd); 
 
             try
             {
@@ -158,13 +180,18 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                // Captura específicamente si el stock es negativo (aunque Resource ya valida esto, es una segunda línea de defensa)
+                // Captura específicamente si la cantidad a añadir es negativa
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Captura cualquier otra excepción de operación inválida
                 return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
                 // Captura cualquier otra excepción inesperada.
-                return StatusCode(500, new { message = "An unexpected error occurred while updating book stock: " + ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred while updating book stock: " + ex.Message });
             }
         }
 

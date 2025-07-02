@@ -9,13 +9,13 @@ namespace LivriaBackend.commerce.Domain.Model.Services
         Task<Book> Handle(CreateBookCommand command);
         
         /// <summary>
-        /// Maneja el comando para actualizar el stock de un libro existente.
+        /// Maneja el comando para actualizar el stock de un libro existente añadiendo una cantidad específica.
         /// </summary>
-        /// <param name="command">El comando que contiene el ID del libro y el nuevo stock.</param>
+        /// <param name="command">El comando que contiene el ID del libro y la cantidad a añadir.</param>
         /// <returns>
         /// Una tarea que representa la operación asíncrona.
         /// El resultado de la tarea es el objeto <see cref="Book"/> actualizado, o <c>null</c> si el libro no se encuentra.
         /// </returns>
-        Task<Book?> Handle(UpdateBookStockCommand command);
+        Task<Book?> Handle(UpdateBookStockCommand command); // Refleja el cambio del comando
     }
 }

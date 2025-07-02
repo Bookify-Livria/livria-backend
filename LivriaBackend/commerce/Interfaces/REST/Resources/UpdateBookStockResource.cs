@@ -3,15 +3,15 @@
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
     /// <summary>
-    /// Resource para actualizar el stock de un libro.
+    /// Resource para añadir stock a un libro.
     /// </summary>
     public class UpdateBookStockResource
     {
         /// <summary>
-        /// La nueva cantidad de stock para el libro. No puede ser negativa.
+        /// La cantidad a añadir al stock actual del libro. Debe ser un valor positivo.
         /// </summary>
-        [Required(ErrorMessage = "El nuevo stock es requerido.")]
-        [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo.")]
-        public int NewStock { get; set; }
+        [Required(ErrorMessage = "La cantidad a añadir es requerida.")]
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidad a añadir debe ser mayor a cero.")] 
+        public int QuantityToAdd { get; set; } 
     }
 }

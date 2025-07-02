@@ -2809,24 +2809,31 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Asuss\\.nuget\\packages\\": {}
+    "C:\\Users\\marce\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\LivriaBackend.csproj",
+      "projectUniqueName": "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\LivriaBackend.csproj",
       "projectName": "LivriaBackend",
-      "projectPath": "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\LivriaBackend.csproj",
-      "packagesPath": "C:\\Users\\Asuss\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\obj\\",
+      "projectPath": "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\LivriaBackend.csproj",
+      "packagesPath": "C:\\Users\\marce\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Asuss\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\marce\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2845,7 +2852,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -2895,7 +2902,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\Asuss\\.dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\marce\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

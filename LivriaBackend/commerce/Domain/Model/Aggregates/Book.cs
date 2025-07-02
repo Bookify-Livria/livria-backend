@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq; // Para .Contains() y .Select()
 
 namespace LivriaBackend.commerce.Domain.Model.Aggregates
 {
@@ -30,9 +31,14 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         public string Author { get; private set; }
 
         /// <summary>
-        /// Obtiene el precio del libro.
+        /// Obtiene el precio de venta del libro (165% del precio de compra).
         /// </summary>
         public decimal SalePrice { get; private set; }
+
+        /// <summary>
+        /// Obtiene el precio de compra del libro (generado aleatoriamente por género).
+        /// </summary>
+        public decimal PurchasePrice { get; private set; }
 
         /// <summary>
         /// Obtiene o establece la cantidad de stock disponible del libro.
@@ -55,12 +61,20 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// </summary>
         public string Language { get; private set; }
         
+        // Instancia estática de Random para evitar que se generen secuencias idénticas rápidamente
+        private static readonly Random _random = new Random();
 
-
-        private static readonly HashSet<string> AllowedGenres = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        // Usamos un HashSet para una búsqueda más eficiente y un StringComparer para la insensibilidad a mayúsculas/minúsculas.
+        public static readonly HashSet<string> AllowedGenres = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "literature", "non_fiction", "fiction", "mangas_comics", "juvenile", "children", "ebooks_audiobooks"
         };
+        
+        public static readonly HashSet<string> AllowedLanguages = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "english", "español"
+        };
+
 
         /// <summary>
         /// Constructor protegido para uso de frameworks ORM (como Entity Framework Core).
@@ -70,19 +84,19 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="Book"/> con los detalles proporcionados.
+        /// El PurchasePrice se genera aleatoriamente según el género y el SalePrice es el 165% del PurchasePrice.
         /// </summary>
         /// <param name="title">El título del libro.</param>
         /// <param name="description">La descripción del libro.</param>
         /// <param name="author">El autor del libro.</param>
-        /// <param name="salePrice">El precio del libro.</param>
         /// <param name="stock">La cantidad inicial de stock disponible.</param>
         /// <param name="cover">La URL o ruta de la imagen de la portada.</param>
         /// <param name="genre">El género del libro.</param>
         /// <param name="language">El idioma del libro.</param>
-        /// <exception cref="ArgumentException">Se lanza si el idioma no es 'english' o 'español'.</exception>
-        public Book(string title, string description, string author, decimal salePrice, int stock, string cover, string genre, string language)
+        /// <exception cref="ArgumentException">Se lanza si el idioma no es 'english' o 'español' o el género no es válido.</exception>
+        public Book(string title, string description, string author, int stock, string cover, string genre, string language)
         {
-            if (string.IsNullOrEmpty(language) || !(language.Equals("english", StringComparison.OrdinalIgnoreCase) || language.Equals("español", StringComparison.OrdinalIgnoreCase)))
+            if (string.IsNullOrEmpty(language) || !AllowedLanguages.Contains(language))
             {
                 throw new ArgumentException("El idioma del libro debe ser 'english' o 'español'.", nameof(language));
             }
@@ -91,16 +105,86 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             {
                 throw new ArgumentException($"El género del libro debe ser uno de los siguientes: {string.Join(", ", AllowedGenres)}.", nameof(genre));
             }
+            if (stock < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(stock), "El stock inicial no puede ser negativo.");
+            }
 
             Title = title;
             Description = description;
             Author = author;
-            SalePrice = salePrice;
             Stock = stock;
             Cover = cover;
             Genre = genre;
             Language = language;
             
+            // Generar PurchasePrice basado en el género
+            PurchasePrice = GenerateRandomPurchasePrice(genre);
+            // Calcular SalePrice como el 165% del PurchasePrice
+            SalePrice = PurchasePrice * 1.65m;
+        }
+
+        /// <summary>
+        /// Genera un precio de compra aleatorio basado en el género del libro.
+        /// </summary>
+        /// <param name="genre">El género del libro.</param>
+        /// <returns>El precio de compra aleatorio.</returns>
+        private decimal GenerateRandomPurchasePrice(string genre)
+        {
+            decimal minPrice;
+            decimal maxPrice;
+
+            switch (genre.ToLower())
+            {
+                case "literature":
+                    minPrice = 25m;
+                    maxPrice = 35m;
+                    break;
+                case "non_fiction":
+                case "fiction":
+                    minPrice = 20m;
+                    maxPrice = 30m;
+                    break;
+                case "mangas_comics":
+                    minPrice = 15m;
+                    maxPrice = 35m;
+                    break;
+                case "juvenile":
+                    minPrice = 20m;
+                    maxPrice = 25m;
+                    break;
+                case "children":
+                    minPrice = 15m;
+                    maxPrice = 20m;
+                    break;
+                case "ebooks_audiobooks":
+                    minPrice = 20m;
+                    maxPrice = 30m;
+                    break;
+                default:
+                    minPrice = 10m; 
+                    maxPrice = 20m;
+                    break;
+            }
+
+            // Generar un número aleatorio entre minPrice y maxPrice
+            // Multiplicamos por 100 y luego dividimos por 100 para trabajar con dos decimales
+            int randomInt = _random.Next(Convert.ToInt32(minPrice * 100), Convert.ToInt32(maxPrice * 100 + 1));
+            return (decimal)randomInt / 100m;
+        }
+
+        /// <summary>
+        /// Añade una cantidad específica al stock actual del libro.
+        /// </summary>
+        /// <param name="quantity">La cantidad a añadir. Debe ser no negativa.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Se lanza si la cantidad es negativa.</exception>
+        public void AddStock(int quantity)
+        {
+            if (quantity < 0) // Validamos aquí también para asegurar el invariante
+            {
+                throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to add to stock cannot be negative.");
+            }
+            Stock += quantity;
         }
 
         /// <summary>
@@ -138,19 +222,20 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
 
         /// <summary>
         /// Actualiza todos los detalles mutables del libro.
+        /// El SalePrice se recalcula como el 165% del PurchasePrice proporcionado.
         /// </summary>
         /// <param name="title">El nuevo título del libro.</param>
         /// <param name="description">La nueva descripción del libro.</param>
         /// <param name="author">El nuevo autor del libro.</param>
-        /// <param name="salePrice">El nuevo precio del libro.</param>
+        /// <param name="purchasePrice">El nuevo precio de compra del libro.</param>
         /// <param name="stock">La nueva cantidad de stock disponible.</param>
         /// <param name="cover">La nueva URL o ruta de la imagen de la portada.</param>
         /// <param name="genre">El nuevo género del libro.</param>
         /// <param name="language">El nuevo idioma del libro.</param>
-        /// <exception cref="ArgumentException">Se lanza si el idioma no es 'english' o 'español'.</exception>
-        public void Update(string title, string description, string author, decimal salePrice, int stock, string cover, string genre, string language)
+        /// <exception cref="ArgumentException">Se lanza si el idioma no es 'english' o 'español' o el género no es válido.</exception>
+        public void Update(string title, string description, string author, decimal purchasePrice, int stock, string cover, string genre, string language)
         {
-            if (string.IsNullOrEmpty(language) || !(language.Equals("english", StringComparison.OrdinalIgnoreCase) || language.Equals("español", StringComparison.OrdinalIgnoreCase)))
+            if (string.IsNullOrEmpty(language) || !AllowedLanguages.Contains(language))
             {
                 throw new ArgumentException("El idioma del libro debe ser 'english' o 'español'.", nameof(language));
             }
@@ -159,18 +244,20 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             {
                 throw new ArgumentException($"El género del libro debe ser uno de los siguientes: {string.Join(", ", AllowedGenres)}.", nameof(genre));
             }
-
+            if (stock < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(stock), "El stock no puede ser negativo.");
+            }
 
             Title = title;
             Description = description;
             Author = author;
-            SalePrice = salePrice;
+            PurchasePrice = purchasePrice;
+            SalePrice = PurchasePrice * 1.65m; 
             Stock = stock;
             Cover = cover;
             Genre = genre;
             Language = language;
         }
-
-     
     }
 }

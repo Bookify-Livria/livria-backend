@@ -1,9 +1,9 @@
 ﻿using LivriaBackend.commerce.Domain.Model.Entities;
 using LivriaBackend.commerce.Domain.Model.ValueObjects;
-using LivriaBackend.users.Domain.Model.Aggregates; 
-using System; 
+using LivriaBackend.users.Domain.Model.Aggregates;
+using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 
 namespace LivriaBackend.commerce.Domain.Model.Aggregates
 {
@@ -22,20 +22,20 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// <summary>
         /// Obtiene el código alfanumérico único de la orden, generado automáticamente.
         /// </summary>
-        public string Code { get; private set; } 
+        public string Code { get; private set; }
 
         /// <summary>
         /// Obtiene el identificador del cliente de usuario que realizó la orden.
         /// </summary>
-        public int UserClientId { get; private set; } 
+        public int UserClientId { get; private set; }
 
         /// <summary>
         /// Obtiene el objeto <see cref="UserClient"/> asociado a esta orden.
         /// </summary>
         // Si no tienes una propiedad de navegación UserClient, esta línea debería ser eliminada
         // o mapeada correctamente en tu DbContext.
-        public UserClient UserClient { get; private set; } 
-        
+        public UserClient UserClient { get; private set; }
+
         /// <summary>
         /// Obtiene el correo electrónico del usuario en el momento de la orden.
         /// </summary>
@@ -60,12 +60,12 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// <summary>
         /// Obtiene un valor que indica si la orden requiere envío a domicilio.
         /// </summary>
-        public bool IsDelivery { get; private set; } 
-        
+        public bool IsDelivery { get; private set; }
+
         /// <summary>
         /// Obtiene los detalles de envío de la orden, si <see cref="IsDelivery"/> es verdadero.
         /// </summary>
-        public Shipping? Shipping { get; private set; } // Ahora es nullable
+        public Shipping? Shipping { get; private set; }
 
         /// <summary>
         /// Obtiene el monto total de la orden.
@@ -75,7 +75,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// <summary>
         /// Obtiene la fecha y hora de creación de la orden (en UTC).
         /// </summary>
-        public DateTime Date { get; private set; } 
+        public DateTime Date { get; private set; }
 
         /// <summary>
         /// Obtiene el estado actual de la orden.
@@ -99,9 +99,8 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// Constructor protegido para uso de frameworks ORM (como Entity Framework Core).
         /// No debe ser utilizado directamente para la creación de instancias de <see cref="Order"/>.
         /// </summary>
-        protected Order() 
+        protected Order()
         {
-            // Inicialización de propiedades para evitar errores de null-reference en el constructor protegido
             Code = string.Empty;
             UserEmail = string.Empty;
             UserPhone = string.Empty;
@@ -109,7 +108,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             RecipientName = string.Empty;
             Status = string.Empty;
             Total = 0;
-            Date = DateTime.UtcNow; 
+            Date = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -137,7 +136,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             string userFullName,
             string recipientName,
             bool isDelivery,
-            Shipping? shipping, // Ahora es nullable
+            Shipping? shipping,
             List<OrderItem> orderItems,
             string status)
         {
@@ -147,11 +146,10 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             if (string.IsNullOrWhiteSpace(userFullName)) throw new ArgumentNullException(nameof(userFullName), "User full name cannot be empty.");
             if (string.IsNullOrWhiteSpace(recipientName)) throw new ArgumentNullException(nameof(recipientName), "Recipient Name cannot be empty.");
             if (orderItems == null || !orderItems.Any()) throw new ArgumentException("Order must contain at least one item.", nameof(orderItems));
-            
-            // Validación de shipping y isDelivery
+
             if (isDelivery && shipping == null) throw new ArgumentException("Shipping details are required for delivery orders.", nameof(shipping));
             if (!isDelivery && shipping != null) throw new ArgumentException("Shipping details should be null for non-delivery orders.", nameof(shipping));
-            
+
             if (string.IsNullOrWhiteSpace(status) || !AllowedStatuses.Contains(status))
             {
                 throw new ArgumentException($"El estado de la orden debe ser '{string.Join("' o '", AllowedStatuses)}'.", nameof(status));
@@ -164,17 +162,17 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             RecipientName = recipientName;
             Status = status;
             IsDelivery = isDelivery;
-            Shipping = shipping; 
+            Shipping = shipping;
 
             Code = GenerateOrderCode();
-            Date = DateTime.UtcNow; 
+            Date = DateTime.UtcNow;
 
-            Total = 0; // Inicializar el total antes de sumar los ítems
+            Total = 0;
             foreach (var item in orderItems)
             {
                 _items.Add(item);
-                Total += item.ItemTotal; 
-                item.SetOrder(this); 
+                Total += item.ItemTotal;
+                item.SetOrder(this);
             }
         }
 

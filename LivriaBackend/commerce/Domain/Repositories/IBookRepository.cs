@@ -36,5 +36,12 @@ namespace LivriaBackend.commerce.Domain.Repositories
         /// <param name="book">El objeto <see cref="Book"/> a actualizar.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
         Task UpdateAsync(Book book); 
+
+        /// <summary>
+        /// Verifica si existe un libro con el mismo título (ignorando mayúsculas/minúsculas).
+        /// </summary>
+        /// <param name="title">El título del libro.</param>
+        /// <returns>True si existe un libro con el mismo título, de lo contrario False.</returns>
+        Task<bool> ExistsByTitleAsync(string title); // Método modificado
     }
 }

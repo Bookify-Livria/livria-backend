@@ -20,17 +20,26 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         public string SecurityPin { get; private set; }
 
         /// <summary>
+        /// Obtiene el capital asignado al administrador. Por defecto es 500.
+        /// </summary>
+        public decimal Capital { get; private set; }
+
+        /// <summary>
         /// Constructor protegido sin parámetros, típicamente utilizado por ORMs como Entity Framework Core.
         /// </summary>
-        protected UserAdmin() : base() { }
+        protected UserAdmin() : base()
+        {
+            Capital = 3000m; // Se inicializa aquí también para el constructor sin parámetros
+            SecurityPin = string.Empty;
+        }
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="UserAdmin"/> con las propiedades especificadas.
         /// </summary>
-        /// <param name="display">El nombre visible o alias del administrador.</param>
+        /// <param name="display">El nombre visible o alias del administrador (FullName).</param>
         /// <param name="username">El nombre de usuario único del administrador.</param>
         /// <param name="email">La dirección de correo electrónico del administrador.</param>
-        /// <param name="password">La contraseña del administrador (asumida como segura).</param>
+        /// <param name="password">La contraseña del administrador (asumida como segura/hash).</param>
         /// <param name="adminAccess">Indica si el administrador tiene acceso de administrador.</param>
         /// <param name="securityPin">El pin de seguridad del administrador.</param>
         public UserAdmin(string display, string username, string email, string password, bool adminAccess, string securityPin)
@@ -38,6 +47,7 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         {
             AdminAccess = adminAccess;
             SecurityPin = securityPin;
+            Capital = 3000m; // Inicialización por defecto del capital
         }
 
         /// <summary>
@@ -55,6 +65,53 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
             base.UpdateUserProperties(display, username, email, password);
             AdminAccess = adminAccess;
             SecurityPin = securityPin;
+        }
+
+        /// <summary>
+        /// Añade una cantidad al capital del administrador.
+        /// </summary>
+        /// <param name="amount">La cantidad a añadir. Debe ser no negativa.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Se lanza si la cantidad es negativa.</exception>
+        public void AddCapital(decimal amount)
+        {
+            if (amount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), "Amount to add to capital must be positive.");
+            }
+            Capital += amount;
+        }
+
+        /// <summary>
+        /// Reduce una cantidad del capital del administrador.
+        /// </summary>
+        /// <param name="amount">La cantidad a reducir. Debe ser no negativa.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Se lanza si la cantidad es negativa.</exception>
+        /// <exception cref="InvalidOperationException">Se lanza si la reducción hace que el capital sea negativo.</exception>
+        public void DecreaseCapital(decimal amount)
+        {
+            if (amount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(amount), "Amount to decrease capital must be positive.");
+            }
+            if (Capital - amount < 0)
+            {
+                throw new InvalidOperationException("Capital cannot go below zero.");
+            }
+            Capital -= amount;
+        }
+
+        /// <summary>
+        /// Establece el capital del administrador a un nuevo valor.
+        /// </summary>
+        /// <param name="newCapital">El nuevo valor del capital.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Se lanza si el nuevo capital es negativo.</exception>
+        public void UpdateCapital(decimal newCapital)
+        {
+            if (newCapital < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(newCapital), "Capital cannot be negative.");
+            }
+            Capital = newCapital;
         }
     }
 }

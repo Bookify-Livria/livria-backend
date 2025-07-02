@@ -1,19 +1,20 @@
 ﻿using LivriaBackend.commerce.Domain.Model.Aggregates;
 using LivriaBackend.commerce.Domain.Model.Commands;
-using LivriaBackend.commerce.Domain.Model.Entities; 
-using LivriaBackend.commerce.Domain.Repositories; 
+using LivriaBackend.commerce.Domain.Model.Entities;
+using LivriaBackend.commerce.Domain.Repositories;
 using LivriaBackend.commerce.Domain.Model.Services;
-using LivriaBackend.Shared.Domain.Repositories; 
-using LivriaBackend.users.Domain.Model.Repositories; 
-using LivriaBackend.commerce.Domain.Model.ValueObjects; 
+using LivriaBackend.Shared.Domain.Repositories;
+using LivriaBackend.users.Domain.Model.Repositories;
+using LivriaBackend.commerce.Domain.Model.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using LivriaBackend.notifications.Domain.Model.Services; 
-using LivriaBackend.notifications.Domain.Model.Commands; 
-using LivriaBackend.notifications.Domain.Model.ValueObjects; 
+using LivriaBackend.notifications.Domain.Model.Services;
+using LivriaBackend.notifications.Domain.Model.Commands;
+using LivriaBackend.notifications.Domain.Model.ValueObjects;
+using LivriaBackend.users.Domain.Model.Services; 
 
 
 namespace LivriaBackend.commerce.Application.Internal.CommandServices
@@ -25,13 +26,14 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
     public class OrderCommandService : IOrderCommandService
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly ICartItemRepository _cartItemRepository; 
-        private readonly IBookRepository _bookRepository; 
-        private readonly IUserClientRepository _userClientRepository; 
+        private readonly ICartItemRepository _cartItemRepository;
+        private readonly IBookRepository _bookRepository;
+        private readonly IUserClientRepository _userClientRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly INotificationCommandService _notificationCommandService; 
+        private readonly INotificationCommandService _notificationCommandService;
+        private readonly IUserAdminCommandService _userAdminCommandService;
 
-        
+
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="OrderCommandService"/>.
         /// </summary>
@@ -41,20 +43,23 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
         /// <param name="userClientRepository">El repositorio de clientes de usuario.</param>
         /// <param name="unitOfWork">La unidad de trabajo para gestionar transacciones.</param>
         /// <param name="notificationCommandService">El servicio de comandos de notificación para enviar alertas al usuario.</param>
+        /// <param name="userAdminCommandService">El servicio de comandos de UserAdmin para actualizar su capital.</param>
         public OrderCommandService(
             IOrderRepository orderRepository,
             ICartItemRepository cartItemRepository,
             IBookRepository bookRepository,
             IUserClientRepository userClientRepository,
             IUnitOfWork unitOfWork,
-            INotificationCommandService notificationCommandService) 
+            INotificationCommandService notificationCommandService,
+            IUserAdminCommandService userAdminCommandService)
         {
             _orderRepository = orderRepository;
             _cartItemRepository = cartItemRepository;
             _bookRepository = bookRepository;
             _userClientRepository = userClientRepository;
             _unitOfWork = unitOfWork;
-            _notificationCommandService = notificationCommandService; 
+            _notificationCommandService = notificationCommandService;
+            _userAdminCommandService = userAdminCommandService;
         }
 
         /// <summary>
@@ -82,26 +87,26 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
         /// 7. Elimina los ítems del carrito una vez que la orden ha sido creada.
         /// 8. Persiste todos los cambios utilizando la unidad de trabajo.
         /// 9. Envía una notificación de "Orden Recibida" al cliente de usuario.
+        /// 10. ¡Actualiza el capital del UserAdmin!
         /// </remarks>
         public async Task<Order> Handle(CreateOrderCommand command)
         {
-            // 1. Obtener los detalles del UserClient
+
             var userClient = await _userClientRepository.GetByIdAsync(command.UserClientId);
             if (userClient == null)
             {
                 throw new ArgumentException($"UserClient with ID {command.UserClientId} not found.", nameof(command.UserClientId));
             }
 
-            // 2. Obtener todos los ítems del carrito para este UserClient
-            // Se utiliza GetCartItemsByUserIdAsync para obtener todos los ítems del carrito del usuario.
+
             var cartItems = (await _cartItemRepository.GetCartItemsByUserIdAsync(command.UserClientId)).ToList();
-            
+
             if (!cartItems.Any())
             {
                 throw new ArgumentException($"Cart for UserClient with ID {command.UserClientId} is empty. Cannot create an order.", nameof(command.UserClientId));
             }
 
-            // 3. Validar y construir los detalles de envío
+
             Shipping? shippingDetails = null;
             if (command.IsDelivery)
             {
@@ -109,25 +114,23 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
                 {
                     throw new ArgumentException("Shipping details are required for delivery orders.", nameof(command.ShippingDetails));
                 }
-                // Se ajusta el constructor de Shipping para incluir 'City'
+
                 shippingDetails = new Shipping(
                     command.ShippingDetails.Address,
-                    command.ShippingDetails.City, 
+                    command.ShippingDetails.City,
                     command.ShippingDetails.District,
-                    command.ShippingDetails.Reference 
+                    command.ShippingDetails.Reference
                 );
             }
-            else // No es para entrega a domicilio
+            else
             {
                 if (command.ShippingDetails != null)
                 {
-                    // Si no hay delivery, los detalles de envío deben ser nulos
                     throw new ArgumentException("Shipping details should not be provided for non-delivery orders.", nameof(command.IsDelivery));
                 }
             }
 
             var orderItems = new List<OrderItem>();
-            // totalOrderPrice se calculará en el constructor de Order.
 
             foreach (var cartItem in cartItems)
             {
@@ -146,44 +149,48 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
                     book.Id,
                     book.Title,
                     book.Author,
-                    book.SalePrice, 
-                    book.Cover,     
+                    book.SalePrice,
+                    book.Cover,
                     cartItem.Quantity
                 );
                 orderItems.Add(orderItem);
 
-                book.DecreaseStock(cartItem.Quantity); 
-                await _bookRepository.UpdateAsync(book); 
+                book.DecreaseStock(cartItem.Quantity);
+                await _bookRepository.UpdateAsync(book);
             }
-            
-            // Crear la nueva orden
+
             var order = new Order(
                 command.UserClientId,
-                command.UserEmail, 
-                command.UserPhone, 
-                command.UserFullName, 
-                command.RecipientName, 
+                command.UserEmail,
+                command.UserPhone,
+                command.UserFullName,
+                command.RecipientName,
                 command.IsDelivery,
-                shippingDetails, 
-                orderItems, 
-                command.Status 
+                shippingDetails,
+                orderItems,
+                command.Status
             );
 
             await _orderRepository.AddAsync(order);
 
-            // 4. Eliminar los ítems del carrito una vez que la orden ha sido creada exitosamente
             foreach (var cartItem in cartItems)
             {
                 await _cartItemRepository.DeleteAsync(cartItem);
             }
 
-            await _unitOfWork.CompleteAsync(); 
-            
-            // 5. Enviar notificación al usuario
+            await _unitOfWork.CompleteAsync();
+
+            // ¡IMPORTANTE: Lógica para actualizar el capital del UserAdmin!
+            // Asumiendo que el UserAdmin por defecto que quieres actualizar tiene ID 0.
+            // Si tu lógica de negocio determina un UserAdmin diferente, ajusta el ID.
+            int userAdminToUpdateId = 1; // O el ID del UserAdmin que corresponda (ej. el admin principal)
+            await _userAdminCommandService.UpdateUserAdminCapitalAsync(userAdminToUpdateId, order.Total);
+
+
             await _notificationCommandService.Handle(new CreateNotificationCommand(
-                command.UserClientId, 
-                ENotificationType.Order, 
-                DateTime.UtcNow       
+                command.UserClientId,
+                ENotificationType.Order,
+                DateTime.UtcNow
             ));
 
             return order;
@@ -200,12 +207,12 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
             var order = await _orderRepository.GetByIdAsync(command.OrderId);
             if (order == null)
             {
-                return null; 
+                return null;
             }
-            
-            order.UpdateStatus(command.Status); 
 
-            await _unitOfWork.CompleteAsync(); 
+            order.UpdateStatus(command.Status);
+
+            await _unitOfWork.CompleteAsync();
             return order;
         }
     }
