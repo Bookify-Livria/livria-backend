@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asuss\\Downloads\\livria-backend-develop\\livria-backend-develop\\LivriaBackend\\LivriaBackend.csproj": {}
+    "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\LivriaBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asuss\\Downloads\\livria-backend-develop\\livria-backend-develop\\LivriaBackend\\LivriaBackend.csproj": {
+    "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\LivriaBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asuss\\Downloads\\livria-backend-develop\\livria-backend-develop\\LivriaBackend\\LivriaBackend.csproj",
+        "projectUniqueName": "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\LivriaBackend.csproj",
         "projectName": "LivriaBackend",
-        "projectPath": "C:\\Users\\Asuss\\Downloads\\livria-backend-develop\\livria-backend-develop\\LivriaBackend\\LivriaBackend.csproj",
+        "projectPath": "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\LivriaBackend.csproj",
         "packagesPath": "C:\\Users\\Asuss\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asuss\\Downloads\\livria-backend-develop\\livria-backend-develop\\LivriaBackend\\obj\\",
+        "outputPath": "C:\\Users\\Asuss\\Downloads\\elqueentendio\\livria-backend-8dee7bd257d39a5723f1fc596da250540a449966\\LivriaBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Asuss\\AppData\\Roaming\\NuGet\\NuGet.Config"
