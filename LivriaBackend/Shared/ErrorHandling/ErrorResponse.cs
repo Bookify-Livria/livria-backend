@@ -1,5 +1,4 @@
-﻿// Path: LivriaBackend/Shared/ErrorHandling/ErrorResponse.cs
-namespace LivriaBackend.Shared.ErrorHandling
+﻿namespace LivriaBackend.Shared.ErrorHandling
 {
     /// <summary>
     /// Represents a standardized error response structure for API errors.

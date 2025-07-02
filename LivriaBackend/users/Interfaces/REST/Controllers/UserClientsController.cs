@@ -171,9 +171,8 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
                 resource.Email,
                 resource.Password,
                 resource.Icon,
-                resource.Phrase,
-                resource.Subscription 
-            );
+                resource.Phrase
+                );
 
             try
             {

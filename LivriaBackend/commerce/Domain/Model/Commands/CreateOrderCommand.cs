@@ -11,9 +11,10 @@ namespace LivriaBackend.commerce.Domain.Model.Commands
     /// <param name="UserEmail">El correo electrónico del usuario.</param>
     /// <param name="UserPhone">El número de teléfono del usuario.</param>
     /// <param name="UserFullName">El nombre completo del usuario.</param>
+    /// <param name="RecipientName">El nombre del destinatario.</param>
+    /// <param name="Status">El estado inicial de la orden.</param>
     /// <param name="IsDelivery">Indica si la orden requiere envío a domicilio (verdadero) o es para recoger (falso).</param>
     /// <param name="ShippingDetails">Los detalles de envío. Obligatorio si <paramref name="IsDelivery"/> es verdadero.</param>
-    /// <param name="CartItemIds">Una lista de los identificadores de los ítems del carrito que se incluirán en la orden.</param>
     public record CreateOrderCommand(
         [Required]
         int UserClientId,
@@ -41,9 +42,6 @@ namespace LivriaBackend.commerce.Domain.Model.Commands
         [Required]
         bool IsDelivery,
         
-        Shipping ShippingDetails,
-        
-        [Required]
-        List<int> CartItemIds 
+        Shipping? ShippingDetails 
     );
 }

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using LivriaBackend.commerce.Domain.Model.Entities;
 
 namespace LivriaBackend.commerce.Domain.Model.Aggregates
 {
     /// <summary>
     /// Representa la entidad agregada 'Libro' en el dominio de comercio.
-    /// Un <see cref="Book"/> es un objeto con una identidad global y es la raíz de un agregado,
-    /// lo que significa que controla la vida útil de las entidades contenidas como <see cref="Review"/>.
+    /// Un <see cref="Book"/> es un objeto con una identidad global.
     /// </summary>
     public class Book
     {
@@ -36,8 +34,6 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// </summary>
         public decimal SalePrice { get; private set; }
 
-        
-        
         /// <summary>
         /// Obtiene o establece la cantidad de stock disponible del libro.
         /// Este valor es mutable a través de métodos de comportamiento.
@@ -58,19 +54,14 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// Obtiene el idioma en el que está escrito el libro.
         /// </summary>
         public string Language { get; private set; }
-
-        /// <summary>
-        /// Obtiene la colección de reseñas asociadas a este libro.
-        /// Esta colección es privada y solo se puede modificar a través de métodos de comportamiento del agregado.
-        /// </summary>
-        public ICollection<Review> Reviews { get; private set; } = new List<Review>();
-
         
+
+
         private static readonly HashSet<string> AllowedGenres = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "literatura", "noficcion", "mangasycomics", "juvenil", "infantil", "ebooks"
         };
-        
+
         /// <summary>
         /// Constructor protegido para uso de frameworks ORM (como Entity Framework Core).
         /// No debe ser utilizado directamente para la creación de instancias de <see cref="Book"/>.
@@ -95,7 +86,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             {
                 throw new ArgumentException("El idioma del libro debe ser 'english' o 'español'.", nameof(language));
             }
-            
+
             if (string.IsNullOrEmpty(genre) || !AllowedGenres.Contains(genre))
             {
                 throw new ArgumentException($"El género del libro debe ser uno de los siguientes: {string.Join(", ", AllowedGenres)}.", nameof(genre));
@@ -105,12 +96,13 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             Description = description;
             Author = author;
             SalePrice = salePrice;
-            Stock = stock; 
+            Stock = stock;
             Cover = cover;
             Genre = genre;
             Language = language;
+            
         }
-        
+
         /// <summary>
         /// Disminuye la cantidad de stock del libro por la cantidad especificada.
         /// </summary>
@@ -143,7 +135,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             }
             Stock = newStock;
         }
-        
+
         /// <summary>
         /// Actualiza todos los detalles mutables del libro.
         /// </summary>
@@ -162,12 +154,12 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             {
                 throw new ArgumentException("El idioma del libro debe ser 'english' o 'español'.", nameof(language));
             }
-            
+
             if (string.IsNullOrEmpty(genre) || !AllowedGenres.Contains(genre))
             {
                 throw new ArgumentException($"El género del libro debe ser uno de los siguientes: {string.Join(", ", AllowedGenres)}.", nameof(genre));
             }
-            
+
 
             Title = title;
             Description = description;
@@ -179,16 +171,6 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             Language = language;
         }
 
-        /// <summary>
-        /// Añade una nueva reseña a la colección de reseñas del libro.
-        /// </summary>
-        /// <param name="review">El objeto <see cref="Review"/> a añadir. Debe tener el mismo BookId que este libro.</param>
-        public void AddReview(Review review)
-        {
-            if (review != null && review.BookId == this.Id)
-            {
-                Reviews.Add(review);
-            }
-        }
+     
     }
 }

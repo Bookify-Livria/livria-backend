@@ -1,12 +1,16 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
-using LivriaBackend.commerce.Domain.Model.Aggregates; 
-using LivriaBackend.commerce.Domain.Model.Entities;    
+using LivriaBackend.communities.Domain.Model.ValueObjects; 
+using LivriaBackend.commerce.Domain.Model.Aggregates;
+using LivriaBackend.commerce.Domain.Model.Entities; 
 using LivriaBackend.commerce.Domain.Model.ValueObjects; 
 using LivriaBackend.users.Domain.Model.Aggregates;
 using LivriaBackend.notifications.Domain.Model.Aggregates;
 using LivriaBackend.notifications.Domain.Model.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Threading; 
+using System.Threading.Tasks; 
 
 namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
 {
@@ -24,9 +28,9 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
         /// <summary>Representa la colección de ítems en los carritos de compra en la base de datos.</summary>
         public DbSet<CartItem> CartItems { get; set; }
         /// <summary>Representa la colección de órdenes de compra en la base de datos.</summary>
-        public DbSet<Order> Orders { get; set; } 
+        public DbSet<Order> Orders { get; set; }
         /// <summary>Representa la colección de ítems dentro de las órdenes de compra en la base de datos.</summary>
-        public DbSet<OrderItem> OrderItems { get; set; } 
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         /// <summary>Representa la colección de usuarios base en la base de datos.</summary>
         public DbSet<User> Users { get; set; }
@@ -41,7 +45,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
         public DbSet<Post> Posts { get; set; }
         /// <summary>Representa la tabla de unión entre usuarios clientes y comunidades en la base de datos.</summary>
         public DbSet<UserCommunity> UserCommunities { get; set; }
-        
+
         /// <summary>Representa la colección de notificaciones en la base de datos.</summary>
         public DbSet<Notification> Notifications { get; set; }
 
@@ -80,21 +84,22 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(uc => uc.Icon).HasMaxLength(255);
                 entity.Property(uc => uc.Phrase).HasMaxLength(255);
                 entity.Property(uc => uc.Subscription).HasMaxLength(50);
-                
-                
-                
+
                 entity.HasBaseType<User>();
-                
+
                 entity.HasMany(uc => uc.FavoriteBooks)
-                    .WithMany() 
+                    .WithMany()
                     .UsingEntity(j => j.ToTable("user_favorite_books"));
 
-                
-                entity.HasMany(uc => uc.Orders) 
-                    .WithOne(o => o.UserClient) 
-                    .HasForeignKey(o => o.UserClientId) 
+                // ELIMINADO: Se elimina la configuración de la relación de Orders desde UserClient
+                // ya que la propiedad Orders fue eliminada de la clase UserClient
+                /*
+                entity.HasMany(uc => uc.Orders)
+                    .WithOne(o => o.UserClient)
+                    .HasForeignKey(o => o.UserClientId)
                     .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict); 
+                    .OnDelete(DeleteBehavior.Restrict);
+                */
             });
 
             modelBuilder.Entity<UserAdmin>(entity =>
@@ -104,7 +109,7 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(ua => ua.SecurityPin).HasMaxLength(255);
                 entity.HasBaseType<User>();
             });
-
+            
             modelBuilder.Entity<Book>(entity =>
             {
                 entity.ToTable("books");
@@ -119,11 +124,6 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(b => b.Genre).HasMaxLength(50);
                 entity.Property(b => b.Language).HasMaxLength(50);
 
-                entity.HasMany(b => b.Reviews)
-                      .WithOne(r => r.Book)
-                      .HasForeignKey(r => r.BookId)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -136,14 +136,14 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
 
                 entity.Property(r => r.BookId).IsRequired();
                 entity.HasOne(r => r.Book)
-                      .WithMany(b => b.Reviews)
+                      .WithMany() 
                       .HasForeignKey(r => r.BookId)
                       .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade); 
 
                 entity.Property(r => r.UserClientId).IsRequired();
                 entity.HasOne(r => r.UserClient)
-                      .WithMany()
+                      .WithMany() 
                       .HasForeignKey(r => r.UserClientId)
                       .IsRequired()
                       .OnDelete(DeleteBehavior.Restrict);
@@ -179,14 +179,15 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.HasKey(o => o.Id);
                 entity.Property(o => o.Id).IsRequired().ValueGeneratedOnAdd();
                 entity.Property(o => o.Code).IsRequired().HasMaxLength(6);
-                entity.HasIndex(o => o.Code).IsUnique(); 
+                entity.HasIndex(o => o.Code).IsUnique();
 
                 entity.Property(o => o.UserClientId).IsRequired();
-                entity.HasOne(o => o.UserClient) 
-                    .WithMany(uc => uc.Orders) 
+                // Esta relación es correcta, ya que Order sigue teniendo una clave foránea a UserClient
+                entity.HasOne(o => o.UserClient)
+                    .WithMany() // <-- IMPORTANTE: Ahora WithMany() no toma un parámetro de navegación si UserClient ya no tiene Orders
                     .HasForeignKey(o => o.UserClientId)
                     .IsRequired()
-                    .OnDelete(DeleteBehavior.Restrict); 
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(o => o.UserEmail).IsRequired().HasMaxLength(100);
                 entity.Property(o => o.UserPhone).IsRequired().HasMaxLength(20);
@@ -197,25 +198,25 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(o => o.Total).IsRequired().HasColumnType("decimal(10, 2)");
                 entity.Property(o => o.Date).IsRequired();
 
-                
+
                 entity.OwnsOne(o => o.Shipping, shipping =>
                 {
                     shipping.Property(s => s.Address).IsRequired().HasMaxLength(255).HasColumnName("ShippingAddress");
                     shipping.Property(s => s.City).IsRequired().HasMaxLength(100).HasColumnName("ShippingCity");
                     shipping.Property(s => s.District).IsRequired().HasMaxLength(100).HasColumnName("ShippingDistrict");
                     shipping.Property(s => s.Reference).HasMaxLength(500).HasColumnName("ShippingReference");
-                    
+
                 });
 
-                
+
                 entity.HasMany(o => o.Items)
                       .WithOne(oi => oi.Order)
                       .HasForeignKey(oi => oi.OrderId)
                       .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade); 
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
-            
+
             modelBuilder.Entity<OrderItem>(entity =>
             {
                 entity.ToTable("order_items");
@@ -226,17 +227,17 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(oi => oi.BookTitle).IsRequired().HasMaxLength(255);
                 entity.Property(oi => oi.BookAuthor).IsRequired().HasMaxLength(100);
                 entity.Property(oi => oi.BookPrice).IsRequired().HasColumnType("decimal(10, 2)");
-                entity.Property(oi => oi.BookCover).HasMaxLength(255); 
+                entity.Property(oi => oi.BookCover).HasMaxLength(255);
 
                 entity.Property(oi => oi.Quantity).IsRequired();
                 entity.Property(oi => oi.ItemTotal).IsRequired().HasColumnType("decimal(10, 2)");
 
                 entity.Property(oi => oi.OrderId).IsRequired();
- 
+
             });
 
 
-            
+          
             modelBuilder.Entity<Community>(entity =>
             {
                 entity.ToTable("communities");
@@ -244,15 +245,12 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(c => c.Id).IsRequired().ValueGeneratedOnAdd();
                 entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
                 entity.Property(c => c.Description).IsRequired().HasMaxLength(500);
-                entity.Property(c => c.Type).IsRequired().HasMaxLength(50);
+                entity.Property(c => c.Type)
+                      .IsRequired()
+                      .HasConversion<string>(); 
                 entity.Property(c => c.Image).HasMaxLength(255);
                 entity.Property(c => c.Banner).HasMaxLength(255);
 
-                entity.HasMany(c => c.Posts)
-                      .WithOne(p => p.Community)
-                      .HasForeignKey(p => p.CommunityId)
-                      .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             
@@ -265,18 +263,18 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(p => p.Content).IsRequired().HasMaxLength(2000);
                 entity.Property(p => p.Img).HasMaxLength(255);
                 entity.Property(p => p.CreatedAt).IsRequired();
-
+                entity.Property(p => p.CommunityId).IsRequired();
+                entity.Property(p => p.UserId).IsRequired();
                 entity.HasOne(p => p.Community)
-                      .WithMany(c => c.Posts)
+                      .WithMany() 
                       .HasForeignKey(p => p.CommunityId)
                       .IsRequired()
-                      .OnDelete(DeleteBehavior.Cascade);
-
+                      .OnDelete(DeleteBehavior.Cascade); 
                 entity.HasOne(p => p.UserClient)
-                      .WithMany()
+                      .WithMany() 
                       .HasForeignKey(p => p.UserId)
                       .IsRequired()
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .OnDelete(DeleteBehavior.Restrict); 
             });
 
             
@@ -285,17 +283,17 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.ToTable("user_communities");
                 entity.HasKey(uc => new { uc.UserClientId, uc.CommunityId });
 
-                entity.Property(uc => uc.JoinedDate).IsRequired();
+                entity.Property(uc => uc.JoinedDate).IsRequired(); 
 
                 entity.HasOne(uc => uc.UserClient)
                       .WithMany(u => u.UserCommunities)
                       .HasForeignKey(uc => uc.UserClientId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade); 
 
                 entity.HasOne(uc => uc.Community)
                       .WithMany(c => c.UserCommunities)
                       .HasForeignKey(uc => uc.CommunityId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade); 
             });
 
             
@@ -311,8 +309,32 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
 
                 entity.Property(n => n.Type)
                       .IsRequired()
-                      .HasConversion<string>();
+                      .HasConversion<string>(); 
             });
+        }
+
+        /// <summary>
+        /// Sobrescribe SaveChangesAsync para manejar automáticamente las propiedades CreatedAt y UpdatedAt
+        /// para entidades que las tengan (asumiendo que heredan de una clase base como AuditableEntity
+        /// o que estas propiedades existen).
+        /// </summary>
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries<dynamic>()) 
+            {
+                
+                if (entry.State == EntityState.Added && entry.Metadata.FindProperty("CreatedAt") != null)
+                {
+                    entry.Property("CreatedAt").CurrentValue = DateTime.UtcNow;
+                    if (entry.Metadata.FindProperty("UpdatedAt") != null)
+                        entry.Property("UpdatedAt").CurrentValue = null;
+                }
+                else if (entry.State == EntityState.Modified && entry.Metadata.FindProperty("UpdatedAt") != null)
+                {
+                    entry.Property("UpdatedAt").CurrentValue = DateTime.UtcNow;
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

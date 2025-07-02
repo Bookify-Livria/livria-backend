@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using LivriaBackend.communities.Domain.Model.ValueObjects; 
 
 namespace LivriaBackend.communities.Interfaces.REST.Resources
 {
-
     public record CommunityResource(
         int Id,
         
@@ -13,15 +13,12 @@ namespace LivriaBackend.communities.Interfaces.REST.Resources
         [StringLength(500, ErrorMessage = "MaxLengthError")]
         string Description,
         
-        [StringLength(50, ErrorMessage = "MaxLengthError")]
-        string Type,
+        CommunityType Type, 
         
         [Url(ErrorMessage = "UrlError")]
         string Image,
         
         [Url(ErrorMessage = "UrlError")]
-        string Banner,
-        
-        IEnumerable<PostResource> Posts 
+        string Banner
     );
 }

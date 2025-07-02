@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
-using LivriaBackend.users.Domain.Model.Aggregates; 
-using System.Linq; 
+using LivriaBackend.users.Domain.Model.Aggregates;
+using System.Linq;
+using LivriaBackend.communities.Domain.Model.ValueObjects; // ¡Nuevo using!
 
 namespace LivriaBackend.communities.Domain.Model.Aggregates
 {
     /// <summary>
     /// Representa un agregado de comunidad dentro del dominio.
-    /// Una comunidad agrupa publicaciones y usuarios que la integran.
+    /// Una comunidad agrupa usuarios que la integran.
     /// </summary>
     public class Community
     {
@@ -26,9 +27,9 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         public string Description { get; private set; }
 
         /// <summary>
-        /// Obtiene el tipo de comunidad (por ejemplo, "pública", "privada").
+        /// Obtiene el tipo de comunidad (género literario).
         /// </summary>
-        public string Type { get; private set; }
+        public CommunityType Type { get; private set; } // ¡Modificado a CommunityType!
 
         /// <summary>
         /// Obtiene la URL de la imagen de perfil de la comunidad.
@@ -40,10 +41,6 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         /// </summary>
         public string Banner { get; private set; }
 
-        /// <summary>
-        /// Obtiene una colección de las publicaciones asociadas a esta comunidad.
-        /// </summary>
-        public ICollection<Post> Posts { get; private set; } = new List<Post>(); 
 
         /// <summary>
         /// Obtiene una colección de las relaciones entre usuarios y esta comunidad (miembros).
@@ -52,12 +49,18 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
 
         /// <summary>
         /// Constructor privado sin parámetros para uso de Entity Framework Core.
-        /// Inicializa las colecciones de publicaciones y relaciones de usuarios con la comunidad.
+        /// Inicializa las colecciones de relaciones de usuarios con la comunidad.
         /// </summary>
         private Community()
         {
-            Posts = new List<Post>(); 
-            UserCommunities = new List<UserCommunity>(); 
+            UserCommunities = new List<UserCommunity>();
+            // Es buena práctica inicializar propiedades no nulas en constructores,
+            // incluso si son para EF Core, a menos que sepa que EF Core las poblará.
+            Name = string.Empty;
+            Description = string.Empty;
+            Image = string.Empty;
+            Banner = string.Empty;
+            // Type será asignado por EF Core al cargar.
         }
 
         /// <summary>
@@ -65,31 +68,50 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         /// </summary>
         /// <param name="name">El nombre de la comunidad.</param>
         /// <param name="description">La descripción de la comunidad.</param>
-        /// <param name="type">El tipo de comunidad (pública, privada, etc.).</param>
-        /// <param name="image">La URL de la imagen de perfil de la comunidad.</param>
-        /// <param name="banner">La URL del banner de la comunidad.</param>
-        public Community(string name, string description, string type, string image, string banner)
+        /// <param name="type">El tipo de comunidad (género literario).</param>
+        /// <param name="image">La URL de la imagen de perfil de la comunidad. Opcional, por defecto string.Empty.</param>
+        /// <param name="banner">La URL del banner de la comunidad. Opcional, por defecto string.Empty.</param>
+        public Community(string name, string description, CommunityType type, string? image = null, string? banner = null) // ¡Modificado el tipo de 'type' y hecho 'image' y 'banner' opcionales!
         {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name cannot be empty.", nameof(name));
+            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Description cannot be empty.", nameof(description));
+
             Name = name;
             Description = description;
             Type = type;
-            Image = image;
-            Banner = banner;
-            Posts = new List<Post>(); 
-            UserCommunities = new List<UserCommunity>(); 
+            Image = image ?? string.Empty; // Asigna string.Empty si es nulo
+            Banner = banner ?? string.Empty; // Asigna string.Empty si es nulo
+            UserCommunities = new List<UserCommunity>();
         }
 
-        /// <summary>
-        /// Añade una nueva publicación a la colección de publicaciones de la comunidad.
-        /// </summary>
-        /// <param name="post">La publicación a añadir. Debe ser un objeto <see cref="Post"/> válido y no debe estar ya en la colección.</param>
-        public void AddPost(Post post)
+        // --- Métodos para actualizar la comunidad (si aplica) ---
+        public void UpdateName(string newName)
         {
-            if (post != null && !Posts.Contains(post))
-            {
-                Posts.Add(post);
-            }
+            if (string.IsNullOrWhiteSpace(newName)) throw new ArgumentException("Name cannot be empty.", nameof(newName));
+            Name = newName;
         }
+
+        public void UpdateDescription(string newDescription)
+        {
+            if (string.IsNullOrWhiteSpace(newDescription)) throw new ArgumentException("Description cannot be empty.", nameof(newDescription));
+            Description = newDescription;
+        }
+
+        public void UpdateType(CommunityType newType) // Método para actualizar el tipo de comunidad
+        {
+            Type = newType;
+        }
+
+        public void UpdateImage(string? newImage)
+        {
+            Image = newImage ?? string.Empty;
+        }
+
+        public void UpdateBanner(string? newBanner)
+        {
+            Banner = newBanner ?? string.Empty;
+        }
+
 
         /// <summary>
         /// Añade un cliente de usuario como miembro de esta comunidad creando una relación <see cref="UserCommunity"/>.
@@ -97,10 +119,16 @@ namespace LivriaBackend.communities.Domain.Model.Aggregates
         /// <param name="userClient">El cliente de usuario a añadir. Debe ser un objeto <see cref="UserClient"/> válido y no debe ser ya miembro de la comunidad.</param>
         public void AddUser(UserClient userClient)
         {
-            if (userClient != null && !UserCommunities.Any(uc => uc.UserClientId == userClient.Id))
+            if (userClient == null)
             {
-                UserCommunities.Add(new UserCommunity(userClient.Id, this.Id));
+                throw new ArgumentNullException(nameof(userClient), "UserClient cannot be null.");
             }
+            if (UserCommunities.Any(uc => uc.UserClientId == userClient.Id))
+            {
+                // Podrías lanzar una excepción o simplemente no hacer nada si ya es miembro
+                return;
+            }
+            UserCommunities.Add(new UserCommunity(userClient.Id, this.Id));
         }
     }
 }

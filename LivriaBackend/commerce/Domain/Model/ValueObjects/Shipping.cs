@@ -21,7 +21,7 @@ namespace LivriaBackend.commerce.Domain.Model.ValueObjects
         /// </summary>
         [Required]
         [StringLength(100)]
-        public string City { get; init; } = "Lima Metropolitana"; 
+        public string City { get; init; } // Ya no tiene un asignador de valor por defecto aquí si se pasa por constructor
 
         /// <summary>
         /// Obtiene el distrito o comuna de destino del envío.
@@ -40,21 +40,32 @@ namespace LivriaBackend.commerce.Domain.Model.ValueObjects
         /// Constructor privado para uso de frameworks ORM o serialización.
         /// No debe ser utilizado directamente para la creación de instancias de <see cref="Shipping"/>.
         /// </summary>
-        private Shipping() { }
+        private Shipping() 
+        {
+            // Inicializar propiedades no nulas para el ORM
+            Address = string.Empty;
+            City = "Lima Metropolitana"; // Se mantiene el valor por defecto si no se pasa por el constructor principal
+            District = string.Empty;
+            Reference = string.Empty;
+        }
 
         /// <summary>
         /// Inicializa una nueva instancia del objeto de valor <see cref="Shipping"/> con los detalles especificados.
         /// </summary>
         /// <param name="address">La dirección de la calle y número (no puede ser nula ni vacía).</param>
+        /// <param name="city">La ciudad de destino (no puede ser nula ni vacía).</param>
         /// <param name="district">El distrito o comuna (no puede ser nulo ni vacío).</param>
         /// <param name="reference">Información adicional o de referencia.</param>
-        /// <exception cref="ArgumentNullException">Se lanza si <paramref name="address"/> o <paramref name="district"/> son nulos o vacíos.</exception>
-        public Shipping(string address, string district, string reference)
+        /// <exception cref="ArgumentNullException">Se lanza si algún parámetro requerido es nulo o vacío.</exception>
+        public Shipping(string address, string city, string district, string reference)
         {
             if (string.IsNullOrWhiteSpace(address)) throw new ArgumentNullException(nameof(address), "Address cannot be empty.");
+            if (string.IsNullOrWhiteSpace(city)) throw new ArgumentNullException(nameof(city), "City cannot be empty.");
             if (string.IsNullOrWhiteSpace(district)) throw new ArgumentNullException(nameof(district), "District cannot be empty.");
+            // Reference puede ser null/empty, no se valida
 
             Address = address;
+            City = city;
             District = district;
             Reference = reference;
         }

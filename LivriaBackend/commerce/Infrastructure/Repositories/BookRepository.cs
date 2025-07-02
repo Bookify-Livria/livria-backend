@@ -31,7 +31,6 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         public new async Task<Book> GetByIdAsync(int id)
         {
             return await this.Context.Books
-                .Include(b => b.Reviews)
                 .FirstOrDefaultAsync(b => b.Id == id);
         }
 
@@ -43,7 +42,6 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         public new async Task<IEnumerable<Book>> GetAllAsync()
         {
             return await this.Context.Books
-                .Include(b => b.Reviews)
                 .ToListAsync();
         }
 

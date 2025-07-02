@@ -122,9 +122,8 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
                 command.Email,
                 command.Password,
                 command.Icon,
-                command.Phrase,
-                command.Subscription
-            );
+                command.Phrase
+                );
 
             
             await _userClientRepository.UpdateAsync(userClient);

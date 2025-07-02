@@ -5,6 +5,7 @@ using LivriaBackend.commerce.Domain.Repositories;
 using LivriaBackend.commerce.Domain.Model.Services;
 using LivriaBackend.Shared.Domain.Repositories; 
 using LivriaBackend.users.Domain.Model.Repositories; 
+using LivriaBackend.commerce.Domain.Model.ValueObjects; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,6 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
         /// <param name="userClientRepository">El repositorio de clientes de usuario.</param>
         /// <param name="unitOfWork">La unidad de trabajo para gestionar transacciones.</param>
         /// <param name="notificationCommandService">El servicio de comandos de notificación para enviar alertas al usuario.</param>
-
         public OrderCommandService(
             IOrderRepository orderRepository,
             ICartItemRepository cartItemRepository,
@@ -58,61 +58,83 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
         }
 
         /// <summary>
-        /// Maneja el comando <see cref="CreateOrderCommand"/> para crear una nueva orden de compra.
+        /// Maneja el comando <see cref="CreateOrderCommand"/> para crear una nueva orden de compra,
+        /// obteniendo los ítems directamente del carrito del usuario especificado por UserClientId.
         /// </summary>
-        /// <param name="command">El comando que contiene los detalles de la orden, incluyendo los IDs de los ítems del carrito.</param>
+        /// <param name="command">El comando que contiene los detalles de la orden, incluyendo el UserClientId.</param>
         /// <returns>El objeto <see cref="Order"/> creado.</returns>
         /// <exception cref="ArgumentException">
-        /// Se lanza si el cliente de usuario no se encuentra, si un ítem del carrito no existe o no pertenece al usuario,
-        /// si el carrito está vacío, si un libro no se encuentra, o si el estado de la orden es inválido.
+        /// Se lanza si el cliente de usuario no se encuentra, si el carrito está vacío,
+        /// si los detalles de envío son inválidos para el tipo de entrega, o si un libro no se encuentra.
         /// </exception>
         /// <exception cref="InvalidOperationException">Se lanza si no hay suficiente stock para un libro.</exception>
         /// <remarks>
         /// Este método:
-        /// 1. Valida la existencia del cliente de usuario.
-        /// 2. Recupera y valida los ítems del carrito, asegurando que pertenecen al usuario.
-        /// 3. Verifica que el carrito no esté vacío.
-        /// 4. Itera sobre los ítems del carrito para:
+        /// 1. Valida la existencia del cliente de usuario y obtiene sus datos.
+        /// 2. Recupera **todos** los <see cref="CartItem"/>s asociados al <see cref="UserClient"/>.
+        /// 3. Valida que el carrito no esté vacío.
+        /// 4. Valida los detalles de envío según si es `IsDelivery`.
+        /// 5. Itera sobre los ítems del carrito para:
         ///    a. Validar la existencia y stock de cada libro.
-        ///    b. Crear <see cref="OrderItem"/>s a partir de los ítems del carrito.
+        ///    b. Crear <see cref="OrderItem"/>s.
         ///    c. Disminuir el stock del libro.
-        /// 5. Crea la nueva <see cref="Order"/> con todos sus <see cref="OrderItem"/>s.
-        /// 6. Elimina los ítems del carrito una vez que la orden ha sido creada.
-        /// 7. Persiste todos los cambios utilizando la unidad de trabajo.
-        /// 8. Envía una notificación de "Orden Recibida" al cliente de usuario.
+        /// 6. Crea la nueva <see cref="Order"/> con todos sus <see cref="OrderItem"/>s.
+        /// 7. Elimina los ítems del carrito una vez que la orden ha sido creada.
+        /// 8. Persiste todos los cambios utilizando la unidad de trabajo.
+        /// 9. Envía una notificación de "Orden Recibida" al cliente de usuario.
         /// </remarks>
-
         public async Task<Order> Handle(CreateOrderCommand command)
         {
+            // 1. Obtener los detalles del UserClient
             var userClient = await _userClientRepository.GetByIdAsync(command.UserClientId);
             if (userClient == null)
             {
-                throw new ArgumentException($"UserClient with ID {command.UserClientId} not found.");
+                throw new ArgumentException($"UserClient with ID {command.UserClientId} not found.", nameof(command.UserClientId));
             }
 
-            var cartItems = new List<CartItem>();
-            foreach (var cartItemId in command.CartItemIds)
-            {
-                var cartItem = await _cartItemRepository.GetByIdAsync(cartItemId);
-                if (cartItem == null || cartItem.UserClientId != command.UserClientId)
-                {
-                    throw new ArgumentException($"CartItem with ID {cartItemId} not found or does not belong to UserClient {command.UserClientId}.");
-                }
-                cartItems.Add(cartItem);
-            }
-
+            // 2. Obtener todos los ítems del carrito para este UserClient
+            // Se utiliza GetCartItemsByUserIdAsync para obtener todos los ítems del carrito del usuario.
+            var cartItems = (await _cartItemRepository.GetCartItemsByUserIdAsync(command.UserClientId)).ToList();
+            
             if (!cartItems.Any())
             {
-                throw new ArgumentException("Cannot create an order with an empty cart.");
+                throw new ArgumentException($"Cart for UserClient with ID {command.UserClientId} is empty. Cannot create an order.", nameof(command.UserClientId));
+            }
+
+            // 3. Validar y construir los detalles de envío
+            Shipping? shippingDetails = null;
+            if (command.IsDelivery)
+            {
+                if (command.ShippingDetails == null)
+                {
+                    throw new ArgumentException("Shipping details are required for delivery orders.", nameof(command.ShippingDetails));
+                }
+                // Se ajusta el constructor de Shipping para incluir 'City'
+                shippingDetails = new Shipping(
+                    command.ShippingDetails.Address,
+                    command.ShippingDetails.City, 
+                    command.ShippingDetails.District,
+                    command.ShippingDetails.Reference 
+                );
+            }
+            else // No es para entrega a domicilio
+            {
+                if (command.ShippingDetails != null)
+                {
+                    // Si no hay delivery, los detalles de envío deben ser nulos
+                    throw new ArgumentException("Shipping details should not be provided for non-delivery orders.", nameof(command.IsDelivery));
+                }
             }
 
             var orderItems = new List<OrderItem>();
+            // totalOrderPrice se calculará en el constructor de Order.
+
             foreach (var cartItem in cartItems)
             {
                 var book = await _bookRepository.GetByIdAsync(cartItem.BookId);
                 if (book == null)
                 {
-                    throw new ArgumentException($"Book with ID {cartItem.BookId} for CartItem {cartItem.Id} not found.");
+                    throw new ArgumentException($"Book with ID {cartItem.BookId} for CartItem {cartItem.Id} not found.", nameof(cartItem.BookId));
                 }
 
                 if (book.Stock < cartItem.Quantity)
@@ -124,31 +146,32 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
                     book.Id,
                     book.Title,
                     book.Author,
-                    book.SalePrice,
-                    book.Cover,
+                    book.SalePrice, 
+                    book.Cover,     
                     cartItem.Quantity
                 );
                 orderItems.Add(orderItem);
 
-                book.DecreaseStock(cartItem.Quantity);
-                await _bookRepository.UpdateAsync(book);
+                book.DecreaseStock(cartItem.Quantity); 
+                await _bookRepository.UpdateAsync(book); 
             }
-
             
+            // Crear la nueva orden
             var order = new Order(
                 command.UserClientId,
-                command.UserEmail,
-                command.UserPhone,
-                command.UserFullName,
-                command.RecipientName,
+                command.UserEmail, 
+                command.UserPhone, 
+                command.UserFullName, 
+                command.RecipientName, 
                 command.IsDelivery,
-                command.ShippingDetails,
-                orderItems,
+                shippingDetails, 
+                orderItems, 
                 command.Status 
             );
 
             await _orderRepository.AddAsync(order);
 
+            // 4. Eliminar los ítems del carrito una vez que la orden ha sido creada exitosamente
             foreach (var cartItem in cartItems)
             {
                 await _cartItemRepository.DeleteAsync(cartItem);
@@ -156,6 +179,7 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
 
             await _unitOfWork.CompleteAsync(); 
             
+            // 5. Enviar notificación al usuario
             await _notificationCommandService.Handle(new CreateNotificationCommand(
                 command.UserClientId, 
                 ENotificationType.Order, 
@@ -179,7 +203,7 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
                 return null; 
             }
             
-            order.UpdateStatus(command.Status);
+            order.UpdateStatus(command.Status); 
 
             await _unitOfWork.CompleteAsync(); 
             return order;

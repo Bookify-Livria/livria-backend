@@ -31,8 +31,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         string Genre,
         
         [StringLength(50, ErrorMessage = "MaxLengthError")]
-        string Language,
+        string Language
         
-        IEnumerable<ReviewResource> Reviews 
     );
 }

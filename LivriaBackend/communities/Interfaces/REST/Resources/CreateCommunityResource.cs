@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Mysqlx;
+using LivriaBackend.communities.Domain.Model.ValueObjects; // ¡Nuevo using!
 
 namespace LivriaBackend.communities.Interfaces.REST.Resources
 {
-
     public record CreateCommunityResource(
         [Required(ErrorMessage = "EmptyField")]
         [StringLength(100, ErrorMessage = "MaxLengthError")]
@@ -14,13 +13,12 @@ namespace LivriaBackend.communities.Interfaces.REST.Resources
         string Description,
         
         [Required(ErrorMessage = "EmptyField")]
-        [StringLength(50, ErrorMessage = "MaxLengthError")]
-        string Type,
+        CommunityType Type, 
         
         [Url(ErrorMessage = "UrlError")]
-        string Image,
+        string? Image, // ¡Hecho nullable para coincidir con el constructor de la entidad!
         
         [Url(ErrorMessage = "UrlError")]
-        string Banner
+        string? Banner // ¡Hecho nullable para coincidir con el constructor de la entidad!
     );
 }

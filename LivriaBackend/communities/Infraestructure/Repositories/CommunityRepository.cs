@@ -35,7 +35,6 @@ namespace LivriaBackend.communities.Infrastructure.Repositories
         public override async Task<Community> GetByIdAsync(int id)
         {
             return await Context.Communities
-                .Include(c => c.Posts) // Carga ansiosa de las publicaciones de la comunidad
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
@@ -50,7 +49,6 @@ namespace LivriaBackend.communities.Infrastructure.Repositories
         public override async Task<IEnumerable<Community>> ListAsync()
         {
             return await Context.Communities
-                .Include(c => c.Posts) 
                 .ToListAsync();
         }
     }

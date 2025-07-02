@@ -28,10 +28,8 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// </summary>
         public string Subscription { get; private set; }
 
-        /// <summary>
-        /// Obtiene la colección de órdenes realizadas por este usuario.
-        /// </summary>
-        public ICollection<Order> Orders { get; private set; } = new List<Order>();
+        // ELIMINADO: La propiedad de navegación Orders para evitar que se cargue por defecto
+        // public ICollection<Order> Orders { get; private set; } = new List<Order>();
 
         /// <summary>
         /// Obtiene la colección de comunidades a las que este usuario se ha unido.
@@ -55,7 +53,8 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// </summary>
         protected UserClient() : base()
         {
-            Orders = new List<Order>(); 
+            // ELIMINADO: Inicialización de Orders
+            // Orders = new List<Order>(); 
             UserCommunities = new List<UserCommunity>();
         }
 
@@ -76,7 +75,8 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
             Icon = icon;
             Phrase = phrase;
             Subscription = subscription; 
-            Orders = new List<Order>();
+            // ELIMINADO: Inicialización de Orders
+            // Orders = new List<Order>();
             UserCommunities = new List<UserCommunity>();
         }
 
@@ -90,13 +90,11 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="password">La nueva contraseña.</param>
         /// <param name="icon">El nuevo URL o identificador del icono.</param>
         /// <param name="phrase">La nueva frase o estado personal.</param>
-        /// <param name="subscription">El nuevo plan de suscripción.</param>
-        public void Update(string display, string username, string email, string password, string icon, string phrase, string subscription)
+        public void Update(string display, string username, string email, string password, string icon, string phrase)
         {
             base.UpdateUserProperties(display, username, email, password);
             Icon = icon;
             Phrase = phrase;
-            Subscription = subscription;
         }
 
         /// <summary>

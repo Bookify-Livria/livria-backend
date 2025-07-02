@@ -25,8 +25,6 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
         [StringLength(255, ErrorMessage = "MaxLengthError")]
         string Phrase,
         
-        List<OrderResource> Orders, 
-        
         [StringLength(255, ErrorMessage = "MaxLengthError")]
         string Subscription
         

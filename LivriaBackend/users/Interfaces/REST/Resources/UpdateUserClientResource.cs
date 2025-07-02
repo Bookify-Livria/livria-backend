@@ -11,8 +11,6 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
         [StringLength(255, ErrorMessage = "MaxLengthError")]
         public string? Phrase { get; init; }
         
-        [StringLength(255, ErrorMessage = "MaxLengthError")]
-        public string? Subscription { get; init; }
 
         
         public UpdateUserClientResource(
@@ -21,13 +19,11 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
             string? email,
             string? password,
             string? icon,
-            string? phrase,
-            string? subscription
+            string? phrase
         ) : base(display, username, email, password, icon, phrase)
         {
             Icon = icon;
             Phrase = phrase;
-            Subscription = subscription;
         }
         
         

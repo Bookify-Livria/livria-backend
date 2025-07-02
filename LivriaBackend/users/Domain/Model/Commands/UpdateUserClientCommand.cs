@@ -10,7 +10,6 @@
     /// <param name="Password">La nueva contraseña del cliente.</param>
     /// <param name="Icon">El nuevo URL o identificador del icono/avatar del cliente.</param>
     /// <param name="Phrase">La nueva frase o estado personal del cliente.</param>
-    /// <param name="Subscription">El nuevo plan de suscripción del cliente.</param>
     public record UpdateUserClientCommand(
         int UserClientId,
         string Display,
@@ -18,7 +17,5 @@
         string Email,
         string Password,
         string Icon,
-        string Phrase,
-        string Subscription
-    );
+        string Phrase);
 }

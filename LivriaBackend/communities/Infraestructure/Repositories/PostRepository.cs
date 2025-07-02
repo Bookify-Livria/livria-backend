@@ -1,11 +1,13 @@
-﻿using LivriaBackend.communities.Domain.Model.Aggregates;
+﻿// Path: LivriaBackend.communities.Infrastructure.Repositories/PostRepository.cs
+using LivriaBackend.communities.Domain.Model.Aggregates;
 using LivriaBackend.communities.Domain.Repositories;
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; 
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories; 
-using Microsoft.EntityFrameworkCore; 
-using System.Collections.Generic;    
-using System.Linq;                   
-using System.Threading.Tasks;        
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using LivriaBackend.users.Domain.Model.Aggregates; // Added for UserClient navigation property
 
 namespace LivriaBackend.communities.Infrastructure.Repositories
 {
@@ -23,24 +25,24 @@ namespace LivriaBackend.communities.Infrastructure.Repositories
         public PostRepository(AppDbContext context) : base(context)
         {
         }
-        
+
         /// <summary>
         /// Obtiene una colección de todas las publicaciones que pertenecen a una comunidad específica.
         /// Incluye los datos del usuario cliente (<see cref="Post.UserClient"/>) y la comunidad (<see cref="Post.Community"/>) asociados.
         /// </summary>
         /// <param name="communityId">El identificador único de la comunidad.</param>
         /// <returns>
-        /// Una tarea que representa la operación asíncrona. 
+        /// Una tarea que representa la operación asíncrona.
         /// El resultado de la tarea es una colección de <see cref="Post"/> asociadas a la comunidad especificada,
         /// con sus relaciones de usuario y comunidad cargadas de forma ansiosa.
         /// Retorna una colección vacía si no se encuentran publicaciones para el ID de comunidad dado.
         /// </returns>
         public async Task<IEnumerable<Post>> GetByCommunityIdAsync(int communityId)
         {
-            return await this.Context.Set<Post>() 
-                .Include(p => p.UserClient) 
-                .Include(p => p.Community)   
-                .Where(p => p.CommunityId == communityId) 
+            return await this.Context.Set<Post>()
+                .Include(p => p.UserClient)
+                .Include(p => p.Community)
+                .Where(p => p.CommunityId == communityId)
                 .ToListAsync();
         }
     }

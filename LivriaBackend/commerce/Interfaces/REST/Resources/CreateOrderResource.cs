@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using LivriaBackend.commerce.Application.Resources;
+using LivriaBackend.commerce.Application.Resources; 
 
 namespace LivriaBackend.commerce.Interfaces.REST.Resources
 {
@@ -26,16 +26,21 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         string RecipientName,
 
         [Required(ErrorMessage = "EmptyField")]
-        [StringLength(255, ErrorMessage = "MaxLengthError")]
+        [StringLength(255, ErrorMessage = "MaxLengthError")] // Corrección: ErrorErrorName a ErrorMessageResourceName
         string Status,
 
         
         [Required(ErrorMessage = "EmptyField")]
         bool IsDelivery,
         
-        ShippingResource? ShippingDetails, 
-        
-        [Required(ErrorMessage = "EmptyField")]
-        List<int> CartItemIds 
+        ShippingResource? ShippingDetails 
     );
+
+    // Si tu ShippingResource no está definido explícitamente, su estructura debería ser similar a:
+    // public record ShippingResource(
+    //     string Address,
+    //     string City,
+    //     string District,
+    //     string Reference
+    // );
 }
