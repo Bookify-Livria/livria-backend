@@ -75,7 +75,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             // Creamos el RegisterUserClientCompositeCommand con todos los datos, incluyendo la contraseña
             var command = new RegisterUserClientCompositeCommand(
                 resource.Username,
-                resource.Password,
+                resource.Password, // ¡Ahora incluimos la contraseña!
                 resource.Display,
                 resource.Email,
                 resource.Icon,
@@ -218,7 +218,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 404 Not Found si el cliente de usuario no se encuentra.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "UserClient,Admin")]
         [HttpPut("{id}/subscription")]
         [SwaggerOperation(
             Summary = "Actualizar el plan de suscripción de un cliente de usuario.",

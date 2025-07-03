@@ -16,6 +16,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
     /// <summary>
     /// Controlador RESTful para gestionar las operaciones relacionadas con los ítems del carrito de compras.
     /// </summary>
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/cart-items")]
     [Produces(MediaTypeNames.Application.Json)]

@@ -101,7 +101,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// con un código 201 CreatedAtAction si la operación es exitosa.
         /// </returns>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "UserClient,Admin")]
         [SwaggerOperation(
             Summary= "Crear un nuevo libro.",
             Description= "Crea un nuevo libro en el sistema."
@@ -146,7 +146,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// Retorna 404 Not Found si el libro no existe.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "UserClient,Admin")]
         [HttpPut("{bookId}/stock")] // PUT api/v1/books/{bookId}/stock
         [SwaggerOperation(
             Summary = "Aumentar el stock de un libro.",

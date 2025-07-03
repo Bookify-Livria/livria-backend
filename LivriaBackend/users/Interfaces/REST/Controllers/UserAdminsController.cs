@@ -17,7 +17,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
     /// Expone endpoints para operaciones relacionadas con <see cref="UserAdmin"/>, como
     /// obtener todos los administradores y actualizar un administrador existente.
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/useradmins")]
     public class UserAdminsController : ControllerBase
