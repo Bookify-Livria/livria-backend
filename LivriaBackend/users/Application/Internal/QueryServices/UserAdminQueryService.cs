@@ -1,9 +1,9 @@
-﻿using LivriaBackend.users.Domain.Model.Queries;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Queries;
 using LivriaBackend.users.Domain.Model.Repositories;
 using LivriaBackend.users.Domain.Model.Services;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LivriaBackend.users.Application.Internal.QueryServices
 {

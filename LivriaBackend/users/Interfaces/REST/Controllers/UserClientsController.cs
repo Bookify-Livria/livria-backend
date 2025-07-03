@@ -1,8 +1,4 @@
-﻿using LivriaBackend.users.Domain.Model.Commands;
-using LivriaBackend.users.Domain.Model.Queries;
-using LivriaBackend.users.Domain.Model.Services;
-using LivriaBackend.users.Interfaces.REST.Resources;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +7,14 @@ using System.ComponentModel;
 using System.Linq;
 using LivriaBackend.commerce.Interfaces.REST.Resources; 
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime; 
+using System.Net.Mime;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Commands;
+using LivriaBackend.users.Domain.Model.Queries;
+using LivriaBackend.users.Domain.Model.Services;
+using LivriaBackend.users.Interfaces.REST.Resources;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LivriaBackend.users.Interfaces.REST.Controllers
 {
@@ -28,6 +31,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         private readonly IUserClientCommandService _userClientCommandService;
         private readonly IUserClientQueryService _userClientQueryService;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="UserClientsController"/>.
@@ -38,11 +42,13 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         public UserClientsController(
             IUserClientCommandService userClientCommandService,
             IUserClientQueryService userClientQueryService,
-            IMapper mapper)
+            IMapper mapper,
+            IMediator mediator)
         {
             _userClientCommandService = userClientCommandService;
             _userClientQueryService = userClientQueryService;
             _mapper = mapper;
+            _mediator = mediator;
         }
         
         /// <summary>
@@ -56,6 +62,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
         [HttpPost]
+        [AllowAnonymous]
         [SwaggerOperation(
             Summary= "Añadir nuevo cliente.",
             Description= "Crea un nuevo cliente en el sistema con suscripción 'freeplan' por defecto."
@@ -65,28 +72,33 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         [ProducesResponseType(500)]
         public async Task<ActionResult<UserClientResource>> CreateUserClient([FromBody] CreateUserClientResource resource)
         {
-           
-            var command = new CreateUserClientCommand(
-                resource.Display,
+            // Creamos el RegisterUserClientCompositeCommand con todos los datos, incluyendo la contraseña
+            var command = new RegisterUserClientCompositeCommand(
                 resource.Username,
+                resource.Password, // ¡Ahora incluimos la contraseña!
+                resource.Display,
                 resource.Email,
-                resource.Password,
                 resource.Icon,
                 resource.Phrase
             );
             
             try
             {
-                var userClient = await _userClientCommandService.Handle(command);
-                var userClientResource = _mapper.Map<UserClientResource>(userClient);
+                var userClientResource = await _mediator.Send(command);
+                
                 return CreatedAtAction(nameof(GetUserClientById), new { id = userClientResource.Id }, userClientResource);
             }
             
+           
             catch (ArgumentException ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
-            
+
+            catch (LivriaBackend.Shared.Domain.Exceptions.DuplicateEntityException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
             catch (Exception)
             {
                 return StatusCode(500, new { message = "An unexpected error occurred while creating the user client." });
@@ -100,6 +112,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Una acción de resultado HTTP que contiene una colección de <see cref="UserClientResource"/>
         /// si la operación fue exitosa (código 200 OK).
         /// </returns>
+        [AllowAnonymous]
         [HttpGet]
         [SwaggerOperation(
             Summary= "Obtener los datos de todos los clientes.",
@@ -124,6 +137,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// si la operación fue exitosa (código 200 OK).
         /// Retorna 404 Not Found si el cliente de usuario no se encuentra.
         /// </returns>
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [SwaggerOperation(
             Summary= "Obtener los datos de un usuario en específico.",
@@ -154,6 +168,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 400 Bad Request si los datos de entrada son inválidos.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
+        [Authorize(Roles = "UserClient,Admin")]
         [HttpPut("{id}")]
         [SwaggerOperation(
             Summary= "Actualizar los datos de un UserClient existente.",
@@ -169,7 +184,6 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
                 resource.Display,
                 resource.Username,
                 resource.Email,
-                resource.Password,
                 resource.Icon,
                 resource.Phrase
                 );
@@ -204,6 +218,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 404 Not Found si el cliente de usuario no se encuentra.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}/subscription")]
         [SwaggerOperation(
             Summary = "Actualizar el plan de suscripción de un cliente de usuario.",
@@ -246,6 +261,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 404 Not Found si el cliente de usuario no se encuentra.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
+        [Authorize(Roles = "UserClient,Admin")]
         [HttpDelete("{id}")]
         [SwaggerOperation(
             Summary= "Eliminar un UserClient previamente creado.",
@@ -290,6 +306,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 409 Conflict si el libro ya está en los favoritos del usuario.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
+        [Authorize(Roles = "UserClient,Admin")]
         [HttpPost("{userClientId}/favorites/{bookId}")]
         [SwaggerOperation(
             Summary= "Agregar un libro existente como favorito.",
@@ -334,6 +351,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// Retorna 409 Conflict si el libro no está en los favoritos del usuario.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
+        [Authorize(Roles = "UserClient,Admin")]
         [HttpDelete("{userClientId}/favorites/{bookId}")]
         [SwaggerOperation(
             Summary= "Eliminar un libro favorito de un UserClient previamente creado.",
@@ -375,6 +393,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
         /// si la operación fue exitosa (código 200 OK).
         /// Retorna 404 Not Found si el cliente de usuario no se encuentra.
         /// </returns>
+        [AllowAnonymous]
         [HttpGet("{userClientId}/favorites")]
         [SwaggerOperation(
             Summary= "Obtener los datos de los favoritos que le pertenecen a un usuario en específico.",

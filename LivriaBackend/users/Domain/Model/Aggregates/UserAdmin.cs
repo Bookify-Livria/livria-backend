@@ -39,11 +39,10 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nombre visible o alias del administrador (FullName).</param>
         /// <param name="username">El nombre de usuario único del administrador.</param>
         /// <param name="email">La dirección de correo electrónico del administrador.</param>
-        /// <param name="password">La contraseña del administrador (asumida como segura/hash).</param>
         /// <param name="adminAccess">Indica si el administrador tiene acceso de administrador.</param>
         /// <param name="securityPin">El pin de seguridad del administrador.</param>
-        public UserAdmin(string display, string username, string email, string password, bool adminAccess, string securityPin)
-            : base(display, username, email, password)
+        public UserAdmin(string display, string username, string email, bool adminAccess, string securityPin)
+            : base(display, username, email)
         {
             AdminAccess = adminAccess;
             SecurityPin = securityPin;
@@ -57,12 +56,11 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nuevo nombre visible o alias.</param>
         /// <param name="username">El nuevo nombre de usuario.</param>
         /// <param name="email">La nueva dirección de correo electrónico.</param>
-        /// <param name="password">La nueva contraseña.</param>
         /// <param name="adminAccess">El nuevo estado de acceso de administrador.</param>
         /// <param name="securityPin">El nuevo pin de seguridad.</param>
-        public void Update(string display, string username, string email, string password, bool adminAccess, string securityPin)
+        public void Update(string display, string username, string email, bool adminAccess, string securityPin)
         {
-            base.UpdateUserProperties(display, username, email, password);
+            base.UpdateUserProperties(display, username, email);
             AdminAccess = adminAccess;
             SecurityPin = securityPin;
         }

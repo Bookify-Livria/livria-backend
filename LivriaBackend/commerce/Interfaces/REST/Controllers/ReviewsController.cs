@@ -10,13 +10,15 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Linq; 
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
     /// <summary>
     /// Controlador RESTful para gestionar las operaciones relacionadas con las reseñas de libros.
     /// </summary>
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/reviews")]
     [Produces(MediaTypeNames.Application.Json)]

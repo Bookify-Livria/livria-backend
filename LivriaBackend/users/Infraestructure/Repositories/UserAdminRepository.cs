@@ -1,10 +1,10 @@
-﻿using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; 
-using LivriaBackend.users.Domain.Model.Aggregates;
-using LivriaBackend.users.Domain.Model.Repositories;
+﻿using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using Microsoft.EntityFrameworkCore; 
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Repositories;
 
 namespace LivriaBackend.users.Infrastructure.Repositories
 {

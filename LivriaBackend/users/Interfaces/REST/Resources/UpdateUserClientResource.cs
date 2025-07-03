@@ -17,10 +17,9 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
             string? display,
             string? username,
             string? email,
-            string? password,
             string? icon,
             string? phrase
-        ) : base(display, username, email, password, icon, phrase)
+        ) : base(display, username, email, icon, phrase)
         {
             Icon = icon;
             Phrase = phrase;

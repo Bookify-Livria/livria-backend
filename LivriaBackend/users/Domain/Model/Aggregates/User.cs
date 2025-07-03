@@ -33,11 +33,6 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         public string Email { get; private set; }
 
         /// <summary>
-        /// Obtiene la contraseña del usuario (se asume que está hasheada o segura).
-        /// </summary>
-        public string Password { get; private set; } 
-
-        /// <summary>
         /// Constructor protegido sin parámetros, típicamente utilizado por ORMs como Entity Framework Core.
         /// </summary>
         protected User() { }
@@ -48,13 +43,11 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nombre visible o alias del usuario.</param>
         /// <param name="username">El nombre de usuario único.</param>
         /// <param name="email">La dirección de correo electrónico.</param>
-        /// <param name="password">La contraseña (asumida como segura).</param>
-        public User(string display, string username, string email, string password)
+        public User(string display, string username, string email)
         {
             Display = display;
             Username = username;
             Email = email;
-            Password = password;
         }
 
         /// <summary>
@@ -65,9 +58,8 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nombre visible o alias del usuario.</param>
         /// <param name="username">El nombre de usuario único.</param>
         /// <param name="email">La dirección de correo electrónico.</param>
-        /// <param name="password">La contraseña (asumida como segura).</param>
-        protected User(int id, string display, string username, string email, string password)
-            : this(display, username, email, password) 
+        protected User(int id, string display, string username, string email)
+            : this(display, username, email) 
         {
             Id = id; 
         }
@@ -80,13 +72,11 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nuevo nombre visible o alias.</param>
         /// <param name="username">El nuevo nombre de usuario.</param>
         /// <param name="email">La nueva dirección de correo electrónico.</param>
-        /// <param name="password">La nueva contraseña.</param>
-        protected void UpdateUserProperties(string display, string username, string email, string password)
+        protected void UpdateUserProperties(string display, string username, string email)
         {
             Display = display;
             Username = username;
             Email = email;
-            Password = password;
         }
     }
 }

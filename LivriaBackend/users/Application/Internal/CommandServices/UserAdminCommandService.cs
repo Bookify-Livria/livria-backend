@@ -1,10 +1,10 @@
-﻿using LivriaBackend.users.Domain.Model.Commands;
-using LivriaBackend.users.Domain.Model.Aggregates;
-using LivriaBackend.users.Domain.Model.Repositories;
-using LivriaBackend.users.Domain.Model.Services;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System;
 using LivriaBackend.Shared.Domain.Repositories;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Commands;
+using LivriaBackend.users.Domain.Model.Repositories;
+using LivriaBackend.users.Domain.Model.Services;
 
 namespace LivriaBackend.users.Application.Internal.CommandServices
 {
@@ -49,7 +49,6 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
                 command.Display,
                 command.Username,
                 command.Email,
-                command.Password,
                 command.AdminAccess,
                 command.SecurityPin
             );

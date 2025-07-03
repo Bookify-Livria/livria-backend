@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.notifications.Interfaces.REST.Controllers
@@ -16,6 +17,7 @@ namespace LivriaBackend.notifications.Interfaces.REST.Controllers
     /// <summary>
     /// Controlador RESTful para gestionar las operaciones relacionadas con las notificaciones.
     /// </summary>
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/notifications")]
     [Produces(MediaTypeNames.Application.Json)]

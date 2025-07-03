@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\LivriaBackend.csproj": {}
+    "C:\\Users\\Asuss\\Downloads\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\LivriaBackend\\LivriaBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\LivriaBackend.csproj": {
+    "C:\\Users\\Asuss\\Downloads\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\LivriaBackend\\LivriaBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\LivriaBackend.csproj",
+        "projectUniqueName": "C:\\Users\\Asuss\\Downloads\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\LivriaBackend\\LivriaBackend.csproj",
         "projectName": "LivriaBackend",
-        "projectPath": "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\LivriaBackend.csproj",
-        "packagesPath": "C:\\Users\\marce\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\marce\\OneDrive\\Desktop\\LIVRIABACKEND\\livria-backend\\LivriaBackend\\obj\\",
+        "projectPath": "C:\\Users\\Asuss\\Downloads\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\LivriaBackend\\LivriaBackend.csproj",
+        "packagesPath": "C:\\Users\\Asuss\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Asuss\\Downloads\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\\LivriaBackend\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\marce\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Asuss\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -44,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -53,6 +47,18 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[12.0.1, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "MediatR": {
+              "target": "Package",
+              "version": "[13.0.0, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.6, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
@@ -73,6 +79,10 @@
             "Swashbuckle.AspNetCore.Annotations": {
               "target": "Package",
               "version": "[9.0.1, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.12.1, )"
             }
           },
           "imports": [
@@ -94,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\marce\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\Asuss\\.dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

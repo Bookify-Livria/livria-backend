@@ -9,13 +9,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime; 
+using System.Net.Mime;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LivriaBackend.communities.Interfaces.REST.Controllers
 {
     /// <summary>
     /// Controlador RESTful para gestionar las operaciones relacionadas con las comunidades.
     /// </summary>
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/communities")]
     [Produces(MediaTypeNames.Application.Json)] 

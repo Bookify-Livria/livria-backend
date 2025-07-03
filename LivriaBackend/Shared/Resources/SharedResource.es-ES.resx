@@ -45,4 +45,7 @@
     <data name="MinimumValueError" xml:space="preserve">
         <value>El campo '{0}' debe ser al menos {1}.</value>
     </data>
+    <data name="PasswordMismatch" xml:space="preserve">
+        <value>Las contraseñas no coinciden.</value>
+    </data>
 </root>

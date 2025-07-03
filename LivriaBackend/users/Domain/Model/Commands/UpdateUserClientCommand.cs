@@ -7,7 +7,6 @@
     /// <param name="Display">El nuevo nombre visible o alias del cliente.</param>
     /// <param name="Username">El nuevo nombre de usuario del cliente.</param>
     /// <param name="Email">La nueva dirección de correo electrónico del cliente.</param>
-    /// <param name="Password">La nueva contraseña del cliente.</param>
     /// <param name="Icon">El nuevo URL o identificador del icono/avatar del cliente.</param>
     /// <param name="Phrase">La nueva frase o estado personal del cliente.</param>
     public record UpdateUserClientCommand(
@@ -15,7 +14,6 @@
         string Display,
         string Username,
         string Email,
-        string Password,
         string Icon,
         string Phrase);
 }

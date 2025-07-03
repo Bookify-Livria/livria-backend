@@ -123,6 +123,15 @@ namespace LivriaBackend.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string PasswordMismatch {
+            get {
+                return ResourceManager.GetString("PasswordMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be in range: {0} [{1}-{2}]..
         /// </summary>
         internal static string RangeError {

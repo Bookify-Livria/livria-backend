@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
@@ -16,6 +17,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
     /// <summary>
     /// Controlador RESTful para gestionar las operaciones relacionadas con las órdenes de compra.
     /// </summary>
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/orders")]
     [Produces(MediaTypeNames.Application.Json)]

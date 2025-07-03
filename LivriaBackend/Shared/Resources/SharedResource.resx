@@ -45,4 +45,7 @@
     <data name="EmailError" xml:space="preserve">
         <value />
     </data>
+    <data name="PasswordMismatch" xml:space="preserve">
+        <value />
+    </data>
 </root>

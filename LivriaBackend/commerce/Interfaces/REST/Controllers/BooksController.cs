@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Annotations;
-using System; // Agregado para ArgumentOutOfRangeException y Exception
-using Microsoft.AspNetCore.Http; // Para StatusCodes
+using System;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -48,6 +49,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// Una acción de resultado HTTP que contiene una colección de <see cref="BookResource"/>
         /// si la operación es exitosa (código 200 OK).
         /// </returns>
+        [AllowAnonymous]
         [HttpGet]
         [SwaggerOperation(
             Summary= "Obtener los datos de todos los libros.",
@@ -70,6 +72,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// Una acción de resultado HTTP que contiene un <see cref="BookResource"/> si el libro es encontrado (código 200 OK),
         /// o un resultado NotFound (código 404) si el libro no existe.
         /// </returns>
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [SwaggerOperation(
             Summary= "Obtener los datos de un libro en específico.",
@@ -98,6 +101,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// con un código 201 CreatedAtAction si la operación es exitosa.
         /// </returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [SwaggerOperation(
             Summary= "Crear un nuevo libro.",
             Description= "Crea un nuevo libro en el sistema."
@@ -142,6 +146,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// Retorna 404 Not Found si el libro no existe.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{bookId}/stock")] // PUT api/v1/books/{bookId}/stock
         [SwaggerOperation(
             Summary = "Aumentar el stock de un libro.",
@@ -153,44 +158,35 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AddBookStock(int bookId, [FromBody] UpdateBookStockResource resource) // Renombrado a AddBookStock
         {
-            // Valida el DTO de entrada usando Data Annotations
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            // Crea el comando. El BookId viene de la URL, la QuantityToAdd del cuerpo de la solicitud.
-            // Asegúrate de que el nombre de la propiedad en el recurso sea QuantityToAdd
+            
             var command = new UpdateBookStockCommand(bookId, resource.QuantityToAdd); 
 
             try
             {
-                // Delega la lógica de negocio al servicio de comandos.
                 var updatedBook = await _bookCommandService.Handle(command);
-
-                // Si el servicio devuelve null, el libro no fue encontrado.
+                
                 if (updatedBook == null)
                 {
                     return NotFound(new { message = $"Book with ID {bookId} not found." });
                 }
-
-                // Mapea la entidad de dominio actualizada a un recurso para la respuesta de la API.
+                
                 var bookResource = _mapper.Map<BookResource>(updatedBook);
-                return Ok(bookResource); // 200 OK con el recurso actualizado
+                return Ok(bookResource);
             }
             catch (ArgumentOutOfRangeException ex)
             {
-                // Captura específicamente si la cantidad a añadir es negativa
                 return BadRequest(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
-                // Captura cualquier otra excepción de operación inválida
                 return BadRequest(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                // Captura cualquier otra excepción inesperada.
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred while updating book stock: " + ex.Message });
             }
         }

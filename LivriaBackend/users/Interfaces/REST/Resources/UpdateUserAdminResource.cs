@@ -17,10 +17,6 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
         [EmailAddress(ErrorMessageResourceType = typeof(DataAnnotations), ErrorMessageResourceName = "EmailError")]
         string Email,
         
-        [Required(ErrorMessage = "EmptyField")]
-        [StringLength(255, MinimumLength = 6, ErrorMessage = "LengthError")]
-        string Password,
-        
         [Required(ErrorMessage = "EmptyField")] bool AdminAccess,
         string SecurityPin
     );

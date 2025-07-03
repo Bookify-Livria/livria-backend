@@ -140,7 +140,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             List<OrderItem> orderItems,
             string status)
         {
-            if (userClientId <= 0) throw new ArgumentOutOfRangeException(nameof(userClientId), "UserClient ID must be positive.");
+            if (userClientId < 0) throw new ArgumentOutOfRangeException(nameof(userClientId), "UserClient ID must be positive.");
             if (string.IsNullOrWhiteSpace(userEmail)) throw new ArgumentNullException(nameof(userEmail), "User email cannot be empty.");
             if (string.IsNullOrWhiteSpace(userPhone)) throw new ArgumentNullException(nameof(userPhone), "User phone cannot be empty.");
             if (string.IsNullOrWhiteSpace(userFullName)) throw new ArgumentNullException(nameof(userFullName), "User full name cannot be empty.");

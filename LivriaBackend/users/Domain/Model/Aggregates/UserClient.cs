@@ -65,12 +65,11 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nombre visible o alias del cliente.</param>
         /// <param name="username">El nombre de usuario único del cliente.</param>
         /// <param name="email">La dirección de correo electrónico del cliente.</param>
-        /// <param name="password">La contraseña del cliente (asumida como segura).</param>
         /// <param name="icon">El URL o identificador del icono/avatar del cliente.</param>
         /// <param name="phrase">La frase o estado personal del cliente.</param>
         /// <param name="subscription">El plan de suscripción del cliente.</param>
-        public UserClient(string display, string username, string email, string password, string icon, string phrase, string subscription)
-            : base(display, username, email, password)
+        public UserClient(string display, string username, string email, string icon, string phrase, string subscription)
+            : base(display, username, email)
         {
             Icon = icon;
             Phrase = phrase;
@@ -87,12 +86,11 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// <param name="display">El nuevo nombre visible o alias.</param>
         /// <param name="username">El nuevo nombre de usuario.</param>
         /// <param name="email">La nueva dirección de correo electrónico.</param>
-        /// <param name="password">La nueva contraseña.</param>
         /// <param name="icon">El nuevo URL o identificador del icono.</param>
         /// <param name="phrase">La nueva frase o estado personal.</param>
-        public void Update(string display, string username, string email, string password, string icon, string phrase)
+        public void Update(string display, string username, string email, string icon, string phrase)
         {
-            base.UpdateUserProperties(display, username, email, password);
+            base.UpdateUserProperties(display, username, email);
             Icon = icon;
             Phrase = phrase;
         }

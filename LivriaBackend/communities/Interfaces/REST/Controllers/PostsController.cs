@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Mime; 
 using System;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.communities.Interfaces.REST.Controllers
@@ -17,6 +18,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
     /// <summary>
     /// Controlador RESTful para gestionar las operaciones relacionadas con las publicaciones (posts).
     /// </summary>
+    [Authorize(Roles = "UserClient,Admin")]
     [ApiController]
     [Route("api/v1/posts")] 
     [Produces(MediaTypeNames.Application.Json)]

@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading; 
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
+using LivriaBackend.IAM.Domain.Model.Aggregates;
 
 namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
 {
@@ -48,6 +49,8 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
 
         /// <summary>Representa la colección de notificaciones en la base de datos.</summary>
         public DbSet<Notification> Notifications { get; set; }
+        
+        public DbSet<Identity> Identities { get; set; }
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="AppDbContext"/>.
@@ -75,7 +78,6 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(u => u.Display).IsRequired().HasMaxLength(100);
                 entity.Property(u => u.Username).IsRequired().HasMaxLength(50);
                 entity.Property(u => u.Email).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.Password).IsRequired().HasMaxLength(255);
             });
 
             modelBuilder.Entity<UserClient>(entity =>
@@ -305,6 +307,33 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration
                 entity.Property(n => n.Type)
                       .IsRequired()
                       .HasConversion<string>(); 
+            });
+            
+            modelBuilder.Entity<Identity>(entity =>
+            {
+                entity.ToTable("identities");
+
+                entity.ToTable("Identities");
+                entity.HasKey(i => i.Id);
+                entity.Property(i => i.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(i => i.UserId)
+                    .IsRequired();
+                entity.HasIndex(i => i.UserId).IsUnique();
+
+                entity.Property(i => i.UserName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.OwnsOne(i => i.HashedPassword, ph =>
+                {
+                    ph.Property(p => p.HashedValue)
+                        .HasColumnName("hashed_password")
+                        .IsRequired();
+                });
+
+                entity.HasIndex(i => i.UserName).IsUnique();
             });
         }
 

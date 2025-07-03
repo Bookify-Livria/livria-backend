@@ -16,7 +16,6 @@ namespace LivriaBackend.users.Interfaces.ACL
         /// <param name="display">El nombre visible o alias del usuario.</param>
         /// <param name="username">El nombre de usuario único para el inicio de sesión.</param>
         /// <param name="email">La dirección de correo electrónico del usuario.</param>
-        /// <param name="password">La contraseña del usuario.</param>
         /// <param name="icon">La URL o identificador del icono/avatar del usuario.</param>
         /// <param name="phrase">Una frase o estado personal del usuario.</param>
         /// <returns>
@@ -24,7 +23,7 @@ namespace LivriaBackend.users.Interfaces.ACL
         /// El resultado de la tarea es el **ID del cliente de usuario** recién creado.
         /// Retorna 0 si el cliente de usuario no pudo ser creado (ej. debido a validaciones).
         /// </returns>
-        Task<int> CreateUserClient(string display, string username, string email, string password, string icon, string phrase);
+        Task<int> CreateUserClient(string display, string username, string email, string icon, string phrase);
 
         /// <summary>
         /// Verifica de forma asíncrona si un cliente de usuario con el ID especificado existe en el sistema.

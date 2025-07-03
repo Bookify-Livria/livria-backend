@@ -25,14 +25,13 @@ namespace LivriaBackend.users.Interfaces.REST.Transform
         /// </summary>
         public UsersMappingProfile()
         {
-            
             CreateMap<CreateUserClientResource, CreateUserClientCommand>();
             CreateMap<UserClient, UserClientResource>();
             CreateMap<UpdateUserClientResource, UpdateUserClientCommand>();
             CreateMap<UserAdmin, UserAdminResource>();
             CreateMap<UpdateUserAdminResource, UpdateUserAdminCommand>();
             CreateMap<User, UserResource>();
-            
+            CreateMap<RegisterUserClientRequest, RegisterUserClientCompositeCommand>();
         }
     }
 }

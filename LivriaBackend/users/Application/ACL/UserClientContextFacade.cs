@@ -1,8 +1,9 @@
-﻿using LivriaBackend.users.Domain.Model.Commands;
-using LivriaBackend.users.Domain.Model.Queries; 
-using LivriaBackend.users.Domain.Model.Services; 
-using LivriaBackend.users.Interfaces.ACL; 
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Commands;
+using LivriaBackend.users.Domain.Model.Queries;
+using LivriaBackend.users.Domain.Model.Services;
+using LivriaBackend.users.Interfaces.ACL;
 
 namespace LivriaBackend.users.Application.ACL
 {
@@ -42,12 +43,12 @@ namespace LivriaBackend.users.Application.ACL
         /// <param name="phrase">Una frase o estado personal del usuario.</param>
         /// <returns>
         /// Una tarea que representa la operación asíncrona.
-        /// El resultado de la tarea es el <see cref="LivriaBackend.users.Domain.Model.Aggregates.UserClient.Id"/> del cliente de usuario recién creado.
+        /// El resultado de la tarea es el <see cref="UserClient.Id"/> del cliente de usuario recién creado.
         /// Retorna 0 si el cliente de usuario no pudo ser creado (ej. debido a validaciones).
         /// </returns>
-        public async Task<int> CreateUserClient(string display, string username, string email, string password, string icon, string phrase)
+        public async Task<int> CreateUserClient(string display, string username, string email, string icon, string phrase)
         {
-            var createCommand = new CreateUserClientCommand(display, username, email, password, icon, phrase);
+            var createCommand = new CreateUserClientCommand(display, username, email, icon, phrase);
             var userClient = await _userClientCommandService.Handle(createCommand);
             return userClient?.Id ?? 0;
         }

@@ -8,6 +8,7 @@ using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
 using LivriaBackend.users.Interfaces.REST.Transform;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+
 using AutoMapper;
 
 using LivriaBackend.users.Application.Internal.CommandServices;
@@ -19,6 +20,8 @@ using LivriaBackend.users.Domain.Model.Aggregates;
 
 using LivriaBackend.users.Interfaces.ACL;
 using LivriaBackend.users.Application.ACL;
+
+using LivriaBackend.IAM.Domain.Repositories;
 
 using LivriaBackend.communities.Domain.Repositories; 
 using LivriaBackend.communities.Domain.Model.Services;
@@ -49,7 +52,45 @@ using LivriaBackend.Shared.ErrorHandling;
 using Microsoft.AspNetCore.Http; 
 using LivriaBackend.Shared.Domain.Exceptions; // Agregado para la excepción personalizada
 
+using System.Reflection;
+using LivriaBackend.IAM.Domain.Model.Commands;
+using LivriaBackend.IAM.Interfaces.REST.Controllers;
+using LivriaBackend.IAM.Domain.Repositories;
+using LivriaBackend.IAM.Infrastructure.Persistence.Repositories;
+using LivriaBackend.IAM.Application.Internal.OutboundServices;
+using LivriaBackend.IAM.Infrastructure.Tokens.JWT.Configuration;
+using LivriaBackend.IAM.Infrastructure.Tokens.JWT.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using LivriaBackend.IAM.Application.Internal.CommandServices;
+using LivriaBackend.IAM.Domain.Model.Aggregates;
+
 var builder = WebApplication.CreateBuilder(args);
+
+/* JSON WEB TOKEN START */
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("TokenSettings:Secret").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+/* JSON WEB TOKEN END */
 
 /* Localization Start */
 builder.Services.AddLocalization();
@@ -64,6 +105,24 @@ localizationOptions.SupportedUICultures = supportedCultures;
 localizationOptions.SetDefaultCulture("en-US");
 localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 /* Localization End */
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(RegisterCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(RegisterUserClientCompositeCommandHandler).Assembly);
+    
+    cfg.RegisterServicesFromAssembly(typeof(LoginAdminCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(LoginAdminCommandHandler).Assembly);
+});
+
+// Add Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminAccess", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+});
 
 // Add CORS Policy
 builder.Services.AddCors(options =>
@@ -135,6 +194,8 @@ builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
 
 builder.Services.AddScoped<IRecommendationQueryService, RecommendationQueryService>();
 
+builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
+
 
 builder.Services.AddAutoMapper(
     typeof(UsersMappingProfile).Assembly,
@@ -165,6 +226,31 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API for book management in Livria"
     });
+    
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "Bearer",
+                    Type = ReferenceType.SecurityScheme
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 var app = builder.Build();
@@ -177,48 +263,82 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<AppDbContext>();
-        context.Database.EnsureCreated();
+        context.Database.EnsureCreated(); 
+        
+        var identityRepository = services.GetRequiredService<IIdentityRepository>();
+        var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        
+        const string defaultAdminUsername = "admin_default";
+        const string defaultAdminPassword = "0000";
+        const string defaultAdminEmail = "admin@livria.com";
+        const string defaultAdminDisplayName = "Super Administrador";
+        const string defaultAdminSecurityPin = "0000";
+        
+        var existingIdentity = await identityRepository.GetByUsernameAsync(defaultAdminUsername);
 
-        var defaultUserAdmin = await context.UserAdmins.FirstOrDefaultAsync(ua => ua.Id == 0);
-
-        if (defaultUserAdmin == null)
+        if (existingIdentity == null)
         {
+            Console.WriteLine($"Creando UserAdmin por defecto y su Identity asociada para el usuario '{defaultAdminUsername}'...");
+            
             var userAdmin = new LivriaBackend.users.Domain.Model.Aggregates.UserAdmin(
-                "Super Administrador",
-                "admin_default",
-                "admin@livria.com",
-                "hashed_password_admin_123",
+                defaultAdminDisplayName,
+                defaultAdminUsername,
+                defaultAdminEmail,
                 true,
-                "0000"
+                defaultAdminSecurityPin
             );
-
-            var idProperty = userAdmin.GetType().GetProperty("Id");
-            if (idProperty != null && idProperty.CanWrite)
+            
+            var userAdminIdProperty = userAdmin.GetType().GetProperty("Id");
+            if (userAdminIdProperty != null && userAdminIdProperty.CanWrite)
             {
-                idProperty.SetValue(userAdmin, 0);
+                userAdminIdProperty.SetValue(userAdmin, 0);
             }
             else
             {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError("Could not set ID 0 for default UserAdmin using reflection. Check User.Id setter access.");
+                logger.LogError("No se pudo establecer el ID 0 para el UserAdmin por defecto usando reflection. Verifica el setter de User.Id.");
             }
-
+            
             context.UserAdmins.Add(userAdmin);
-            await context.SaveChangesAsync();
-            Console.WriteLine("UserAdmin por defecto creado con éxito (ID 1).");
+            await context.SaveChangesAsync(); 
+            
+            var userAdminIdForIdentity = userAdmin.Id; 
+            
+            var identity = new Identity(
+                0,
+                defaultAdminUsername,
+                defaultAdminPassword
+            );
+            
+            var identityUserIdProperty = identity.GetType().GetProperty("UserId");
+            if (identityUserIdProperty != null && identityUserIdProperty.CanWrite)
+            {
+                identityUserIdProperty.SetValue(identity, userAdminIdForIdentity);
+            }
+            else
+            {
+                logger.LogError("No se pudo establecer UserId para la Identity por defecto usando reflection. Verifica el setter de Identity.UserId o su constructor.");
+                // Si esto falla, la Identity no estará vinculada correctamente, y el login no funcionará.
+                // Es crucial que Identity.UserId se establezca correctamente.
+            }
+            
+            // Añadir la Identity al repositorio y guardar
+            await identityRepository.AddAsync(identity);
+            await unitOfWork.CompleteAsync(); // Completa la transacción y guarda ambos (UserAdmin e Identity)
+
+            Console.WriteLine($"UserAdmin '{defaultAdminUsername}' (ID: {userAdmin.Id}) y su Identity asociada (ID: {identity.Id}) creados con éxito.");
         }
         else
         {
-            Console.WriteLine("UserAdmin por defecto (ID 1) ya existe en la base de datos.");
+            Console.WriteLine($"La Identity del administrador por defecto para '{defaultAdminUsername}' ya existe en la base de datos.");
         }
     }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocurrió un error al inicializar el UserAdmin por defecto o la base de datos.");
+        logger.LogError(ex, "Ocurrió un error al inicializar el UserAdmin por defecto y su Identity en la base de datos.");
     }
 }
-
 
 app.UseExceptionHandler(appBuilder =>
 {
@@ -309,7 +429,9 @@ app.UseHttpsRedirection();
 // Apply CORS Policy
 app.UseCors("AllowAllPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

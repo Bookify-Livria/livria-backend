@@ -1,12 +1,13 @@
-﻿using LivriaBackend.users.Domain.Model.Commands;
-using LivriaBackend.users.Domain.Model.Queries;
-using LivriaBackend.users.Domain.Model.Services;
-using LivriaBackend.users.Interfaces.REST.Resources;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
+using LivriaBackend.users.Domain.Model.Commands;
+using LivriaBackend.users.Domain.Model.Queries;
+using LivriaBackend.users.Domain.Model.Services;
+using LivriaBackend.users.Interfaces.REST.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace LivriaBackend.users.Interfaces.REST.Controllers
@@ -16,6 +17,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
     /// Expone endpoints para operaciones relacionadas con <see cref="UserAdmin"/>, como
     /// obtener todos los administradores y actualizar un administrador existente.
     /// </summary>
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/v1/useradmins")]
     public class UserAdminsController : ControllerBase
@@ -88,7 +90,6 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
                 resource.Display,
                 resource.Username,
                 resource.Email,
-                resource.Password,
                 resource.AdminAccess,
                 resource.SecurityPin
             );

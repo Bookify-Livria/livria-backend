@@ -1,6 +1,6 @@
-﻿using LivriaBackend.users.Domain.Model.Commands;
-using LivriaBackend.users.Domain.Model.Aggregates; 
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Commands;
 
 namespace LivriaBackend.users.Domain.Model.Services
 {

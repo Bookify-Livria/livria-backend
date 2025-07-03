@@ -1,15 +1,15 @@
 ﻿using LivriaBackend.Shared.Domain.Repositories;
-using LivriaBackend.users.Domain.Model.Aggregates;
-using LivriaBackend.users.Domain.Model.Commands;
-using LivriaBackend.users.Domain.Model.Repositories;
-using LivriaBackend.users.Domain.Model.Services;
 using System;
 using System.Threading.Tasks;
 using LivriaBackend.commerce.Domain.Repositories; 
 using System.Linq; 
 using LivriaBackend.notifications.Domain.Model.Services; 
 using LivriaBackend.notifications.Domain.Model.Commands; 
-using LivriaBackend.notifications.Domain.Model.ValueObjects; 
+using LivriaBackend.notifications.Domain.Model.ValueObjects;
+using LivriaBackend.users.Domain.Model.Aggregates;
+using LivriaBackend.users.Domain.Model.Commands;
+using LivriaBackend.users.Domain.Model.Repositories;
+using LivriaBackend.users.Domain.Model.Services;
 
 
 namespace LivriaBackend.users.Application.Internal.CommandServices
@@ -75,10 +75,9 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
                 command.Display,
                 command.Username,
                 command.Email,
-                command.Password,
                 command.Icon, 
                 command.Phrase, 
-                "freeplan" 
+                "freeplan"
             );
             
             await _userClientRepository.AddAsync(userClient);
@@ -120,7 +119,6 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
                 command.Display,
                 command.Username,
                 command.Email,
-                command.Password,
                 command.Icon,
                 command.Phrase
                 );

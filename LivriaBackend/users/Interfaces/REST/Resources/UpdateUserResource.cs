@@ -13,19 +13,16 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
         [StringLength(100, ErrorMessage = "MaxLengthError")]
         [EmailAddress(ErrorMessageResourceType = typeof(DataAnnotations), ErrorMessageResourceName = "EmailError")]
         public string? Email { get; init; }
-        [StringLength(255, MinimumLength = 6, ErrorMessage = "LengthError")]
-        public string? Password { get; init; } 
         public string? Icon { get; init; } 
         [StringLength(255, ErrorMessage = "MaxLengthError")]
         public string? Phrase { get; init; } 
 
         
-        public UpdateUserResource(string? display, string? username, string? email, string? password, string? icon, string? phrase)
+        public UpdateUserResource(string? display, string? username, string? email, string? icon, string? phrase)
         {
             Display = display;
             Username = username;
             Email = email;
-            Password = password;
             Icon = icon;
             Phrase = phrase;
         }

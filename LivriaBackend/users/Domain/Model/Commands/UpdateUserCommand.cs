@@ -5,7 +5,6 @@
         int UserId,
         string Display,
         string Username,
-        string Email,
-        string Password
+        string Email
     );
 }
