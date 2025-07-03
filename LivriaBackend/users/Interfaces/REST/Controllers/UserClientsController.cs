@@ -75,7 +75,7 @@ namespace LivriaBackend.users.Interfaces.REST.Controllers
             // Creamos el RegisterUserClientCompositeCommand con todos los datos, incluyendo la contraseña
             var command = new RegisterUserClientCompositeCommand(
                 resource.Username,
-                resource.Password, // ¡Ahora incluimos la contraseña!
+                resource.Password,
                 resource.Display,
                 resource.Email,
                 resource.Icon,
