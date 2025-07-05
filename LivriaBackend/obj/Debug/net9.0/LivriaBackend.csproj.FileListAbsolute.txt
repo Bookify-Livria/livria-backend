@@ -683,3 +683,14 @@ C:\Users\Asuss\Downloads\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08
 C:\Users\Asuss\Downloads\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\LivriaBackend\obj\Debug\net9.0\LivriaBackend.users.Application.Resources.DataAnnotations.resources
 C:\Users\Asuss\Downloads\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\LivriaBackend\obj\Debug\net9.0\LivriaBackend.users.Application.Resources.DataAnnotations.en-US.resources
 C:\Users\Asuss\Downloads\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\livria-backend-d0bb3db1b8add41b5fe741e0d3bd91ec8ba01b08\LivriaBackend\obj\Debug\net9.0\LivriaBackend.users.Application.Resources.DataAnnotations.es-es.resources
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\BCrypt.Net-Next.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\MediatR.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\MediatR.Contracts.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\marce\OneDrive\Desktop\LIVRIABACKEND\livria-backend\LivriaBackend\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll

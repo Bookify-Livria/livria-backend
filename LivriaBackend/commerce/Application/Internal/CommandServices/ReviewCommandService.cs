@@ -67,7 +67,7 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
                 throw new ArgumentException($"UserClient with ID {command.UserClientId} not found. Cannot create review.");
             }
 
-            var usernameForReview = userClient.Display; 
+            var usernameForReview = userClient.Username; 
 
             var review = new Review(command.BookId, command.UserClientId, command.Content, command.Stars, usernameForReview);
 
