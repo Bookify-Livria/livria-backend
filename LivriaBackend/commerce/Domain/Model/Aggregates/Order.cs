@@ -32,8 +32,6 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// <summary>
         /// Obtiene el objeto <see cref="UserClient"/> asociado a esta orden.
         /// </summary>
-        // Si no tienes una propiedad de navegación UserClient, esta línea debería ser eliminada
-        // o mapeada correctamente en tu DbContext.
         public UserClient UserClient { get; private set; }
 
         /// <summary>
@@ -88,8 +86,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// Obtiene una colección de solo lectura de los ítems incluidos en esta orden.
         /// </summary>
         public IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
-
-        // Define los estados permitidos para la orden.
+        
         private static readonly HashSet<string> AllowedStatuses = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "in progress", "pending", "delivered"

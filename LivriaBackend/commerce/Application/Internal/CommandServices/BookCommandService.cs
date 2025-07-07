@@ -6,7 +6,7 @@ using LivriaBackend.Shared.Domain.Repositories;
 using System.Threading.Tasks;
 using LivriaBackend.Shared.Domain.Exceptions; // Ya estaba en tu código, ¡bien!
 using LivriaBackend.users.Domain.Model.Services; // ¡Faltaba este using para IUserAdminCommandService!
-using System; // Necesario para ArgumentOutOfRangeException
+using System; 
 
 namespace LivriaBackend.commerce.Application.Internal.CommandServices
 {
@@ -49,12 +49,12 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
         /// </remarks>
         public async Task<Book> Handle(CreateBookCommand command)
         {
-            // Paso de validación: Verificar si ya existe un libro con el mismo título
+            
             var exists = await _bookRepository.ExistsByTitleAsync(command.Title);
 
             if (exists)
             {
-                // Lanza una excepción personalizada si el libro ya existe con el mismo título
+                
                 throw new DuplicateEntityException("Un libro con el mismo título ya existe.");
             }
 
@@ -69,21 +69,18 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
             );
 
             await _bookRepository.AddAsync(book);
-            // No hacemos CompleteAsync aquí todavía para que ambas operaciones (crear libro y actualizar capital)
-            // se manejen en una sola transacción si es posible (a través del UnitOfWork).
-
-            // Lógica para restar el capital del UserAdmin
-            // Usa el PurchasePrice del libro recién creado y su stock
+            
+            
             decimal costToSubtract = book.PurchasePrice * book.Stock;
 
-            // Define el ID del UserAdmin a actualizar (asumimos que es 1)
+            
             int userAdminToUpdateId = 1;
 
-            // Resta el costo del capital del UserAdmin
-            // El método UpdateUserAdminCapitalAsync ahora maneja el signo de 'amountToAdd'
+            
+            
             await _userAdminCommandService.UpdateUserAdminCapitalAsync(userAdminToUpdateId, -costToSubtract);
             
-            await _unitOfWork.CompleteAsync(); // Persistir ambos cambios en la base de datos
+            await _unitOfWork.CompleteAsync(); 
 
             return book;
         }
@@ -99,29 +96,29 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
             var book = await _bookRepository.GetByIdAsync(command.BookId);
             if (book == null)
             {
-                return null; // Book not found
+                return null; 
             }
 
-            // Validar que la cantidad a añadir sea positiva
+            
             if (command.QuantityToAdd <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(command.QuantityToAdd), "Quantity to add to stock must be positive.");
             }
 
-            // Antes de añadir stock, calculamos el costo de esta nueva adquisición para el capital
+            
             decimal costOfNewStock = book.PurchasePrice * command.QuantityToAdd;
 
-            // Llama al método de comportamiento en el agregado Book para añadir stock
+            
             book.AddStock(command.QuantityToAdd);
 
-            // Ajusta el capital del UserAdmin, restando el costo de la nueva adquisición.
-            int userAdminToUpdateId = 1; // Asume el ID del UserAdmin principal
+            
+            int userAdminToUpdateId = 1; 
             await _userAdminCommandService.UpdateUserAdminCapitalAsync(userAdminToUpdateId, -costOfNewStock);
             
-            await _unitOfWork.CompleteAsync(); // Persistir ambos cambios
+            await _unitOfWork.CompleteAsync(); 
             return book;
         }
 
-        // ... otros métodos existentes (como Handle(UpdateBookCommand) si lo tienes) ...
+        
     }
 }

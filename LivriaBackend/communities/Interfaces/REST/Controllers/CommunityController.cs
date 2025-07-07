@@ -180,7 +180,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
         )]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)] // En caso de que el servicio lance una excepción por datos inválidos
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> LeaveCommunity(int communityId, int userId)
         {
@@ -195,7 +195,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
                     return NotFound($"Membership not found for User ID {userId} in Community ID {communityId}.");
                 }
 
-                return NoContent(); // 204 No Content para eliminación exitosa sin devolver contenido
+                return NoContent(); 
             }
             catch (ApplicationException ex)
             {

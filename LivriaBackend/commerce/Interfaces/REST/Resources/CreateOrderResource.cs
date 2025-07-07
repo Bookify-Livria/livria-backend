@@ -26,7 +26,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         string RecipientName,
 
         [Required(ErrorMessage = "EmptyField")]
-        [StringLength(255, ErrorMessage = "MaxLengthError")] // Corrección: ErrorErrorName a ErrorMessageResourceName
+        [StringLength(255, ErrorMessage = "MaxLengthError")] 
         string Status,
 
         
@@ -35,12 +35,5 @@ namespace LivriaBackend.commerce.Interfaces.REST.Resources
         
         ShippingResource? ShippingDetails 
     );
-
-    // Si tu ShippingResource no está definido explícitamente, su estructura debería ser similar a:
-    // public record ShippingResource(
-    //     string Address,
-    //     string City,
-    //     string District,
-    //     string Reference
-    // );
+    
 }

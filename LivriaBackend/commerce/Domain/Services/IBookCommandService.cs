@@ -16,6 +16,6 @@ namespace LivriaBackend.commerce.Domain.Model.Services
         /// Una tarea que representa la operación asíncrona.
         /// El resultado de la tarea es el objeto <see cref="Book"/> actualizado, o <c>null</c> si el libro no se encuentra.
         /// </returns>
-        Task<Book?> Handle(UpdateBookStockCommand command); // Refleja el cambio del comando
+        Task<Book?> Handle(UpdateBookStockCommand command); 
     }
 }

@@ -21,7 +21,7 @@ namespace LivriaBackend.commerce.Domain.Model.ValueObjects
         /// </summary>
         [Required]
         [StringLength(100)]
-        public string City { get; init; } // Ya no tiene un asignador de valor por defecto aquí si se pasa por constructor
+        public string City { get; init; } 
 
         /// <summary>
         /// Obtiene el distrito o comuna de destino del envío.
@@ -42,9 +42,8 @@ namespace LivriaBackend.commerce.Domain.Model.ValueObjects
         /// </summary>
         private Shipping() 
         {
-            // Inicializar propiedades no nulas para el ORM
             Address = string.Empty;
-            City = "Lima Metropolitana"; // Se mantiene el valor por defecto si no se pasa por el constructor principal
+            City = "Lima Metropolitana"; 
             District = string.Empty;
             Reference = string.Empty;
         }
@@ -62,7 +61,7 @@ namespace LivriaBackend.commerce.Domain.Model.ValueObjects
             if (string.IsNullOrWhiteSpace(address)) throw new ArgumentNullException(nameof(address), "Address cannot be empty.");
             if (string.IsNullOrWhiteSpace(city)) throw new ArgumentNullException(nameof(city), "City cannot be empty.");
             if (string.IsNullOrWhiteSpace(district)) throw new ArgumentNullException(nameof(district), "District cannot be empty.");
-            // Reference puede ser null/empty, no se valida
+            
 
             Address = address;
             City = city;

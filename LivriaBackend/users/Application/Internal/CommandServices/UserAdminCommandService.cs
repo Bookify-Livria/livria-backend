@@ -69,23 +69,19 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             var userAdmin = await _userAdminRepository.GetByIdAsync(userAdminId);
             if (userAdmin == null)
             {
-                // Es importante lanzar una excepción o manejar este caso adecuadamente
-                // Si llegamos aquí, significa que el UserAdmin con ese ID no existe.
                 throw new InvalidOperationException($"UserAdmin with ID {userAdminId} not found for capital update.");
             }
-
-            // Decide si añadir o restar capital basándose en el signo de amountToAdd
+            
             if (amountToAdd >= 0)
             {
                 userAdmin.AddCapital(amountToAdd);
             }
             else
             {
-                // Si amountToAdd es negativo, pasamos su valor absoluto a DecreaseCapital
                 userAdmin.DecreaseCapital(Math.Abs(amountToAdd));
             }
             
-            await _userAdminRepository.UpdateAsync(userAdmin); // Asegúrate de que el repositorio actualice la entidad
+            await _userAdminRepository.UpdateAsync(userAdmin); 
             await _unitOfWork.CompleteAsync();
             return userAdmin;
         }

@@ -5,7 +5,7 @@ namespace LivriaBackend.IAM.Domain.Model.ValueObjects
 {
     public class PasswordHash : IEquatable<PasswordHash>
     {
-        public string HashedValue { get; private set; } // Almacena el hash de la contraseña
+        public string HashedValue { get; private set; } 
         
         private PasswordHash() { }
         

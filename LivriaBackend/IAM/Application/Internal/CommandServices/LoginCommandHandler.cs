@@ -35,13 +35,13 @@ namespace LivriaBackend.IAM.Application.Internal.CommandServices
         {
             var identity = await _identityRepository.GetByUsernameAsync(command.Username);
 
-            // Validar credenciales básicas (Identity)
+            
             if (identity == null || !identity.VerifyPassword(command.Password))
             {
                 return new LoginResponse(0, 0, command.Username, false, "Invalid username or password.");
             }
             
-            // ¡NUEVO! Validar que la identidad realmente pertenece a un UserClient
+            
             var userClient = await _userClientRepository.GetByIdAsync(identity.UserId);
             if (userClient == null)
             {

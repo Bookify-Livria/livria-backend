@@ -120,7 +120,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (LivriaBackend.Shared.Domain.Exceptions.DuplicateEntityException ex) // Usa el namespace completo si es necesario
+            catch (LivriaBackend.Shared.Domain.Exceptions.DuplicateEntityException ex) 
             {
                 return Conflict(ex.Message);
             }
@@ -147,7 +147,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
         [Authorize(Roles = "UserClient,Admin")]
-        [HttpPut("{bookId}/stock")] // PUT api/v1/books/{bookId}/stock
+        [HttpPut("{bookId}/stock")] 
         [SwaggerOperation(
             Summary = "Aumentar el stock de un libro.",
             Description = "Permite añadir una cantidad específica al stock disponible de un libro."
@@ -156,7 +156,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddBookStock(int bookId, [FromBody] UpdateBookStockResource resource) // Renombrado a AddBookStock
+        public async Task<IActionResult> AddBookStock(int bookId, [FromBody] UpdateBookStockResource resource) 
         {
             if (!ModelState.IsValid)
             {

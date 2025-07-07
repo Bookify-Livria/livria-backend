@@ -1,10 +1,10 @@
 ﻿using LivriaBackend.commerce.Domain.Model.Aggregates;
 using LivriaBackend.commerce.Domain.Repositories; 
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories; // Asegúrate de que esta referencia sea correcta para BaseRepository
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories; 
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq; // Necesario para .ToList()
+using System.Linq; 
 using System.Threading.Tasks;
 
 namespace LivriaBackend.commerce.Infrastructure.Repositories
@@ -45,7 +45,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es una colección de <see cref="Order"/> para el usuario especificado con sus relaciones.</returns>
         public async Task<IEnumerable<Order>> GetOrdersByUserIdAsync(int userClientId)
         {
-            return await this.Context.Set<Order>() // Usamos Context.Set<Order>()
+            return await this.Context.Set<Order>() 
                 .Where(o => o.UserClientId == userClientId)
                 .Include(o => o.Items)
                 .Include(o => o.UserClient)
@@ -60,7 +60,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es la <see cref="Order"/> encontrada con sus relaciones, o null si no existe.</returns>
         public async Task<Order> GetOrderByCodeAsync(string code)
         {
-            return await this.Context.Set<Order>() // Usamos Context.Set<Order>()
+            return await this.Context.Set<Order>() 
                 .Include(o => o.Items)
                 .Include(o => o.UserClient)
                 .Include(o => o.Shipping)
@@ -74,7 +74,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
         public async Task AddAsync(Order order)
         {
-            await this.Context.Set<Order>().AddAsync(order); // Usamos Context.Set<Order>()
+            await this.Context.Set<Order>().AddAsync(order); 
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// </remarks>
         public async Task DeleteAsync(Order order)
         {
-            this.Context.Set<Order>().Remove(order); // Usamos Context.Set<Order>()
+            this.Context.Set<Order>().Remove(order); 
             await Task.CompletedTask;
         }
 
@@ -113,7 +113,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// Incluye sus ítems, el cliente de usuario y los detalles de envío.
         /// </summary>
         /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es una colección de todas las <see cref="Order"/> con sus relaciones.</returns>
-        public async Task<IEnumerable<Order>> FindAllAsync() // ¡NUEVO MÉTODO AGREGADO!
+        public async Task<IEnumerable<Order>> FindAllAsync() 
         {
             return await this.Context.Set<Order>()
                 .Include(o => o.Items)

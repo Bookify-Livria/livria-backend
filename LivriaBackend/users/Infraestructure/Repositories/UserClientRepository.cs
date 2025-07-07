@@ -79,7 +79,7 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         public async Task UpdateAsync(UserClient userClient)
         {
             this.Context.Entry(userClient).State = EntityState.Modified;
-            await Task.CompletedTask; // Devolvemos una tarea completada para mantener la firma asíncrona.
+            await Task.CompletedTask; 
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace LivriaBackend.users.Infrastructure.Repositories
         public async Task DeleteAsync(UserClient userClient)
         {
             this.Context.UserClients.Remove(userClient);
-            await Task.CompletedTask; // Devolvemos una tarea completada para mantener la firma asíncrona.
+            await Task.CompletedTask; 
         }
 
         /// <summary>

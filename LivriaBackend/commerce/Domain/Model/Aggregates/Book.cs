@@ -61,10 +61,8 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// </summary>
         public string Language { get; private set; }
         
-        // Instancia estática de Random para evitar que se generen secuencias idénticas rápidamente
         private static readonly Random _random = new Random();
-
-        // Usamos un HashSet para una búsqueda más eficiente y un StringComparer para la insensibilidad a mayúsculas/minúsculas.
+        
         public static readonly HashSet<string> AllowedGenres = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "literature", "non_fiction", "fiction", "mangas_comics", "juvenile", "children", "ebooks_audiobooks"
@@ -118,9 +116,8 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
             Genre = genre;
             Language = language;
             
-            // Generar PurchasePrice basado en el género
             PurchasePrice = GenerateRandomPurchasePrice(genre);
-            // Calcular SalePrice como el 165% del PurchasePrice
+            
             SalePrice = PurchasePrice * 1.65m;
         }
 
@@ -166,9 +163,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
                     maxPrice = 20m;
                     break;
             }
-
-            // Generar un número aleatorio entre minPrice y maxPrice
-            // Multiplicamos por 100 y luego dividimos por 100 para trabajar con dos decimales
+            
             int randomInt = _random.Next(Convert.ToInt32(minPrice * 100), Convert.ToInt32(maxPrice * 100 + 1));
             return (decimal)randomInt / 100m;
         }
@@ -180,7 +175,7 @@ namespace LivriaBackend.commerce.Domain.Model.Aggregates
         /// <exception cref="ArgumentOutOfRangeException">Se lanza si la cantidad es negativa.</exception>
         public void AddStock(int quantity)
         {
-            if (quantity < 0) // Validamos aquí también para asegurar el invariante
+            if (quantity < 0) 
             {
                 throw new ArgumentOutOfRangeException(nameof(quantity), "Quantity to add to stock cannot be negative.");
             }

@@ -153,7 +153,7 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             var userClient = await _userClientRepository.GetByIdAsync(command.UserClientId);
             if (userClient == null)
             {
-                return false; // Retorna falso si el usuario no se encuentra.
+                return false; 
             }
             
             await _userClientRepository.DeleteAsync(userClient);

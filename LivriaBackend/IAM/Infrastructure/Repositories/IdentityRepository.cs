@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using LivriaBackend.IAM.Domain.Model.Aggregates;
 using LivriaBackend.IAM.Domain.Repositories;
 // Quita el using de IAM.Infrastructure.Persistence.Contexts si lo tenías
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; // <-- ¡Nuevo! Para AppDbContext
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration; 
 
 namespace LivriaBackend.IAM.Infrastructure.Persistence.Repositories
 {
     public class IdentityRepository : IIdentityRepository
     {
-        private readonly AppDbContext _context; // <-- ¡Cambiado de IAMDbContext a AppDbContext!
+        private readonly AppDbContext _context; 
 
-        public IdentityRepository(AppDbContext context) // <-- ¡Cambiado el tipo del constructor!
+        public IdentityRepository(AppDbContext context) 
         {
             _context = context;
         }

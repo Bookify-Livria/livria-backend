@@ -78,7 +78,7 @@ namespace LivriaBackend.commerce.Infrastructure.Repositories
         /// </summary>
         /// <param name="title">El título del libro.</param>
         /// <returns>True si existe un libro con el mismo título, de lo contrario False.</returns>
-        public async Task<bool> ExistsByTitleAsync(string title) // Método modificado
+        public async Task<bool> ExistsByTitleAsync(string title) 
         {
             return await Context.Books.AnyAsync(b =>
                 b.Title.ToLower() == title.ToLower());

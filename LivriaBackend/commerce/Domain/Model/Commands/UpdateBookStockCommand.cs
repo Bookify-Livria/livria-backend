@@ -9,6 +9,6 @@ namespace LivriaBackend.commerce.Domain.Model.Commands
     /// <param name="QuantityToAdd">La cantidad a añadir al stock actual del libro. Debe ser un valor positivo.</param>
     public record UpdateBookStockCommand(
         [Required] int BookId,
-        [Required] int QuantityToAdd // Cambiado de NewStock a QuantityToAdd
+        [Required] int QuantityToAdd 
     );
 }

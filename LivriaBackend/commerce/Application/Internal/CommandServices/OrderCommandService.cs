@@ -180,10 +180,8 @@ namespace LivriaBackend.commerce.Application.Internal.CommandServices
 
             await _unitOfWork.CompleteAsync();
 
-            // ¡IMPORTANTE: Lógica para actualizar el capital del UserAdmin!
-            // Asumiendo que el UserAdmin por defecto que quieres actualizar tiene ID 0.
-            // Si tu lógica de negocio determina un UserAdmin diferente, ajusta el ID.
-            int userAdminToUpdateId = 1; // O el ID del UserAdmin que corresponda (ej. el admin principal)
+          
+            int userAdminToUpdateId = 1; 
             await _userAdminCommandService.UpdateUserAdminCapitalAsync(userAdminToUpdateId, order.Total);
 
 

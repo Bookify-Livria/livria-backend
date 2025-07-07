@@ -9,7 +9,7 @@ using LivriaBackend.Shared.Domain.Repositories;
 
 namespace LivriaBackend.IAM.Application.Internal.CommandServices
 {
-    // 1. Cambiado de IRequestHandler<RegisterCommand, Guid> a IRequestHandler<RegisterUserCommand, int>
+    
     public class RegisterUserCommandHandler : IRequestHandler<RegisterCommand, int>
     {
         private readonly IIdentityRepository _identityRepository;
