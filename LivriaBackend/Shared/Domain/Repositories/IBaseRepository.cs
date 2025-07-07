@@ -69,6 +69,18 @@ namespace LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories
         }
 
         /// <summary>
+        /// Elimina una entidad del contexto de la base de datos.
+        /// Los cambios se persistirán en la base de datos cuando se llame a <c>IUnitOfWork.CompleteAsync()</c>.
+        /// </summary>
+        /// <param name="entity">La instancia de la entidad a eliminar.</param>
+        /// <returns>Una tarea que representa la operación asíncrona.</returns>
+        public Task DeleteAsync(TEntity entity) 
+        {
+            Context.Set<TEntity>().Remove(entity);
+            return Task.CompletedTask; 
+        }
+
+        /// <summary>
         /// Verifica de forma asíncrona si una entidad con el identificador especificado existe.
         /// Asume que la entidad tiene una propiedad "Id" de tipo entero.
         /// </summary>

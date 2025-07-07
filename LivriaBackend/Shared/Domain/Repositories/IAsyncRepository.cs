@@ -39,6 +39,13 @@ namespace LivriaBackend.Shared.Domain.Repositories
         Task AddAsync(TEntity entity);
 
         /// <summary>
+        /// Elimina una entidad del repositorio de forma asíncrona.
+        /// </summary>
+        /// <param name="entity">La instancia de la entidad a eliminar.</param>
+        /// <returns>Una tarea que representa la operación asíncrona.</returns>
+        Task DeleteAsync(TEntity entity); 
+
+        /// <summary>
         /// Verifica de forma asíncrona si una entidad con el identificador especificado existe.
         /// </summary>
         /// <param name="id">El identificador único de la entidad a verificar.</param>

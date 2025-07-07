@@ -1,7 +1,7 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
 using LivriaBackend.communities.Domain.Repositories;
 using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Configuration;
-using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories;
+using LivriaBackend.Shared.Infrastructure.Persistence.EFC.Repositories; 
 using Microsoft.EntityFrameworkCore; 
 using System.Threading.Tasks;
 
@@ -34,8 +34,9 @@ namespace LivriaBackend.communities.Infrastructure.Repositories
         /// </returns>
         public async Task<UserCommunity> GetByUserAndCommunityIdsAsync(int userClientId, int communityId)
         {
-            return await Context.UserCommunities
+            return await Context.UserCommunities 
                 .FirstOrDefaultAsync(uc => uc.UserClientId == userClientId && uc.CommunityId == communityId);
         }
+        
     }
 }

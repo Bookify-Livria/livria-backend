@@ -11,7 +11,7 @@ namespace LivriaBackend.communities.Application.Internal.CommandServices
 {
     /// <summary>
     /// Implementa el servicio de comandos para las operaciones de la entidad agregada <see cref="UserCommunity"/>.
-    /// Encapsula la lógica de negocio para que los usuarios se unan a las comunidades.
+    /// Encapsula la lógica de negocio para que los usuarios se unan y salgan de las comunidades.
     /// </summary>
     public class UserCommunityCommandService : IUserCommunityCommandService
     {
@@ -83,11 +83,31 @@ namespace LivriaBackend.communities.Application.Internal.CommandServices
             
             var userCommunity = new UserCommunity(command.UserClientId, command.CommunityId);
             
-            await _userCommunityRepository.AddAsync(userCommunity);
+            await _userCommunityRepository.AddAsync(userCommunity); 
             
             await _unitOfWork.CompleteAsync();
 
             return userCommunity;
+        }
+
+        /// <summary>
+        /// Maneja el comando para que un usuario salga de una comunidad.
+        /// Busca la membresía por los IDs del usuario y la comunidad, y la elimina si existe.
+        /// </summary>
+        /// <param name="command">El comando que contiene los IDs del usuario y la comunidad para la salida.</param>
+        /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es <c>true</c> si la membresía fue eliminada con éxito, <c>false</c> si no se encontró la membresía.</returns>
+        public async Task<bool> Handle(LeaveCommunityCommand command) 
+        {
+            var userCommunity = await _userCommunityRepository.GetByUserAndCommunityIdsAsync(command.UserClientId, command.CommunityId);
+
+            if (userCommunity == null)
+            {
+                return false; 
+            }
+
+            await _userCommunityRepository.DeleteAsync(userCommunity); 
+            await _unitOfWork.CompleteAsync(); 
+            return true;
         }
     }
 }

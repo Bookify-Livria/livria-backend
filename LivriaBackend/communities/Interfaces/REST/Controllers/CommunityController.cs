@@ -1,16 +1,18 @@
-﻿using LivriaBackend.communities.Domain.Model.Aggregates;
+﻿using AutoMapper;
+using LivriaBackend.communities.Domain.Model.Aggregates;
 using LivriaBackend.communities.Domain.Model.Commands;
 using LivriaBackend.communities.Domain.Model.Queries;
 using LivriaBackend.communities.Domain.Model.Services;
 using LivriaBackend.communities.Interfaces.REST.Resources;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http; 
 
 namespace LivriaBackend.communities.Interfaces.REST.Controllers
 {
@@ -61,8 +63,8 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             Summary= "Crear una nueva comunidad.",
             Description= "Crea una nueva comunidad en el sistema."
         )]
-        [ProducesResponseType(typeof(CommunityResource), 201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(CommunityResource), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CommunityResource>> CreateCommunity([FromBody] CreateCommunityResource resource)
         {
             var command = _mapper.Map<CreateCommunityResource, CreateCommunityCommand>(resource);
@@ -90,7 +92,7 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             Description= "Te muestra los datos de las comunidades."
             
         )]
-        [ProducesResponseType(typeof(IEnumerable<CommunityResource>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<CommunityResource>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CommunityResource>>> GetAllCommunities()
         {
             var query = new GetAllCommunitiesQuery();
@@ -112,8 +114,8 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             Summary= "Obtener los datos de una comunidad en específico.",
             Description= "Te muestra los datos de la comunidad que buscaste."
         )]
-        [ProducesResponseType(typeof(CommunityResource), 200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(CommunityResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CommunityResource>> GetCommunityById(int id)
         {
             var query = new GetCommunityByIdQuery(id);
@@ -143,9 +145,9 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             Summary= "Unirse una comunidad existente.",
             Description= "El userclient puede unirse a una comunidad existente."
         )]
-        [ProducesResponseType(typeof(UserCommunityResource), 201)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(UserCommunityResource), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UserCommunityResource>> JoinCommunity([FromBody] JoinCommunityResource resource)
         {
             var command = _mapper.Map<JoinCommunityResource, JoinCommunityCommand>(resource);
@@ -157,12 +159,51 @@ namespace LivriaBackend.communities.Interfaces.REST.Controllers
             }
             catch (ApplicationException ex)
             {
-                
                 return BadRequest(ex.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500, "An unexpected error occurred while trying to join the community.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred while trying to join the community.");
+            }
+        }
+
+        /// <summary>
+        /// Permite a un usuario salir de una comunidad.
+        /// </summary>
+        /// <param name="communityId">El ID de la comunidad de la que el usuario quiere salir.</param>
+        /// <param name="userId">El ID del cliente de usuario que quiere salir.</param>
+        /// <returns>Un No Content (204) si la operación fue exitosa, o Not Found (404) si la membresía no existía.</returns>
+        [HttpDelete("{communityId}/members/{userId}")] // ¡NUEVO ENDPOINT AGREGADO!
+        [SwaggerOperation(
+            Summary = "Salir de una comunidad.",
+            Description = "Permite a un usuario salir de una comunidad específica."
+        )]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // En caso de que el servicio lance una excepción por datos inválidos
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> LeaveCommunity(int communityId, int userId)
+        {
+           
+            var command = new LeaveCommunityCommand(userId, communityId);
+            try
+            {
+                var result = await _userCommunityCommandService.Handle(command);
+
+                if (!result)
+                {
+                    return NotFound($"Membership not found for User ID {userId} in Community ID {communityId}.");
+                }
+
+                return NoContent(); // 204 No Content para eliminación exitosa sin devolver contenido
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"An unexpected error occurred: {ex.Message}");
             }
         }
     }

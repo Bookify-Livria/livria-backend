@@ -21,7 +21,7 @@ using LivriaBackend.users.Domain.Model.Aggregates;
 using LivriaBackend.users.Interfaces.ACL;
 using LivriaBackend.users.Application.ACL;
 
-using LivriaBackend.IAM.Domain.Repositories;
+using LivriaBackend.IAM.Domain.Repositories; 
 
 using LivriaBackend.communities.Domain.Repositories; 
 using LivriaBackend.communities.Domain.Model.Services;
@@ -148,14 +148,14 @@ builder.Services.AddScoped<IUserClientRepository, UserClientRepository>();
 builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
 builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
-builder.Services.AddScoped<IUserCommunityRepository, UserCommunityRepository>();
+builder.Services.AddScoped<IUserCommunityRepository, UserCommunityRepository>(); 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>(); 
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>(); 
-builder.Services.AddScoped<IIdentityRepository, IdentityRepository>(); // Ya estaba
+builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 
 
 // Servicios de Comandos
@@ -164,7 +164,7 @@ builder.Services.AddScoped<IUserClientCommandService, UserClientCommandService>(
 builder.Services.AddScoped<IUserAdminCommandService, UserAdminCommandService>();
 builder.Services.AddScoped<ICommunityCommandService, CommunityCommandService>();
 builder.Services.AddScoped<IPostCommandService, PostCommandService>();
-builder.Services.AddScoped<IUserCommunityCommandService, UserCommunityCommandService>();
+builder.Services.AddScoped<IUserCommunityCommandService, UserCommunityCommandService>(); 
 builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
 builder.Services.AddScoped<IReviewCommandService, ReviewCommandService>();
 builder.Services.AddScoped<ICartItemCommandService, CartItemCommandService>();
@@ -180,7 +180,7 @@ builder.Services.AddScoped<IPostQueryService, PostQueryService>();
 builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
 builder.Services.AddScoped<IReviewQueryService, ReviewQueryService>();
 builder.Services.AddScoped<ICartItemQueryService, CartItemQueryService>();
-builder.Services.AddScoped<IOrderQueryService, OrderQueryService>(); // Ya estaba
+builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
 builder.Services.AddScoped<IRecommendationQueryService, RecommendationQueryService>();
 
 
@@ -271,15 +271,14 @@ using (var scope = app.Services.CreateScope())
                 defaultAdminDisplayName,
                 defaultAdminUsername,
                 defaultAdminEmail,
-                true, // Asumo que esto es para AdminAccess
+                true, 
                 defaultAdminSecurityPin
             );
             
-            // Usar reflexión para establecer el ID si no hay un constructor que lo permita
             var userAdminIdProperty = userAdmin.GetType().GetProperty("Id");
             if (userAdminIdProperty != null && userAdminIdProperty.CanWrite)
             {
-                userAdminIdProperty.SetValue(userAdmin, 0); // Establecer ID 0
+                userAdminIdProperty.SetValue(userAdmin, 0); 
             }
             else
             {
@@ -299,7 +298,6 @@ using (var scope = app.Services.CreateScope())
                 defaultAdminPassword
             );
             
-            // Usar reflexión para establecer UserId en Identity
             var identityUserIdProperty = identity.GetType().GetProperty("UserId");
             if (identityUserIdProperty != null && identityUserIdProperty.CanWrite)
             {
@@ -310,9 +308,8 @@ using (var scope = app.Services.CreateScope())
                 logger.LogError("No se pudo establecer UserId para la Identity por defecto usando reflection. Verifica el setter de Identity.UserId o su constructor.");
             }
             
-            // Añadir la Identity al repositorio y guardar
             await identityRepository.AddAsync(identity);
-            await unitOfWork.CompleteAsync(); // Completa la transacción y guarda ambos (UserAdmin e Identity)
+            await unitOfWork.CompleteAsync(); 
 
             Console.WriteLine($"UserAdmin '{defaultAdminUsername}' (ID: {userAdmin.Id}) y su Identity asociada (ID: {identity.Id}) creados con éxito.");
         }
@@ -365,7 +362,7 @@ app.UseExceptionHandler(appBuilder =>
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
         }
-        // Nuevo manejo para la excepción DuplicateEntityException
+        
         else if (exception is DuplicateEntityException dupEx)
         {
             context.Response.StatusCode = StatusCodes.Status409Conflict; 

@@ -1,5 +1,5 @@
 ﻿using LivriaBackend.communities.Domain.Model.Aggregates;
-using LivriaBackend.Shared.Domain.Repositories;
+using LivriaBackend.Shared.Domain.Repositories; 
 using System.Threading.Tasks;
 
 namespace LivriaBackend.communities.Domain.Repositories
@@ -9,7 +9,7 @@ namespace LivriaBackend.communities.Domain.Repositories
     /// Hereda las operaciones CRUD asíncronas básicas de <see cref="IAsyncRepository{T}"/>
     /// y añade métodos específicos para gestionar las membresías de usuarios en comunidades.
     /// </summary>
-    public interface IUserCommunityRepository : IAsyncRepository<UserCommunity>
+    public interface IUserCommunityRepository : IAsyncRepository<UserCommunity> 
     {
         /// <summary>
         /// Obtiene una relación de membresía de usuario-comunidad específica por los IDs del cliente de usuario y la comunidad.
