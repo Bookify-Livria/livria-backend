@@ -50,12 +50,11 @@ using Microsoft.AspNetCore.Diagnostics;
 using System.Text.Json; 
 using LivriaBackend.Shared.ErrorHandling; 
 using Microsoft.AspNetCore.Http; 
-using LivriaBackend.Shared.Domain.Exceptions; // Agregado para la excepción personalizada
+using LivriaBackend.Shared.Domain.Exceptions; 
 
-using System.Reflection;
+
 using LivriaBackend.IAM.Domain.Model.Commands;
 using LivriaBackend.IAM.Interfaces.REST.Controllers;
-using LivriaBackend.IAM.Domain.Repositories;
 using LivriaBackend.IAM.Infrastructure.Persistence.Repositories;
 using LivriaBackend.IAM.Application.Internal.OutboundServices;
 using LivriaBackend.IAM.Infrastructure.Tokens.JWT.Configuration;
@@ -144,57 +143,45 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
-
+// Repositorios
 builder.Services.AddScoped<IUserClientRepository, UserClientRepository>();
 builder.Services.AddScoped<IUserAdminRepository, UserAdminRepository>();
-
 builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IUserCommunityRepository, UserCommunityRepository>();
-
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>(); 
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>(); 
+builder.Services.AddScoped<IIdentityRepository, IdentityRepository>(); // Ya estaba
 
 
+// Servicios de Comandos
 builder.Services.AddScoped<IBookCommandService, BookCommandService>();
-builder.Services.AddScoped<IBookQueryService, BookQueryService>();
-
-
 builder.Services.AddScoped<IUserClientCommandService, UserClientCommandService>();
-builder.Services.AddScoped<IUserClientQueryService, UserClientQueryService>();
-
 builder.Services.AddScoped<IUserAdminCommandService, UserAdminCommandService>();
-builder.Services.AddScoped<IUserAdminQueryService, UserAdminQueryService>();
-
-
 builder.Services.AddScoped<ICommunityCommandService, CommunityCommandService>();
-builder.Services.AddScoped<ICommunityQueryService, CommunityQueryService>();
 builder.Services.AddScoped<IPostCommandService, PostCommandService>();
-builder.Services.AddScoped<IPostQueryService, PostQueryService>();
 builder.Services.AddScoped<IUserCommunityCommandService, UserCommunityCommandService>();
-
-
 builder.Services.AddScoped<INotificationCommandService, NotificationCommandService>();
-builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
-
-
 builder.Services.AddScoped<IReviewCommandService, ReviewCommandService>();
-builder.Services.AddScoped<IReviewQueryService, ReviewQueryService>();
-
 builder.Services.AddScoped<ICartItemCommandService, CartItemCommandService>();
-builder.Services.AddScoped<ICartItemQueryService, CartItemQueryService>();
-
 builder.Services.AddScoped<IOrderCommandService, OrderCommandService>();
-builder.Services.AddScoped<IOrderQueryService, OrderQueryService>();
 
+
+// Servicios de Consultas
+builder.Services.AddScoped<IBookQueryService, BookQueryService>();
+builder.Services.AddScoped<IUserClientQueryService, UserClientQueryService>();
+builder.Services.AddScoped<IUserAdminQueryService, UserAdminQueryService>();
+builder.Services.AddScoped<ICommunityQueryService, CommunityQueryService>();
+builder.Services.AddScoped<IPostQueryService, PostQueryService>();
+builder.Services.AddScoped<INotificationQueryService, NotificationQueryService>();
+builder.Services.AddScoped<IReviewQueryService, ReviewQueryService>();
+builder.Services.AddScoped<ICartItemQueryService, CartItemQueryService>();
+builder.Services.AddScoped<IOrderQueryService, OrderQueryService>(); // Ya estaba
 builder.Services.AddScoped<IRecommendationQueryService, RecommendationQueryService>();
-
-builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 
 
 builder.Services.AddAutoMapper(
@@ -203,7 +190,6 @@ builder.Services.AddAutoMapper(
     typeof(MappingNotification).Assembly,
     typeof(MappingCommerce).Assembly
 );
-
 
 
 builder.Services.AddScoped<IUserClientContextFacade, UserClientContextFacade>();
@@ -285,14 +271,15 @@ using (var scope = app.Services.CreateScope())
                 defaultAdminDisplayName,
                 defaultAdminUsername,
                 defaultAdminEmail,
-                true,
+                true, // Asumo que esto es para AdminAccess
                 defaultAdminSecurityPin
             );
             
+            // Usar reflexión para establecer el ID si no hay un constructor que lo permita
             var userAdminIdProperty = userAdmin.GetType().GetProperty("Id");
             if (userAdminIdProperty != null && userAdminIdProperty.CanWrite)
             {
-                userAdminIdProperty.SetValue(userAdmin, 0);
+                userAdminIdProperty.SetValue(userAdmin, 0); // Establecer ID 0
             }
             else
             {
@@ -301,15 +288,18 @@ using (var scope = app.Services.CreateScope())
             
             context.UserAdmins.Add(userAdmin);
             await context.SaveChangesAsync(); 
+
+            
             
             var userAdminIdForIdentity = userAdmin.Id; 
             
             var identity = new Identity(
-                0,
+                0, 
                 defaultAdminUsername,
                 defaultAdminPassword
             );
             
+            // Usar reflexión para establecer UserId en Identity
             var identityUserIdProperty = identity.GetType().GetProperty("UserId");
             if (identityUserIdProperty != null && identityUserIdProperty.CanWrite)
             {
@@ -318,8 +308,6 @@ using (var scope = app.Services.CreateScope())
             else
             {
                 logger.LogError("No se pudo establecer UserId para la Identity por defecto usando reflection. Verifica el setter de Identity.UserId o su constructor.");
-                // Si esto falla, la Identity no estará vinculada correctamente, y el login no funcionará.
-                // Es crucial que Identity.UserId se establezca correctamente.
             }
             
             // Añadir la Identity al repositorio y guardar
@@ -380,7 +368,7 @@ app.UseExceptionHandler(appBuilder =>
         // Nuevo manejo para la excepción DuplicateEntityException
         else if (exception is DuplicateEntityException dupEx)
         {
-            context.Response.StatusCode = StatusCodes.Status409Conflict; // 409 Conflict es apropiado para duplicados
+            context.Response.StatusCode = StatusCodes.Status409Conflict; 
             context.Response.ContentType = "application/json";
 
             var errorResponse = new ErrorResponse

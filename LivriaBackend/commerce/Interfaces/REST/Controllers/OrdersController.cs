@@ -3,7 +3,7 @@ using LivriaBackend.commerce.Domain.Model.Aggregates;
 using LivriaBackend.commerce.Domain.Model.Commands;
 using LivriaBackend.commerce.Domain.Model.Queries;
 using LivriaBackend.commerce.Domain.Model.Services;
-using LivriaBackend.commerce.Interfaces.REST.Resources; // Ensure this includes UpdateOrderStatusResource
+using LivriaBackend.commerce.Interfaces.REST.Resources; 
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Http; 
 
 namespace LivriaBackend.commerce.Interfaces.REST.Controllers
 {
@@ -110,6 +111,28 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
             var orderResource = _mapper.Map<OrderResource>(order);
             return Ok(orderResource);
         }
+        
+        /// <summary>
+        /// Obtiene todas las órdenes registradas en el sistema.
+        /// </summary>
+        /// <returns>
+        /// Una acción de resultado HTTP que contiene una colección de <see cref="OrderResource"/>
+        /// (código 200 OK) si la operación es exitosa. Puede ser una colección vacía.
+        /// </returns>
+        [HttpGet] 
+        [SwaggerOperation(
+            Summary = "Obtener todas las órdenes.",
+            Description = "Obtiene una lista de todas las órdenes registradas en el sistema."
+        )]
+        [ProducesResponseType(typeof(IEnumerable<OrderResource>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<OrderResource>>> GetAllOrders()
+        {
+            var query = new GetAllOrdersQuery();
+            var orders = await _orderQueryService.Handle(query);
+            
+            var orderResources = _mapper.Map<IEnumerable<OrderResource>>(orders ?? new List<Order>());
+            return Ok(orderResources);
+        }
 
         /// <summary>
         /// Obtiene los datos de una orden específica por su código de orden.
@@ -174,7 +197,7 @@ namespace LivriaBackend.commerce.Interfaces.REST.Controllers
         /// Retorna 404 Not Found si la orden no existe.
         /// Retorna 500 Internal Server Error si ocurre un error inesperado.
         /// </returns>
-        [HttpPut("{orderId}/status")] // Definición de la ruta: PUT /api/v1/orders/{orderId}/status
+        [HttpPut("{orderId}/status")] 
         [SwaggerOperation(
             Summary = "Actualizar el estado de una orden.",
             Description = "Permite cambiar el estado de una orden a 'pending', 'in progress' o 'delivered'."

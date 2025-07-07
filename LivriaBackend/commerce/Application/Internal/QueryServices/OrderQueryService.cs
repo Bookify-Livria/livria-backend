@@ -62,5 +62,18 @@ namespace LivriaBackend.commerce.Application.Internal.QueryServices
         {
             return await _orderRepository.GetOrderByCodeAsync(query.OrderCode);
         }
+
+        /// <summary>
+        /// Maneja el comando <see cref="GetAllOrdersQuery"/> para obtener todas las órdenes disponibles en el sistema.
+        /// </summary>
+        /// <param name="query">La consulta para obtener todas las órdenes.</param>
+        /// <returns>Una colección de objetos <see cref="Order"/>.</returns>
+        /// <remarks>
+        /// Este método delega la lógica de recuperación de datos al <see cref="IOrderRepository"/>.
+        /// </remarks>
+        public async Task<IEnumerable<Order>> Handle(GetAllOrdersQuery query) 
+        {
+            return await _orderRepository.FindAllAsync(); 
+        }
     }
 }

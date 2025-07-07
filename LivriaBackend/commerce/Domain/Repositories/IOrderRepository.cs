@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+
 namespace LivriaBackend.commerce.Domain.Repositories
 {
     /// <summary>
     /// Define el contrato para un repositorio de <see cref="Order"/>.
     /// Proporciona métodos para acceder y manipular datos de órdenes de compra.
     /// </summary>
-    public interface IOrderRepository
+    public interface IOrderRepository 
     {
         /// <summary>
         /// Obtiene una orden de forma asíncrona por su identificador único.
@@ -51,5 +52,11 @@ namespace LivriaBackend.commerce.Domain.Repositories
         /// <param name="order">El objeto <see cref="Order"/> a eliminar.</param>
         /// <returns>Una tarea que representa la operación asíncrona.</returns>
         Task DeleteAsync(Order order);
+
+        /// <summary>
+        /// Obtiene todas las órdenes del repositorio de forma asíncrona.
+        /// </summary>
+        /// <returns>Una tarea que representa la operación asíncrona. El resultado de la tarea es una colección de todas las <see cref="Order"/>.</returns>
+        Task<IEnumerable<Order>> FindAllAsync(); 
     }
 }
