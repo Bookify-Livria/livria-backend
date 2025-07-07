@@ -20,6 +20,8 @@ namespace LivriaBackend.users.Interfaces.REST.Resources
         bool AdminAccess,
         
         [StringLength(255, ErrorMessage = "MaxLengthError")]
-        string SecurityPin 
+        string SecurityPin, 
+        
+        decimal Capital
     ) : UserResource(Id, Display, Username, Email); 
 }
