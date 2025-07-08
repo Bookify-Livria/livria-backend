@@ -29,7 +29,7 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         /// </summary>
         protected UserAdmin() : base()
         {
-            Capital = 3000m; // Se inicializa aquí también para el constructor sin parámetros
+            Capital = 5000m; 
             SecurityPin = string.Empty;
         }
 
@@ -46,7 +46,7 @@ namespace LivriaBackend.users.Domain.Model.Aggregates
         {
             AdminAccess = adminAccess;
             SecurityPin = securityPin;
-            Capital = 3000m; // Inicialización por defecto del capital
+            Capital = 5000m; 
         }
 
         /// <summary>

@@ -69,8 +69,10 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             var userAdmin = await _userAdminRepository.GetByIdAsync(userAdminId);
             if (userAdmin == null)
             {
+               
                 throw new InvalidOperationException($"UserAdmin with ID {userAdminId} not found for capital update.");
             }
+
             
             if (amountToAdd >= 0)
             {
@@ -78,6 +80,7 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             }
             else
             {
+                
                 userAdmin.DecreaseCapital(Math.Abs(amountToAdd));
             }
             

@@ -25,6 +25,7 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
         private readonly IBookRepository _bookRepository; 
         private readonly IUnitOfWork _unitOfWork;
         private readonly INotificationCommandService _notificationCommandService; 
+        private readonly IUserAdminRepository _userAdminRepository;
 
         /// <summary>
         /// Inicializa una nueva instancia de la clase <see cref="UserClientCommandService"/>.
@@ -37,12 +38,16 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             IUserClientRepository userClientRepository,
             IBookRepository bookRepository,
             IUnitOfWork unitOfWork,
-            INotificationCommandService notificationCommandService) 
+            INotificationCommandService notificationCommandService,
+                IUserAdminRepository userAdminRepository)
+             
         {
             _userClientRepository = userClientRepository;
             _bookRepository = bookRepository;
             _unitOfWork = unitOfWork;
             _notificationCommandService = notificationCommandService; 
+            _userAdminRepository = userAdminRepository;
+
         }
 
         /// <summary>
@@ -130,9 +135,9 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
             if (oldSubscription != "communityplan" && userClient.Subscription == "communityplan")
             {
                 await _notificationCommandService.Handle(new CreateNotificationCommand(
-                    userClient.Id,       // ID del usuario
-                    ENotificationType.Plan, // Tipo de notificación de plan
-                    DateTime.UtcNow      // Fecha y hora de creación
+                    userClient.Id,       
+                    ENotificationType.Plan, 
+                    DateTime.UtcNow      
                 ));
             }
 
@@ -284,6 +289,15 @@ namespace LivriaBackend.users.Application.Internal.CommandServices
                     ENotificationType.Plan, 
                     DateTime.UtcNow      
                 ));
+                
+                var userAdmins = await _userAdminRepository.GetAllAsync();
+                var admin = userAdmins.FirstOrDefault();
+
+                if (admin != null)
+                {
+                    admin.AddCapital(40);
+                    await _userAdminRepository.UpdateAsync(admin);
+                }
             }
 
             return userClient;
